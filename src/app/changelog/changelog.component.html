@@ -1,0 +1,49 @@
+<header>
+  <div class="container">
+    <div class="logo">
+      <div *ngIf="theme == 'dark'; then dark_logo else light_logo"></div>
+      <ng-template #light_logo>
+        <img src="assets/img/ic_splash.png" alt="MyChatApp Logo">
+      </ng-template>
+      <ng-template #dark_logo>
+        <img src="assets/img/ic_splash_dark.png" alt="MyChatApp Logo">
+      </ng-template>
+      <a routerLink="/" class="appname">{{ appname }}</a>
+    </div>
+  </div>
+</header>
+
+<body>
+  <p>Version 1.0.2 (xx.11.2019)</p>
+  <ul>
+    <li>In der Raumliste kann jetzt gezielt nach einem Raum gesucht werden.</li>
+    <li>Zitierte Bilder werden jetzt im Zitat korrekt dargestellt.</li>
+    <li>Gepostete Bilder haben jetzt im Chatraum ein fixes 4:3-Format. Per Klick lässt sich das volle Bild öffnen.</li>
+    <li>Gepostete Bilder lassen sich jetzt per Rechtsklick herunterladen.</li>
+    <li>Die Raumliste lässt sich jetzt über die Tastatur ansteuern.</li>
+  </ul>
+  <p>Version 1.0.1 (24.11.2019)</p>
+  <ul>
+    <li>Das eigene Profil lässt sich jetzt bearbeiten.</li>
+    <li>Englisch wird jetzt als Sprache unterstützt. Die Anwendung verwendet die Browsersprache.</li>
+    <li>Uhrzeiten werden jetzt korrekt in die lokale Uhrzeit umgerechnet.</li>
+    <li>Bei Erstellen eines Raums lässt sich jetzt ein Raumbild hochladen.</li>
+    <li>Bei Erstellen eines Raums lässt sich jetzt das eingegebene Passwort als Klartext anzeigen.</li>
+    <li>Per Rechtsklick auf Nachrichten lässt sich jetzt das Profil des Absenders öffnen.</li>
+    <li>Per Rechtsklick auf Nachrichten lassen sich diese jetzt weiterleiten.</li>
+    <li>Per Rechtsklick auf eine Nachricht lässt sich diese jetzt an- bzw. abpinnen. Eine visuelle Pinnwand existiert noch nicht.</li>
+    <li>Per Linksklick auf ein Zitat lässt sich jetzt zur zitierten Nachricht springen.</li>
+    <li>Links werden jetzt als solche erkannt. Per Klick öffnet sich die Seite in einem neuen Tab.</li>
+    <li>Bilder werden jetzt im Hintergrund komprimiert.</li>
+    <li>Die Seite verwendet jetzt die Schriftart des Browsers (Sans-Serif).</li>
+    <li>Das optische Design der Menüs "Raum erstellen" und "Einstellungen" wurde überarbeitet.</li>
+    <li>Ein Darstellungsfehler von sehr breiten Bildern im Vollbild wurde behoben.</li>
+    <li>Ein Darstellungsfehler von empfangenen Bildern im Chatraum wurde behoben.</li>
+    <li>Ein Fehler wurde behoben, der das Scrollen in Dialogen bei kleinen Fenstern verhindert hat.</li>
+    <li>Update auf Angular 8.</li>
+  </ul>
+  <p>Version 1.0.0 (14.11.2019)</p>
+  <ul>
+    <li>Erstveröffentlichung</li>
+  </ul>
+</body>

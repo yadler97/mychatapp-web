@@ -1,0 +1,224 @@
+button, input, textarea, select {
+    font-family: sans-serif;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background: #8EC54F;
+    background: var(--primary-color);
+
+    .versionnumber {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        color: white;
+        padding-left: 1em;
+        font-size: 12px;
+        font-family: "Montserrat"
+    }
+
+    table {
+        width: 100%;
+        height: 100%;
+        tr {
+            td {
+                width: 50%;
+            }
+        }
+
+        .mcalogo {
+            padding-left: 25%;
+            padding-right: 25%;
+
+            img {
+                width: 100%;
+            }
+
+            .mcatext {
+                text-align: center;
+                color: white;
+                font-weight: bold;
+                font-size: 2em;
+            }
+        }
+
+        .loginbox {
+            padding-left: 30%;
+            padding-right: 30%;
+            width: 40%;
+            text-align: center;
+
+            input {
+                height: 2em;
+                width: calc(100% - 2em);
+                margin-bottom: 1em;
+                padding: 1em;
+                border: none;
+                border-radius: 40em;
+                display: block;
+            }
+
+            input:focus {
+                outline-width: 0;
+                background: #EEEEEE;
+            }
+
+            button {
+                margin-top: 1em;
+                border: none;
+                border-radius: 40em;
+                width: 70%;
+                min-width: fit-content;
+                background: #FF0000;
+                background: var(--button);
+                color: white;
+                font-size: 1em;
+                padding-top: 0.5em;
+                padding-bottom: 0.5em;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            button:hover {
+                filter:brightness(0.93);
+            }
+
+            button:focus {
+                filter:brightness(0.85);
+                outline-width: 0;
+            }
+        }
+    }
+}
+
+
+
+
+
+@media screen and (max-width: 600px) {
+    body {
+        position: fixed;
+        table {
+            tr {
+                display: flex;
+                flex-flow: column;
+
+                td {
+                    min-width: 100%;
+                }
+            }
+
+            .mcalogo {
+                padding-top: 10%;
+                padding-bottom: 10%;
+
+                .mcatext {
+                    font-size: 1.5em !important;
+                }
+            }
+
+            .loginbox {
+                padding-left: 10% !important;
+                padding-right: 10% !important;
+                width: 80% !important;
+            }
+        }
+    }
+}
+
+
+
+
+.modal {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    overscroll-behavior: contain;
+    overflow: hidden;
+}
+
+.modal-content {
+    position: absolute;
+    background-color: #F7F7F7;
+    background-color: var(--background);
+    margin: auto;
+    padding: 0;
+    width: 55%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 1em;
+    
+    .close {
+        color: black;
+        color: var(--fontcolor);
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        margin-right: 0.5em;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: grey;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    p {
+        color: black;
+        color: var(--fontcolor);
+        text-align: center;
+    }
+
+    button {
+        margin-top: 1em;
+        border: none;
+        border-radius: 40em;
+        width: 70%;
+        margin-left: 15%;
+        margin-bottom: 1em;
+        background: #FF0000;
+        background: var(--button);
+        color: white;
+        font-size: 1em;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        filter:brightness(0.93);
+    }
+
+    button:focus {
+        filter:brightness(0.85);
+        outline-width: 0;
+    }
+}
+
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:300; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:300; opacity:1}
+}

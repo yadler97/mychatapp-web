@@ -1,0 +1,1448 @@
+button, input, textarea, select {
+    font-family: sans-serif;
+}
+
+
+header {
+    top: 0;
+    background: #8EC54F;
+    background: var(--header);
+    height: 55px;
+    margin: 0;
+
+    .container {
+        grid-template-columns: 30% auto;
+        padding: 0;
+    }
+
+    .logo {
+        float: left;
+        display: flex;
+        flex-flow: row;
+
+        img {
+            width: 40px;
+            height: 33px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            margin-left: 10px;
+            float: left;
+        }
+
+        .appname {
+            margin-left: 1em;
+            font-size: 1em;
+            line-height: 55px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+            white-space: nowrap;
+            text-decoration: none;
+            color: white;
+        }
+    }
+
+    nav {
+        justify-self: right;
+        float: right;
+        height: 55px;
+    
+        ul {
+            list-style-type: none;
+            margin: 0; padding: 0;
+
+            li {
+                float: left;
+
+                button {
+                    padding-left: 1em;
+                    padding-right: 1em;
+                    line-height: 55px;
+                    height: 55px;
+                    max-height: 55px;
+                    text-transform: uppercase;
+                    font-size: .8em;
+                    display: inline-block;
+                    background: none;
+                    border: none;
+                    color: white;
+                    cursor: pointer;
+
+                    &:hover, &:focus {
+                        background: #5f8336;
+                        background: var(--headerhover);
+                    }
+
+                    &:focus {
+                        outline-width: 0;
+                    }
+
+                    &::-moz-focus-inner {
+                        border:0;
+                    }
+                }
+            }
+
+            .nav_profile_image_box {
+                height: 55px;
+                cursor: pointer;
+
+                .nav_profile_image {
+                    height: 35px;
+                    min-width: 35px;
+                    max-width: 35px;
+                    margin: 10px;
+                    border-radius: 50%;
+                }
+
+                &:hover, &:focus {
+                    background: #5f8336;
+                    background: var(--headerhover);
+                }
+            }
+        }
+    }
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    overflow-y: hidden;
+
+    .appcontainer {
+
+        .roomlist {
+            width: 20%;
+            min-width: 350px;
+            height: calc(100vh - 55px);
+            float: left;
+            background: #929292;
+            background: var(--roomlistbackground);
+            display: flex;
+            flex-flow: column;
+            overflow-x: none;
+            position: relative;
+
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                flex: 1;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                
+                .noroomfound {
+                    text-align: center;
+                    line-height: 80vh;
+                    color: #000000;
+                    color: var(--fontcolor);
+                }
+
+                .roomsearchcontainer {
+                    display: flex;
+                    flex-flow: row;
+
+                    input {
+                        width: 100%;
+                        padding: 10px;
+                        font-size: 16px;
+                        border: none;
+                        background: #EEEEEE;
+                        background: var(--room);
+                        color: #000000;
+                        color: var(--fontcolor);
+                    }
+
+                    input:hover {
+                        outline-width: 0;
+                        filter: brightness(0.9);
+                    }
+
+                    input:focus {
+                        outline-width: 0;
+                        filter: brightness(0.8);
+                    }
+
+                    .deleteinput {
+                        margin-left: -40px;
+                        background: none;
+                        border: none;
+                        position: relative;
+                        z-index: 9998!important;
+
+                        .deletesearchinputicon {
+                            color: #AAA;
+                        }
+
+                        .deletesearchinputicon:hover {
+                            color: #888;
+                        }
+                    }
+
+                    .deleteinput:focus {
+                        outline-width: 0;
+                    }
+                }
+
+                li {
+                    background: #EEEEEE;
+                    background: var(--room);
+                    margin-bottom: 2px;
+
+                    .container {
+                        display: flex;
+                        flex-flow: row;
+                        width: 100%;
+                        padding: 10px;
+                        margin-top: 0px;
+                        margin-bottom: 0px;
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        
+                        .room_image {
+                            width: 50px;
+                            height: 50px;
+                            border-radius: 50%;
+                        }
+
+                        .rightpartroomlist {
+                            width: calc(100% - 60px);
+                            padding-left: 10px;
+
+                            .firstroomline {
+                                display: flex;
+                                flex-flow: row;
+
+                                .roomname {
+                                    font-weight: bold;
+                                    font-size: 14px;
+                                    flex: 1;
+                                    color: #000000;
+                                    color: var(--fontcolor);
+                                    text-align: left;
+                                }
+
+                                .roomtime {
+                                    font-size: 10px;
+                                    padding-right: 10px;
+                                    padding-top: 5px;
+                                    color: var(--fontcolor);
+                                    text-align: right;
+                                }
+                            }
+                    
+                            .category {
+                                font-size: 14px;
+                                margin: 4px 30px 0px 0px;
+                                position: relative;
+                                word-wrap: break-word;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                                color: #000000;
+                                color: var(--fontcolor);
+                                text-align: left;
+                            }
+                        }
+                    }
+
+                    .container[data-value='selected'] {
+                        background: #BDBDBD;
+                        background: var(--roomclicked);
+                    }
+
+                    .container:focus {
+                        outline-width: 0;
+                        background: #D1D1D1;
+                        background: var(--roomhover);
+                    }
+
+                    .container:hover {
+                        background: #D1D1D1;
+                        background: var(--roomhover);
+                    }
+                }
+            }
+
+            .addroom {
+                height: 3.5rem;
+                width: 3.5rem;
+                font-size: 30px;
+                font-weight: bold;
+                text-align: center;
+                border-radius: 50%;
+                text-align: center;
+                border: none;
+                background-color: #FF0000;
+                background-color: var(--button);
+                color: white;
+                position: absolute;
+                bottom: 15px;
+                right: 30px;
+                cursor: pointer;
+            }
+
+            .addroom:hover {
+                filter:brightness(0.93);
+            }
+
+            .addroom:focus {
+                filter:brightness(0.85);
+                outline-width: 0;
+            }
+
+            .addroom::-moz-focus-inner {
+                border:0;
+            }
+        }
+
+        .chatroom {
+            float: left;
+            max-width: 80%;
+            width: calc(100vw - 350px);
+            height: calc(100vh - 55px);
+            background: #F7F7F7;
+            background: var(--background);
+            display: flex;
+            flex-flow: column;
+
+            .quotebox {
+                display: flex;
+                flex-flow: row;
+                width: 100%;
+                background: #F0F0F0;
+                background: var(--quotebox);
+
+                .quotetext {
+                    font-size: 16px;
+                    line-height: 35px;
+                    margin-left: 0.4em;
+                    color: #000000;
+                    color: var(--fontcolor);
+                    font-style: italic;
+                    position: relative;
+                    word-wrap: break-word;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    padding-right: 1em;
+                }
+
+                .quoteimage {
+                    height: 40px;
+                    width: 40px;
+                    margin: 5px;
+                    object-fit: cover;
+                    object-position: center;
+                    border-radius: 6px;
+                    background: #AAA;
+                }
+
+                .close {
+                    margin: auto;
+                    margin-right: 0.4em;
+                    margin-top: 0;
+                    vertical-align: top;
+                    color: #000000;
+                    color: var(--fontcolor);
+                }
+
+                .close:hover {
+                    color: #888;
+                }
+            }
+
+            .inputbox {
+                height: 40px;
+                background: #EBEBEB;
+                background: var(--inputbox);
+                display: flex;
+                flex-flow: row;
+
+                input {
+                    display: none;
+                }
+
+                .uploadimage {
+                    height: 24px;
+                    padding: 8px;
+                }
+
+                textarea {
+                    border: none;
+                    height: 40px;
+                    line-height: 20px;
+                    padding-top: 10px;
+                    background: none;
+                    margin: 0px 30px;
+                    box-sizing: border-box;
+                    color: #000000;
+                    color: var(--fontcolor);
+                    flex: 1;
+                    font-size: 16px;
+                    resize: none;
+                    //font-family: 'Montserrat';
+                }
+
+                textarea:focus {
+                    outline-width: 0;
+                }
+
+                button {
+                    height: 40px;
+                    line-height: 40px;
+                    border: none;
+                    background: none;
+                    font-weight: bold;
+                    cursor: pointer;
+                    color: #000000;
+                    color: var(--fontcolor);
+                    padding: 0 0;
+                }
+
+                .sendbutton {
+                    padding-left: 6px;
+                    padding-right: 6px;
+                }
+
+                .sendbutton:hover {
+                    background-color: rgb(224, 224, 224);
+                    background-color: var(--buttonhover);
+                }
+
+                .sendbutton:active {
+                    background-color: #ADADAD;
+                    background-color: var(--buttonfocus);
+                }
+
+                .sendbutton::-moz-focus-inner {
+                    border:0;
+                }
+
+                button:focus {
+                    outline-width: 0;
+                }
+            }
+
+            .chatbox {
+                flex: 1;
+                height: 25em;
+                max-height: calc(100vh - 55px);
+                display: flex;
+                flex-flow: column;
+
+                .messages {
+                    flex: 1;
+                    overflow-y: scroll;
+                    overflow-x: hidden;
+                    padding-bottom: 10px;
+
+                    .noroom {
+                        margin: 0;
+                        position: relative;
+                        top: 50%;
+                        left: 50%;
+                        -ms-transform: translate(-50%, -50%);
+                        transform: translate(-50%, -50%);
+                    }
+
+                    .noroom1, .noroom2 {
+                        text-align: center;
+                        color: #000000;
+                        color: var(--fontcolor);
+                    }
+
+                    .noroom {
+                        font-size: 20px;
+                    }
+
+                    .noroom2 {
+                        font-size: 15px;
+                    }
+
+                    ul {
+                        list-style-type: none;
+                        margin: 0;
+                        padding: 0;
+
+                        .container_header {
+                            margin: 0 auto;
+                            padding: 0.6em;
+                            grid-template-columns: 10% auto;
+                            width: 100%;
+                            margin-top: 0px;
+                            margin-bottom: 0px;
+                            padding-bottom: 5px;
+                            padding-top: 5px;
+                            display: flex;
+                        }
+
+                        .headeritem {
+                            display: none;
+                            //width: fit-content;
+                            margin: auto;
+                            margin-top: 1em;
+                            padding: 0.5em;
+                            text-align: center;
+                            background: #E6E6E6;
+                            font-size: 14px;
+                            max-width: 80%;
+                            border-radius: 12px;
+                        }
+        
+                        li {
+        
+                            .container_received {
+                                margin: 0 auto;
+                                padding: 0.6em;
+                                grid-template-columns: 10% auto;
+                                width: 100%;
+                                margin-top: 0px;
+                                margin-bottom: 0px;
+                                padding-bottom: 5px;
+                                padding-top: 5px;
+                                float: left;
+                                
+                                img {
+                                    float: left;
+                                    width: 2em;
+                                    height: 2em;
+                                    border-radius: 50%;
+                                    margin-right: 5px;
+                                }
+
+                                .rightpart {
+                                    float: left;
+                                    max-width: 60%;
+
+                                    .userid {
+                                        font-weight: bold;
+                                        font-size: 14px;
+                                        padding-right: 5px;
+                                        padding-bottom: 1px;
+                                        width: 100%;
+                                        color: #000000;
+                                        color: var(--fontcolor);
+                                    }
+
+                                    .messagebox {
+                                        display: flex;
+                                        align-items: flex-end;
+
+                                        .messageitem {
+                                            background-color: #FF6E00;
+                                            border-radius: 12px;
+                                            width: fit-content;
+                                            padding: 0.5em;
+                                            font-size: 14px;
+                                            color: white;
+                                            float: left;
+                                            max-width: 80%;
+
+                                            .quoteblock {
+                                                display: flex;
+                                                flex-flow: row;
+                                                border-bottom: solid white;
+                                                border-width: 1px;
+                                                padding-bottom: 5px;
+                                                margin-left: -0.5em;
+                                                margin-right: -0.5em;
+                                                cursor: pointer;
+
+                                                .profile_image {
+                                                    width: 2em;
+                                                    height: 2em;
+                                                    margin-left: 0.5em;
+                                                }
+
+                                                .quoteduserid {
+                                                    font-weight: bold;
+                                                    margin-right: 0.5em;
+                                                }
+
+                                                .quotedtext {
+                                                    font-style: italic;
+                                                    margin-right: 0.5em;
+                                                }
+
+                                                .quoteimage {
+                                                    height: 40px;
+                                                    width: 40px;
+                                                    margin: 5px;
+                                                    object-fit: cover;
+                                                    object-position: center;
+                                                    border-radius: 6px;
+                                                    background: #AAA;
+                                                }
+                                            }
+
+                                            .ownmessage {
+                                                padding-top: 5px;
+                                            }
+                                        }
+
+                                        .messageitem:hover {
+                                            filter: brightness(0.9);
+                                        }
+        
+                                        .imageitem {
+                                            border-radius: 12px;
+                                            float: left;
+                                            width: calc(100vw * 0.25);
+                                            height: calc(100vw * 0.25 / 4 * 3);
+                                            max-width: calc(100vw * 0.25);
+                                            max-height: calc(100vw * 0.25 / 4 * 3);
+                                            min-width: calc(100vw * 0.25);
+                                            min-height: calc(100vw * 0.25 / 4 * 3);
+                                            object-fit: cover;
+                                            object-position: center;
+                                            background: #AAA;
+                                            cursor: pointer;
+                                        }
+
+                                        .imageitem:hover {
+                                            filter: brightness(0.9);
+                                        }
+
+                                        .time {
+                                            font-size: 10px;
+                                            padding-left: 5px;
+                                            padding-bottom: 2px;
+                                            color: #000000;
+                                            color: var(--fontcolor);
+                                        }
+                                    }
+                                }
+                            }
+
+                            .container_sent {
+                                margin: 0 auto;
+                                padding: 0.6em;
+                                grid-template-columns: 10% auto;
+                                width: 100%;
+                                //display: inline-block;
+                                margin-top: 0px;
+                                margin-bottom: 0px;
+                                padding-bottom: 5px;
+                                padding-top: 5px;
+                                float: right;
+
+                                img {
+                                    float: left;
+                                    width: 2em;
+                                    border-radius: 50%;
+                                    margin-right: 5px;
+                                }
+
+                                .rightpart {
+                                    float: right;
+                                    max-width: 60%;
+
+                                    .messagebox {
+                                        float: right;
+                                        display: flex;
+                                        justify-content: flex-end;
+                                        align-items: flex-end;
+                                        width: auto;
+
+                                        .messageitem {
+                                            background-color: #0048FF;
+                                            border-radius: 12px;
+                                            min-width: fit-content;
+                                            padding: 0.5em;
+                                            font-size: 14px;
+                                            color: white;
+                                            float: right;
+                                            max-width: 80%;
+
+                                            .quoteblock {
+                                                display: flex;
+                                                flex-flow: row;
+                                                border-bottom: solid white;
+                                                border-width: 1px;
+                                                padding-bottom: 5px;
+                                                margin-left: -0.5em;
+                                                margin-right: -0.5em;
+                                                cursor: pointer;
+
+                                                .profile_image {
+                                                    width: 2em;
+                                                    height: 2em;
+                                                    margin-left: 0.5em;
+                                                }
+
+                                                .quoteduserid {
+                                                    font-weight: bold;
+                                                    margin-right: 1em;
+                                                }
+
+                                                .quotedtext {
+                                                    font-style: italic;
+                                                    margin-right: 1em;
+                                                }
+
+                                                .quoteimage {
+                                                    height: 40px;
+                                                    width: 40px;
+                                                    margin: 5px;
+                                                    object-fit: cover;
+                                                    object-position: center;
+                                                    border-radius: 6px;
+                                                    background: #AAA;
+                                                }
+                                            }
+
+                                            .ownmessage {
+                                                padding-top: 5px;
+                                            }
+                                        }
+
+                                        .messageitem:hover {
+                                            filter: brightness(0.9);
+                                        }
+        
+                                        .imageitem {
+                                            border-radius: 12px;
+                                            width: calc(100vw * 0.25);
+                                            height: calc(100vw * 0.25 / 4 * 3);
+                                            max-width: calc(100vw * 0.25);
+                                            max-height: calc(100vw * 0.25 / 4 * 3);
+                                            min-width: calc(100vw * 0.25);
+                                            min-height: calc(100vw * 0.25 / 4 * 3);
+                                            object-fit: cover;
+                                            object-position: center;
+                                            background: #AAA;
+                                            cursor: pointer;
+                                        }
+
+                                        .imageitem:hover {
+                                            filter: brightness(0.9);
+                                        }
+
+                                        .time {
+                                            font-size: 10px;
+                                            padding-right: 5px;
+                                            padding-bottom: 2px;
+                                            color: #000000;
+                                            color: var(--fontcolor);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+}
+
+::-webkit-scrollbar {
+    width: auto;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbartrack); 
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbarthumb); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbarthumbhover); 
+}
+
+.modal {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    overscroll-behavior: contain;
+    overflow: hidden;
+}
+
+.modal-content {
+    position: absolute;
+    background-color: #F7F7F7;
+    background-color: var(--background);
+    margin: auto;
+    padding: 0;
+    width: 55%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow-y: auto;
+    max-height: 100vh;
+    min-width: 400px;
+}
+
+.image-modal-content {
+    position: absolute;
+    background-color: #F7F7F7;
+    background-color: var(--background);
+    margin: auto;
+    padding: 0;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #8EC54F;
+    background: var(--modalheader);
+    display: flex;
+    flex-flow: column;
+
+    .fullscreenimage {
+        height: calc(100% - 35px);
+        background: white;
+    }
+
+    .close {
+        height: 35px;
+        margin-right: .4em;
+    }
+}
+
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:300; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:300; opacity:1}
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background: #8EC54F;
+    background-color: var(--modalheader);
+    color: white;
+}
+
+.modal-body {
+    padding: 0px 0px;
+
+    figure {  
+        width: 100%;
+        overflow: hidden;
+        margin:0;  
+    }
+
+    figure img {
+        display: block;
+        width: 100%;
+        min-height: calc(100vw * 0.55 / 16 * 9);
+        background: #D84D9A;
+        background: var(--standardbanner);
+    }
+      
+    .change-ratio img {
+        margin: -10% 0;
+    }
+
+    .profile_content {
+        padding: 0px 16px;
+
+        .profile_name {
+            display: flex;
+            flex-flow: row;
+            padding-bottom: 1em;
+
+            .profile_image {
+                height: calc(100vw * 0.55 / 16 * 4);
+                border-radius: 50%;
+                margin-top: calc(-1 * 100vw * 0.55 / 16 * 2);
+            }
+
+            .username {
+                font-weight: bold;
+                font-size: calc(100vw * 0.55 / 16);
+                padding-left: 0.5em;
+                padding-top: 0.3em;
+                color: #000000;
+                color: var(--fontcolor);
+            }
+
+            .editbutton {
+                margin-left: 20px;
+                margin-top: calc(0.3em + (100vw * 0.55 / 32) - 10px);
+                padding: 5px;
+                height: fit-content;
+                background: none;
+                border: none;
+                cursor: pointer;
+
+                &:hover {
+                    background: #CDCDCD;
+                    background: var(--buttonhover);
+                }
+
+                &:active {
+                    background: #ADADAD;
+                    background: var(--buttonfocus);
+                }
+
+                &:focus {
+                    outline-width: 0;
+                }
+
+                &::-moz-focus-inner {
+                    border: 0;
+                }
+
+                .iconedit {
+                    width: calc(100vw * 0.55 / 24);
+                    height: calc(100vw * 0.55 / 24);
+                }
+            }
+        }
+
+        .userbio {
+            font-size: 20px;
+            color: #000000;
+            color: var(--fontcolor);
+        }
+
+        .bdayandloc {
+            padding-top: 1em;
+            padding-bottom: 1em;
+            display: flex;
+            flex-flow: row;
+
+            .icon {
+                padding-right: 0.3em;
+                color: black;
+                color: var(--fontcolor);
+            }
+
+            .location {
+                font-size: 20px;
+                margin-top: 0;
+                margin-bottom: 0;
+                padding-right: 1em;
+                color: #000000;
+                color: var(--fontcolor);
+            }
+
+            .bday {
+                font-size: 20px;
+                margin-top: 0;
+                margin-bottom: 0;
+                color: #000000;
+                color: var(--fontcolor);
+            }
+        }
+    }
+
+    .roomform {
+        padding: 16px;
+
+        form {
+            display: flex;
+            flex-flow: column;
+        }
+
+        mat-form-field {
+            width: 100%;
+        }
+
+        mat-hint {
+            color: black;
+            color: var(--fontcolor);
+        }
+
+        input, textarea {
+            color: black;
+            color: var(--fontcolor);
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        select {
+            border-color: white;
+            outline-color: white;
+            border-bottom: 2px solid rgb(238, 238, 238);
+            padding: 12px 20px;
+            margin: 8px 30px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .createroombutton {
+            border: none;
+            background-color: #FF0000;
+            background-color: var(--button);
+            color: white;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            margin: 8px 30px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 40em;
+        }
+
+        .createroombutton:hover, .visibilitytoggle:hover {
+            filter:brightness(0.93);
+        }
+
+        .createroombutton:focus, .visibilitytoggle:focus {
+            filter:brightness(0.85);
+            outline-width: 0;
+        }
+
+        .createroombutton::-moz-focus-inner, .visibilitytoggle::-moz-focus-inner {
+            border:0;
+        }
+
+        .visibilitytoggle {
+            background: none;
+            border: none;
+        }
+
+        .visibilitytoggleicon {
+            color: #AAA;
+        }
+
+        .imageupload {
+            display: flex;
+            flex-flow: row;
+
+            .modal-text {
+                color: black;
+                color: var(--fontcolor);
+                margin-right: 20px;
+                font-size: 18px;
+                line-height: 36px;
+                margin-top: 0px;
+            }
+
+            .uploadelement {
+                display: none;
+            }
+
+            .uploadimagebutton {
+                width: 36px;
+                height: 36px;
+                border-radius: 0%;
+            }
+
+            input[type=image]:hover {
+                filter:brightness(0.93);
+            }
+
+            input[type=image]:active {
+                filter:brightness(0.85);
+            }
+
+            input[type=image]:focus {
+                outline-width: 0;
+            }
+    
+            input[type=image]::-moz-focus-inner {
+                border:0;
+            }
+        }
+    }
+
+    .settings {
+        padding: 16px;
+        display: flex;
+        flex-flow: column;
+
+        mat-slide-toggle {
+            color: black;
+            color: var(--fontcolor);
+            font-size: 20px;
+            line-height: 34px;
+        }
+    }
+
+    .forward_roomlist {
+        margin: 0;
+        padding: 0;
+        max-height: 80vh;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        background: #929292;
+        background: var(--roomlistbackground);
+
+        li {
+            background: #EEEEEE;
+            background: var(--room);
+            margin-bottom: 2px;
+            list-style-type: none;
+            cursor: pointer;
+
+            .container {
+                display: flex;
+                flex-flow: row;
+                width: 100%;
+                padding-left: 10px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                
+                .room_image {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                }
+
+                .rightpartroomlist {
+                    width: calc(100% - 60px);
+                    padding-left: 10px;
+
+                    .firstroomline {
+                        display: flex;
+                        flex-flow: row;
+
+                        .roomname {
+                            font-weight: bold;
+                            font-size: 14px;
+                            flex: 1;
+                            color: #000000;
+                            color: var(--fontcolor);
+                        }
+
+                        .roomtime {
+                            font-size: 8px;
+                            padding-right: 20px;
+                            padding-top: 5px;
+                            color: var(--fontcolor);
+                        }
+                    }
+            
+                    .category {
+                        font-size: 14px;
+                        margin: 4px 30px 0px 0px;
+                        position: relative;
+                        word-wrap: break-word;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        color: #000000;
+                        color: var(--fontcolor);
+                    }
+                }
+            }
+
+            .container[data-value='selected'] {
+                display: none;
+            }
+        }
+
+        li:hover {
+            background: #D1D1D1;
+            background: var(--roomhover);
+        }
+
+        li:active {
+            background: #BDBDBD;
+            background: var(--roomclicked);
+        }
+    }
+
+    .editprofile_content {
+        padding: 16px;
+
+        mat-form-field {
+            width: 100%;
+        }
+
+        mat-hint {
+            color: black;
+            color: var(--fontcolor);
+        }
+
+        input, textarea {
+            color: black;
+            color: var(--fontcolor);
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        button {
+            width: calc(100% - 60px);
+            border: none;
+            background-color: #FF0000;
+            background-color: var(--button);
+            color: white;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            margin: 8px 30px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 40em;
+        }
+
+        button:hover {
+            filter:brightness(0.93);
+        }
+
+        button:focus {
+            filter:brightness(0.85);
+            outline-width: 0;
+        }
+
+        button::-moz-focus-inner {
+            border:0;
+        }
+
+        .imageupload {
+            display: flex;
+            flex-flow: row;
+
+            .modal-text {
+                color: black;
+                color: var(--fontcolor);
+                margin-right: 20px;
+                font-size: 18px;
+                line-height: 36px;
+                margin-top: 0px;
+            }
+
+            .uploadelement {
+                display: none;
+            }
+
+            .uploadimagebutton_square {
+                width: 36px;
+                height: 36px;
+                border-radius: 0%;
+            }
+
+            .uploadimagebutton_rectangle {
+                width: 64px;
+                height: 36px;
+                border-radius: 0%;
+            }
+
+            input[type=image]:hover {
+                filter:brightness(0.93);
+            }
+
+            input[type=image]:active {
+                filter:brightness(0.85);
+            }
+
+            input[type=image]:focus {
+                outline-width: 0;
+            }
+    
+            input[type=image]::-moz-focus-inner {
+                border:0;
+            }
+        }
+    }
+}
+
+
+
+
+
+::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: #8EC54F !important;
+    color: var(--modalheader) !important;
+}
+
+::ng-deep.mat-form-field-underline {
+    /*change color of underline*/
+    background-color: #8EC54F !important;
+    background-color: var(--modalheader) !important;
+} 
+
+::ng-deep.mat-form-field-label {
+    //color: black !important;
+    //color: var(--fontcolor) !important;
+    color: #AAA !important;
+}
+
+::ng-deep.mat-form-field-ripple {
+    /*change color of underline when focused*/
+    background-color: #8EC54F !important;
+    background-color: var(--modalheader) !important;
+}
+
+::ng-deep.mat-select-value {
+    color: black !important;
+    color: var(--fontcolor) !important;
+}
+
+::ng-deep.mat-select-arrow {
+    color: black !important;
+    color: var(--fontcolor) !important;
+}
+
+::ng-deep.mat-option {
+    color: black !important;
+    color: var(--fontcolor) !important;
+    background-color: #F7F7F7 !important;
+    background-color: var(--background) !important;
+}
+
+::ng-deep.mat-option[aria-selected="true"] span{
+    color: #8EC54F !important;
+    color: var(--modalheader) !important;
+}
+
+::ng-deep.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+    background-color: #6C7E59 !important;
+    background-color: var(--modalheaderdark) !important;
+}
+
+::ng-deep.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+    background-color: #8EC54F !important;
+    background-color: var(--modalheader) !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.contextmenu {
+    display: none;
+    position: absolute;
+    background-color: #F7F7F7;
+    background-color: var(--background);
+    margin: auto;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    transform: translate(-100%, -100%);
+
+    button {
+        border: none;
+        background: none;
+        width: 100%;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 15px;
+        line-height: 20px;
+        color: #000000;
+        color: var(--fontcolor);
+        display: flex;
+        flex-flow: row;
+        white-space: nowrap;
+
+        img {
+            height: 20px;
+            margin-right: 10px;
+        }
+    }
+
+    button:hover {
+        background: #CDCDCD;
+        background: var(--buttonhover);
+    }
+    
+    button:focus {
+        background: #ADADAD;
+        background: var(--buttonfocus);
+        outline-width: 0;
+    }
+}
+
+.toast {
+    display: none;
+    position: fixed;
+    width: calc(100vw - 350px);
+    text-align: center;
+    bottom: 60px;
+
+    -webkit-animation: fadeIn 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeIn 1s; /* Firefox < 16 */
+    -ms-animation: fadeIn 1s; /* Internet Explorer */
+    -o-animation: fadeIn 1s; /* Opera < 12.1 */
+    animation: fadeIn 1s;
+
+    @-webkit-keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .toastcontent {
+        margin: auto;
+        width: fit-content;
+        max-width: 80%;
+
+        .toasttext {
+            background: #555C;
+            color: white;
+            padding: 10px;
+            border-radius: 40em;
+            font-size: 16px;
+        }
+    }
+}
+
+.toast.did-fade-in {
+    -webkit-animation: fadeOut 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeOut 1s; /* Firefox < 16 */
+    -ms-animation: fadeOut 1s; /* Internet Explorer */
+    -o-animation: fadeOut 1s; /* Opera < 12.1 */
+    animation: fadeOut 1s;
+
+    @-webkit-keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+}

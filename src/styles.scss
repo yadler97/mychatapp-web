@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+:root {
+    --primary-color: #8EC54F;
+    --header: #8EC54F;
+    --headerhover: #5f8336;
+    --modalheader: #8EC54F;
+    --modalheaderdark: #6C7E59;
+    --button: #FF0000;
+    --textbox-sent: #0048FF;
+    --textbox-received: #FF6E00;
+    --background: #F7F7F7;
+    --inputbox: #EBEBEB;
+    --fontcolor: #000000;
+    --roomlistbackground: #929292;
+    --room: #EEEEEE;
+    --roomhover: #D1D1D1;
+    --roomclicked: #BDBDBD;
+    --standardbanner: #D84D9A;
+    --scrollbartrack: #DDD;
+    --scrollbarthumb: #BBB;
+    --scrollbarthumbhover: #888;
+    --buttonhover: #CDCDCD;
+    --buttonfocus: #ADADAD;
+    --quotebox: #F0F0F0;
+}
+
+[data-theme="dark"] {
+    --primary-color: #36393E;
+    --header: #202225;
+    --headerhover: #35383d;
+    --modalheader: #7289DA;
+    --modalheaderdark: #3F455B;
+    --button: #7289DA;
+    --background: #36393E;
+    --inputbox: #2F3136;
+    --fontcolor: #FFFFFF;
+    --roomlistbackground: #4A4C52;
+    --room: #2F3136;
+    --roomhover: #5C5E63;
+    --roomclicked: #6c6e75;
+    --standardbanner: #009688;
+    --scrollbartrack: #333;
+    --scrollbarthumb: #555;
+    --scrollbarthumbhover: #888;
+    --buttonhover: #4A4C52;
+    --buttonfocus: #53555B;
+    --quotebox: #33353A;
+}
+
+body, html {
+    height: 100%;
+    margin: 0 auto;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: sans-serif;
+    font-size: 18px;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 0.6em;
+    display: grid;
+    grid-template-columns: 10% auto;
+}
+
+section {
+    width: 100%;
+    margin: 0 auto;
+}

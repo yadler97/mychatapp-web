@@ -1,0 +1,370 @@
+<header>
+  <div class="container">
+    <div class="logo">
+      <div *ngIf="theme == 'dark'; then dark_logo else light_logo"></div>
+      <ng-template #light_logo>
+        <img src="assets/img/ic_splash.png" alt="MyChatApp Logo">
+      </ng-template>
+      <ng-template #dark_logo>
+        <img src="assets/img/ic_splash_dark.png" alt="MyChatApp Logo">
+      </ng-template>
+      <a routerLink="/" class="appname">{{ appname }}</a>
+    </div>
+    <nav>
+      <ul>
+        <li><button id="showprofilebutton" (click)="showProfile(0)">{{ 'MY PROFILE' | translate }}</button></li>
+        <li><button id="showsettingsbutton" (click)="showSettings()">{{ 'SETTINGS' | translate }}</button></li>
+        <li><button id="logoutbutton" (click)="logout()">{{ 'LOGOUT' | translate }}</button></li>
+        <li class="nav_profile_image_box"><img src="{{ currentUser?.profile_image }}" alt="profile image" class="nav_profile_image"></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<body id="body">
+  <div class="appcontainer">
+    <div class="roomlist">
+      <ul>
+        <li class="roomsearchcontainer">
+          <input #searchroom id="roomsearchinput" type="text" placeholder="{{ 'SEARCH ROOM' | translate }}" (input)="searchRoom(searchroom.value)">
+          <!--<button class="deleteinput" mat-icon-button matSuffix (click)="deleteSearchInput()">
+            <mat-icon class="deletesearchinputicon">clear</mat-icon>
+          </button>!-->
+        </li>
+        <div *ngIf="(items | async).length > 0; then roomlist else message_norooms"></div>
+        <ng-template #roomlist>
+          <li *ngFor="let room of items | async">
+            <button id="roomlistbutton_{{ room.name }}" class="container" [attr.data-value]="(roomkey == room.key) ? 'selected' : null" (click)="openRoom(room.key)">
+              <img src="{{ room.img }}" alt="room image" class="room_image">
+              <div class="rightpartroomlist">
+                <div class="firstroomline">
+                  <div class="roomname">{{ room.name }}</div>
+                  <div class="roomtime">{{ room.newestMessage.displayTime }}</div>
+                </div>
+                <div class="category">{{ room.newestMessage.msg }}</div>
+              </div>
+            </button>
+          </li>
+        </ng-template>
+        <ng-template #message_norooms>
+          <p class="noroomfound">{{ 'NO ROOM FOUND' | translate }}</p>
+        </ng-template>
+      </ul>
+      <button id="addroombutton" (click)="addRoom()" class="addroom">+</button>
+    </div>
+    <div class="chatroom">
+      <div class="chatbox" id="chatbox">
+        <div class="messages" id="messages">
+          <div class="noroom" id="noroom">
+            <p class="noroom1">{{ 'YOU DONT HAVE A ROOM SELECTED' | translate }}</p>
+            <p class="noroom2">{{ 'CHOOSE A ROOM OR CREATE A NEW ONE' | translate }}</p>
+          </div>
+          <ul id="messagelist">
+            <div class="container_header">
+              <div id="headeritem" class="headeritem"></div>
+            </div>
+            <li *ngFor="let message of items_messages | async; let i = index">
+              <div *ngIf="message.displayTime == null; then message_header else message_box"></div>
+              <ng-template #message_header>
+                <div class="container_header">
+                  <div class="headeritem" style="display: block;">{{ message.msg }}</div>
+                </div>
+              </ng-template>
+              <ng-template #message_box>
+                <div *ngIf="userid == message.userid; then message_sent else message_received"></div>
+                <ng-template #message_received>
+                  <div class="container_received" id="message_{{ message.key }}">
+                    <img src="{{ message.pb_url }}" alt="profile image" class="profile_image">
+                    <div class="rightpart">
+                      <div class="userid">{{ message.name }}</div>
+                      <div id="message_{{ i }}" class="messagebox" (contextmenu)="openMessageMenu($event, message.key)">
+                        <div *ngIf="message.img == ''; then textmessage else imagemessage"></div>
+                        <ng-template #textmessage>
+                          <div *ngIf="message.quote == ''; then textmessagenormal else textmessagequote"></div>
+                          <ng-template #textmessagenormal>
+                            <div class="messageitem" id="messagecontent_{{ message.key }}">{{ message.msg }}</div>
+                          </ng-template>
+                          <ng-template #textmessagequote>
+                            <div class="messageitem">
+                              <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
+                                <img src="{{ message.quotedMessage.pb_url }}" alt="profile image" class="profile_image">
+                                <div class="rightpartquote">
+                                  <div class="quoteduserid">{{ message.quotedMessage.name }}</div>
+                                  <div class="quotedtext">{{ message.quotedMessage.msg }}</div>
+                                </div>
+                                <div *ngIf="message.quotedMessage.img != ''; then quoteimagetemplate"></div>
+                                <ng-template #quoteimagetemplate>
+                                  <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.img }}">
+                                </ng-template>
+                              </div>
+                              <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.msg }}</div>
+                            </div>
+                          </ng-template>
+                        </ng-template>
+                        <ng-template #imagemessage><img #imageitem src="{{ message.img }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
+                        <div class="time">{{ message.displayTime }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template #message_sent>
+                  <div class="container_sent" id="message_{{ message.key }}">
+                    <div class="rightpart">
+                      <div id="message_{{ i }}" class="messagebox" (contextmenu)="openMessageMenu($event, message.key)">
+                        <div class="time">{{ message.displayTime }}</div>
+                        <div *ngIf="message.img == ''; then textmessage else imagemessage"></div>
+                        <ng-template #textmessage>
+                          <div *ngIf="message.quote == ''; then textmessagenormal else textmessagequote"></div>
+                          <ng-template #textmessagenormal>
+                            <div class="messageitem" id="messagecontent_{{ message.key }}">{{ message.msg }}</div>
+                          </ng-template>
+                          <ng-template #textmessagequote>
+                            <div class="messageitem">
+                              <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
+                                <img src="{{ message.quotedMessage.pb_url }}" alt="profile image" class="profile_image">
+                                <div class="rightpartquote">
+                                  <div class="quoteduserid">{{ message.quotedMessage.name }}</div>
+                                  <div class="quotedtext">{{ message.quotedMessage.msg }}</div>
+                                </div>
+                                <div *ngIf="message.quotedMessage.img != ''; then quoteimagetemplate"></div>
+                                <ng-template #quoteimagetemplate>
+                                  <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.img }}">
+                                </ng-template>
+                              </div>
+                              <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.msg }}</div>
+                            </div>
+                          </ng-template>
+                        </ng-template>
+                        <ng-template #imagemessage><img #imageitem src="{{ message.img }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-template>
+            </li>
+          </ul>
+          <div class="toast" id="toast">
+            <div class="toastcontent">
+              <p class="toasttext" id="toasttext"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="quotebox" id="quotebox" style="display: none">
+        <div class="quotetext" id="quotetext"></div>
+        <img class="quoteimage" id="quoteimage" src="">
+        <span class="close" (click)="cancelQuote()">&times;</span>
+      </div>
+      <div class="inputbox" id="inputbox" style="display: none">
+        <input #fileInput type="file" accept="image/*" (change)="onFileUpload($event, 0)">
+        <button (click)="fileInput.click()"><img class="uploadimage" src="assets/img/ic_image.png" onmouseover="this.src='assets/img/ic_image_light.png'" onmouseout="this.src='assets/img/ic_image.png'"></button>
+        <textarea id="messageinput" #box placeholder="{{ 'SEND MESSAGE' | translate }}" (keyup.enter)="sendMessage(box.value); box.value='' "></textarea><br>
+        <button id="sendmessagebutton" class="sendbutton" (click)="sendMessage(box.value); box.value='' ">{{ 'SEND' | translate }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="closeprofilebutton" class="close" (click)="closeProfile()">&times;</span>
+        <h2>{{ 'MY PROFILE' | translate }}</h2>
+      </div>
+      <div class="modal-body">
+        <figure class="change-ratio">
+          <img src="{{ displayUser?.profile_banner }}" alt="profile banner" class="profile_banner">
+        </figure>
+        <div class="profile_content">
+          <div class="profile_name">
+            <img src="{{ displayUser?.profile_image }}" alt="profile image" class="profile_image">
+            <div class="username">{{ displayUser?.name }}</div>
+            <div *ngIf="theme == 'dark'; then dark_edit else light_edit"></div>
+            <ng-template #light_edit>
+              <button class="editbutton" id="edit_profile_button" (click)="openEditProfile()"><img src="assets/img/ic_edit.png" alt="edit icon" class="iconedit"></button>
+            </ng-template>
+            <ng-template #dark_edit>
+              <button class="editbutton" id="edit_profile_button" (click)="openEditProfile()"><img src="assets/img/ic_edit_dark.png" alt="edit icon" class="iconedit"></button>
+            </ng-template>
+          </div>
+          <div class="userbio">{{ displayUser?.bio }}</div>
+          <div class="bdayandloc">
+            <mat-icon class="icon">location_city</mat-icon>
+            <p class="location">{{ displayUser?.loc }}</p>
+            <mat-icon class="icon">cake</mat-icon>
+            <p class="bday">{{ displayUser?.bday }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="roomModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="canceladdingroombutton" class="close" (click)="cancelAddingRoom()">&times;</span>
+        <h2>{{ 'ADD ROOM' | translate }}</h2>
+      </div>
+      <div class="modal-body">
+        <div class="roomform">
+          <form onsubmit="return false">
+            <mat-form-field>
+              <input #roomname matInput type="text" id="roomnameinput" placeholder="{{ 'ROOM NAME' | translate }}" maxlength="25" name="roomnameinput" ngModel required/>
+              <mat-hint align=end>{{roomname.value?.length || 0}} / 25</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <textarea #description matInput type="text" id="roomdescinput" placeholder="{{ 'DESCRIPTION' | translate}}" rows="4" maxlength="150" name="descriptioninput" ngModel required></textarea>
+              <mat-hint align=end>{{description.value?.length || 0}} / 150</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select #category matInput name="category" id="roomcatselect" placeholder="{{ 'SELECT CATEGORY' | translate }}" name="categoryselect" ngModel required>
+                <mat-option id="roomcatselect_1" value="1">{{ 'GAMING' | translate }}</mat-option>
+                <mat-option id="roomcatselect_2" value="2">{{ 'POLITICS' | translate }}</mat-option>
+                <mat-option id="roomcatselect_3" value="3">{{ 'GEOGRAPHY' | translate }}</mat-option>
+                <mat-option id="roomcatselect_4" value="4">{{ 'DIALECTS' | translate }}</mat-option>
+                <mat-option id="roomcatselect_5" value="5">{{ 'ANIME' | translate }}</mat-option>
+                <mat-option id="roomcatselect_6" value="6">{{ 'SCHOOL AND WORK' | translate }}</mat-option>
+                <mat-option id="roomcatselect_7" value="7">{{ 'TECHNICS' | translate }}</mat-option>
+                <mat-option id="roomcatselect_8" value="8">{{ 'TV' | translate }}</mat-option>
+                <mat-option id="roomcatselect_9" value="9">{{ 'SPORTS' | translate }}</mat-option>
+                <mat-option id="roomcatselect_10" value="10">{{ 'CULTURE' | translate }}</mat-option>
+                <mat-option id="roomcatselect_11" value="11">{{ 'MISC' | translate }}</mat-option>
+                <mat-option id="roomcatselect_12" value="12">{{ 'SHITPOSTING' | translate }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="imageupload">
+              <p class="modal-text">{{ 'ROOM IMAGE' | translate }}</p>
+              <input class="uploadelement" #fileInput4 type="file" accept="image/*" (change)="onFileUpload($event, 1)">
+              <input id="room_image_input" type="image" src="assets/img/ic_image.png" (click)="fileInput4.click(); $event.preventDefault()" class="uploadimagebutton">
+            </div>
+            <mat-form-field>
+              <input #password matInput id="roompasswordinput" placeholder="{{ 'PASSWORD' | translate }}" maxlength="16" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
+              <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              </button>
+              <mat-hint align=end>{{password.value?.length || 0}} / 16</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <input #confirmpassword matInput id="roomconfirmpasswordinput" placeholder="{{ 'CONFIRM PASSWORD' | translate }}" maxlength="16" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
+              <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              </button>
+              <mat-hint align=end>{{confirmpassword.value?.length || 0}} / 16</mat-hint>
+            </mat-form-field>
+            <button id="addroomsubmitbutton" class="createroombutton" (click)="createRoom(roomname, description, category, password, confirmpassword); hide = false">{{ 'CREATE ROOM' | translate }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="imageModal" class="modal">
+    <div class="image-modal-content" id="image-modal-content">
+      <div class="closeheader"><span class="close" (click)="closeFullscreen()">&times;</span></div>
+      <img id="fullscreenimage" class="fullscreenimage">
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="closesettingsbutton" class="close" (click)="closeSettings()">&times;</span>
+        <h2>{{ 'SETTINGS' | translate }}</h2>
+      </div>
+      <div class="modal-body">
+        <div class="settings">
+          <mat-slide-toggle id="themetoggle" [formControl]="changethemeevent" (change)="changeTheme()">Dark Theme</mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="contextmenu" class="contextmenu">
+    <div *ngIf="theme == 'dark'; then dark_menu else light_menu"></div>
+    <ng-template #light_menu>
+      <button (click)="quoteMessage()" id="cmquotebutton"><img src="assets/img/ic_quote.png" alt="quote icon">{{ 'QUOTE' | translate }}</button>
+      <button (click)="forwardMessage()" id="cmforwardbutton"><img src="assets/img/ic_fw.png" alt="forward icon">{{ 'FORWARD' | translate }}</button>
+      <button (click)="pinMessage()" id="cmpinbutton"><img src="assets/img/ic_pin.png" alt="pin icon" id="pin_icon"><div id="pin_button_text">{{ 'PIN' | translate }}</div></button>
+      <button (click)="downloadFile()" id="cmdownloadbutton"><img src="assets/img/ic_download.png" alt="download icon">{{ 'DOWNLOAD' | translate }}</button>
+      <button (click)="showProfile(1)" id="cmprofilebutton"><img src="assets/img/ic_account.png" alt="profile icon">{{ 'SHOW PROFILE' | translate }}</button>
+    </ng-template>
+    <ng-template #dark_menu>
+      <button (click)="quoteMessage()" id="cmquotebutton"><img src="assets/img/ic_quote_dark.png" alt="quote icon">{{ 'QUOTE' | translate }}</button>
+      <button (click)="forwardMessage()" id="cmforwardbutton"><img src="assets/img/ic_fw_dark.png" alt="forward icon">{{ 'FORWARD' | translate }}</button>
+      <button (click)="pinMessage()" id="cmpinbutton"><img src="assets/img/ic_pin_dark.png" alt="pin icon" id="pin_icon"><div id="pin_button_text">{{ 'PIN' | translate }}</div></button>
+      <button (click)="downloadFile()" id="cmdownloadbutton"><img src="assets/img/ic_download_dark.png" alt="download icon">{{ 'DOWNLOAD' | translate }}</button>
+      <button (click)="showProfile(1)" id="cmprofilebutton"><img src="assets/img/ic_account_dark.png" alt="profile icon">{{ 'SHOW PROFILE' | translate }}</button>
+    </ng-template>
+  </div>
+
+  <div id="forwardModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="cancelforwardingbutton" class="close" (click)="cancelForwarding()">&times;</span>
+        <h2>{{ 'FORWARD' | translate }}</h2>
+      </div>
+      <div class="modal-body">
+        <ul class="forward_roomlist">
+          <li *ngFor="let room of items | async">
+            <div class="container" [attr.data-value]="(roomkey == room.key) ? 'selected' : null" (click)="forwardTo(room.key)">
+              <img src="{{ room.img }}" alt="room image" class="room_image">
+              <div class="rightpartroomlist">
+                <div class="firstroomline">
+                  <div class="roomname">{{ room.name }}</div>
+                  <div class="roomtime">{{ room.newestMessage.displayTime }}</div>
+                </div>
+                <div class="category">{{ room.newestMessage.msg }}</div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="editProfileModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close" (click)="cancelEditProfile()">&times;</span>
+        <h2>{{ 'EDIT PROFILE' | translate }}</h2>
+      </div>
+      <div class="modal-body">
+        <div class="editprofile_content">
+          <form onsubmit="return false">
+            <mat-form-field>
+              <input #name id="edit_profile_name" matInput placeholder="Name" maxlength="15" name="usernameinput" ngModel required>
+              <mat-hint align=end>{{name.value?.length || 0}} / 15</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field>
+              <textarea #bio id="edit_profile_bio" matInput placeholder="{{ 'ABOUT ME' | translate }}" rows="4" maxlength="200" name="bioinput" ngModel required></textarea>
+              <mat-hint align=end>{{bio.value?.length || 0}} / 200</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input #birthday type="date" id="edit_profile_birthday" matInput placeholder="{{ 'BIRTHDAY' | translate }}" name="birthdayinput" ngModel required>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input #location matInput id="edit_profile_location" placeholder="{{ 'LOCATION' | translate }}" maxlength="25" name="locationinput" ngModel required>
+              <mat-hint align=end>{{location.value?.length || 0}} / 25</mat-hint>
+            </mat-form-field>
+
+            <div class="imageupload">
+              <p class="modal-text">{{ 'PROFILE IMAGE' | translate }}</p>
+              <input class="uploadelement" #fileInput2 type="file" accept="image/*" (change)="onFileUpload($event, 2)">
+              <input id="profile_image_input" type="image" src="" (click)="fileInput2.click(); $event.preventDefault()" class="uploadimagebutton_square">
+            </div>
+
+            <div class="imageupload">
+              <p class="modal-text">{{ 'PROFILE BANNER' | translate }}</p>
+              <input class="uploadelement" #fileInput3 type="file" accept="image/*" (change)="onFileUpload($event, 3)">
+              <input id="profile_banner_input" type="image" src="" (click)="fileInput3.click(); $event.preventDefault()" class="uploadimagebutton_rectangle">
+            </div>
+
+            <button id="editprofilesubmitbutton" (click)="editProfile(name.value, bio.value, birthday.value, location.value)">{{ 'CONFIRM' | translate }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

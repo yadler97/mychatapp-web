@@ -1,0 +1,36 @@
+<body>
+  <table>
+    <tr>
+      <td>
+        <div class="mcalogo">
+          <div *ngIf="theme == 'dark'; then dark_logo else light_logo"></div>
+          <ng-template #light_logo>
+            <img src="assets/img/ic_splash.png" alt="MyChatApp Logo">
+          </ng-template>
+          <ng-template #dark_logo>
+            <img src="assets/img/ic_splash_dark.png" alt="MyChatApp Logo">
+          </ng-template>
+          <p class="mcatext">{{ appname }}</p>
+        </div>
+      </td>
+      <td>
+        <div class="loginbox">
+          <form id="loginform" method="post" target="/" onsubmit="return false">
+            <input #email type="email" id="emailinput" placeholder="{{ 'EMAIL' | translate }}" maxlength="40" required (invalid)="setCustomValidityInTemplate()" oninput="this.setCustomValidity('')">
+            <input #password type="password" placeholder="{{ 'PASSWORD' | translate }}" maxlength="16" id="passwordinput" (keyup.enter)="login(email.value, password.value, password); password.value='' " oninput="this.setCustomValidity('')">
+            <button id="submitbutton" (click)="login(email.value, password.value, password)">{{ 'LOGIN' | translate }}</button>
+          </form>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <p class="versionnumber">Ver. 1.0.2</p>
+
+  <div id="resendModal" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="cancelResendingEmail()">&times;</span>
+      <p>{{ 'PLEASE VERIFY EMAIL' | translate }}</p>
+      <button (click)="resendEmail()">{{ 'RESEND VERIFICATION MAIL' | translate }}</button>
+    </div>
+  </div>
+</body>

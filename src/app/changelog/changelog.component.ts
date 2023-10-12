@@ -6,6 +6,7 @@ import { appname } from '../../environments/appname';
   templateUrl: './changelog.component.html',
   styleUrls: ['./changelog.component.scss']
 })
+
 export class ChangelogComponent implements OnInit {
 
   appname: string = appname;

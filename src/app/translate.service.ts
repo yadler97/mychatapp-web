@@ -13,16 +13,16 @@ export class TranslateService {
   use(lang: string): Promise<{}> {
     return new Promise<{}>((resolve, reject) => {
       const langPath = `assets/translations/${lang || 'en'}.json`;
-      this.http.get<{}>(langPath).subscribe(
-        translation => {
+      this.http.get<{}>(langPath).subscribe({
+        next: (translation) => {
           this.data = Object.assign({}, translation || {});
           resolve(this.data);
         },
-        error => {
+        error: () => {
           this.data = {};
           resolve(this.data);
         }
-      );
+      });
     });
   }
 }

@@ -1,2 +1,2 @@
-export const appname = "MyChatApp (Dev)";
-//export const appname = "MyChatApp";
+// export const appname = "MyChatApp (Dev)";
+export const appname = "MyChatApp";

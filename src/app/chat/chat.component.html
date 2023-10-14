@@ -31,17 +31,17 @@
             <mat-icon class="deletesearchinputicon">clear</mat-icon>
           </button>!-->
         </li>
-        <div *ngIf="(items | async).length > 0; then roomlist else message_norooms"></div>
+        <div *ngIf="(items | async)!.length > 0; then roomlist else message_norooms"></div>
         <ng-template #roomlist>
           <li *ngFor="let room of items | async">
             <button id="roomlistbutton_{{ room.name }}" class="container" [attr.data-value]="(roomkey == room.key) ? 'selected' : null" (click)="openRoom(room.key)">
-              <img src="{{ room.img }}" alt="room image" class="room_image">
+              <img src="{{ room.image }}" alt="room image" class="room_image">
               <div class="rightpartroomlist">
                 <div class="firstroomline">
                   <div class="roomname">{{ room.name }}</div>
                   <div class="roomtime">{{ room.newestMessage.displayTime }}</div>
                 </div>
-                <div class="category">{{ room.newestMessage.msg }}</div>
+                <div class="category">{{ room.newestMessage.text }}</div>
               </div>
             </button>
           </li>
@@ -67,7 +67,7 @@
               <div *ngIf="message.displayTime == null; then message_header else message_box"></div>
               <ng-template #message_header>
                 <div class="container_header">
-                  <div class="headeritem" style="display: block;">{{ message.msg }}</div>
+                  <div class="headeritem" style="display: block;">{{ message.text }}</div>
                 </div>
               </ng-template>
               <ng-template #message_box>
@@ -76,32 +76,32 @@
                   <div class="container_received" id="message_{{ message.key }}">
                     <img src="{{ message.pb_url }}" alt="profile image" class="profile_image">
                     <div class="rightpart">
-                      <div class="userid">{{ message.name }}</div>
+                      <div class="userid">{{ message.sender }}</div>
                       <div id="message_{{ i }}" class="messagebox" (contextmenu)="openMessageMenu($event, message.key)">
-                        <div *ngIf="message.img == ''; then textmessage else imagemessage"></div>
+                        <div *ngIf="message.image == ''; then textmessage else imagemessage"></div>
                         <ng-template #textmessage>
                           <div *ngIf="message.quote == ''; then textmessagenormal else textmessagequote"></div>
                           <ng-template #textmessagenormal>
-                            <div class="messageitem" id="messagecontent_{{ message.key }}">{{ message.msg }}</div>
+                            <div class="messageitem" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
                           </ng-template>
                           <ng-template #textmessagequote>
                             <div class="messageitem">
                               <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
                                 <img src="{{ message.quotedMessage.pb_url }}" alt="profile image" class="profile_image">
                                 <div class="rightpartquote">
-                                  <div class="quoteduserid">{{ message.quotedMessage.name }}</div>
-                                  <div class="quotedtext">{{ message.quotedMessage.msg }}</div>
+                                  <div class="quoteduserid">{{ message.quotedMessage.sender }}</div>
+                                  <div class="quotedtext">{{ message.quotedMessage.text }}</div>
                                 </div>
-                                <div *ngIf="message.quotedMessage.img != ''; then quoteimagetemplate"></div>
+                                <div *ngIf="message.quotedMessage.image != ''; then quoteimagetemplate"></div>
                                 <ng-template #quoteimagetemplate>
-                                  <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.img }}">
+                                  <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.image }}">
                                 </ng-template>
                               </div>
-                              <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.msg }}</div>
+                              <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
                             </div>
                           </ng-template>
                         </ng-template>
-                        <ng-template #imagemessage><img #imageitem src="{{ message.img }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
+                        <ng-template #imagemessage><img #imageitem src="{{ message.image }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
                         <div class="time">{{ message.displayTime }}</div>
                       </div>
                     </div>
@@ -112,30 +112,36 @@
                     <div class="rightpart">
                       <div id="message_{{ i }}" class="messagebox" (contextmenu)="openMessageMenu($event, message.key)">
                         <div class="time">{{ message.displayTime }}</div>
-                        <div *ngIf="message.img == ''; then textmessage else imagemessage"></div>
+                        <div *ngIf="message.image == ''; then textmessage else imagemessage"></div>
                         <ng-template #textmessage>
                           <div *ngIf="message.quote == ''; then textmessagenormal else textmessagequote"></div>
                           <ng-template #textmessagenormal>
-                            <div class="messageitem" id="messagecontent_{{ message.key }}">{{ message.msg }}</div>
+                            <div class="messageitem" id="messagecontent_{{ message.key }}">
+                              <div *ngIf="message.forwarded; then forwardedflag"></div>
+                              <ng-template #forwardedflag>
+                                <div class="forwardedflag"><img src="assets/img/ic_fw_dark.png" alt="forward icon"> {{ 'FORWARDED' | translate }}</div>
+                              </ng-template>
+                              {{ message.text }}
+                            </div>
                           </ng-template>
                           <ng-template #textmessagequote>
                             <div class="messageitem">
                               <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
                                 <img src="{{ message.quotedMessage.pb_url }}" alt="profile image" class="profile_image">
                                 <div class="rightpartquote">
-                                  <div class="quoteduserid">{{ message.quotedMessage.name }}</div>
-                                  <div class="quotedtext">{{ message.quotedMessage.msg }}</div>
+                                  <div class="quoteduserid">{{ message.quotedMessage.sender }}</div>
+                                  <div class="quotedtext">{{ message.quotedMessage.text }}</div>
                                 </div>
-                                <div *ngIf="message.quotedMessage.img != ''; then quoteimagetemplate"></div>
+                                <div *ngIf="message.quotedMessage.image != ''; then quoteimagetemplate"></div>
                                 <ng-template #quoteimagetemplate>
-                                  <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.img }}">
+                                  <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.image }}">
                                 </ng-template>
                               </div>
-                              <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.msg }}</div>
+                              <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
                             </div>
                           </ng-template>
                         </ng-template>
-                        <ng-template #imagemessage><img #imageitem src="{{ message.img }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
+                        <ng-template #imagemessage><img #imageitem src="{{ message.image }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
                       </div>
                     </div>
                   </div>
@@ -186,12 +192,12 @@
               <button class="editbutton" id="edit_profile_button" (click)="openEditProfile()"><img src="assets/img/ic_edit_dark.png" alt="edit icon" class="iconedit"></button>
             </ng-template>
           </div>
-          <div class="userbio">{{ displayUser?.bio }}</div>
+          <div class="userbio">{{ displayUser?.description }}</div>
           <div class="bdayandloc">
             <mat-icon class="icon">location_city</mat-icon>
-            <p class="location">{{ displayUser?.loc }}</p>
+            <p class="location">{{ displayUser?.location }}</p>
             <mat-icon class="icon">cake</mat-icon>
-            <p class="bday">{{ displayUser?.bday }}</p>
+            <p class="bday">{{ displayUser?.birthday }}</p>
           </div>
         </div>
       </div>
@@ -217,18 +223,18 @@
             </mat-form-field>
             <mat-form-field>
               <mat-select #category matInput name="category" id="roomcatselect" placeholder="{{ 'SELECT CATEGORY' | translate }}" name="categoryselect" ngModel required>
-                <mat-option id="roomcatselect_1" value="1">{{ 'GAMING' | translate }}</mat-option>
-                <mat-option id="roomcatselect_2" value="2">{{ 'POLITICS' | translate }}</mat-option>
-                <mat-option id="roomcatselect_3" value="3">{{ 'GEOGRAPHY' | translate }}</mat-option>
-                <mat-option id="roomcatselect_4" value="4">{{ 'DIALECTS' | translate }}</mat-option>
-                <mat-option id="roomcatselect_5" value="5">{{ 'ANIME' | translate }}</mat-option>
-                <mat-option id="roomcatselect_6" value="6">{{ 'SCHOOL AND WORK' | translate }}</mat-option>
-                <mat-option id="roomcatselect_7" value="7">{{ 'TECHNICS' | translate }}</mat-option>
-                <mat-option id="roomcatselect_8" value="8">{{ 'TV' | translate }}</mat-option>
-                <mat-option id="roomcatselect_9" value="9">{{ 'SPORTS' | translate }}</mat-option>
-                <mat-option id="roomcatselect_10" value="10">{{ 'CULTURE' | translate }}</mat-option>
-                <mat-option id="roomcatselect_11" value="11">{{ 'MISC' | translate }}</mat-option>
-                <mat-option id="roomcatselect_12" value="12">{{ 'SHITPOSTING' | translate }}</mat-option>
+                <mat-option id="roomcatselect_1" value=1>{{ 'STUDY AND WORK' | translate }}</mat-option>
+                <mat-option id="roomcatselect_2" value=2>{{ 'GAMING' | translate }}</mat-option>
+                <mat-option id="roomcatselect_3" value=3>{{ 'POLITICS' | translate }}</mat-option>
+                <mat-option id="roomcatselect_4" value=4>{{ 'GEOGRAPHY' | translate }}</mat-option>
+                <mat-option id="roomcatselect_5" value=5>{{ 'LANGUAGES' | translate }}</mat-option>
+                <mat-option id="roomcatselect_6" value=6>{{ 'LITERATURE' | translate }}</mat-option>
+                <mat-option id="roomcatselect_7" value=7>{{ 'TECHNICS' | translate }}</mat-option>
+                <mat-option id="roomcatselect_8" value=8>{{ 'TV' | translate }}</mat-option>
+                <mat-option id="roomcatselect_9" value=9>{{ 'SPORTS' | translate }}</mat-option>
+                <mat-option id="roomcatselect_10" value=10>{{ 'CULTURE AND ART' | translate }}</mat-option>
+                <mat-option id="roomcatselect_11" value=11>{{ 'MUSIC' | translate }}</mat-option>
+                <mat-option id="roomcatselect_12" value=12>{{ 'MISC' | translate }}</mat-option>
               </mat-select>
             </mat-form-field>
             <div class="imageupload">
@@ -272,7 +278,7 @@
       </div>
       <div class="modal-body">
         <div class="settings">
-          <mat-slide-toggle id="themetoggle" [formControl]="changethemeevent" (change)="changeTheme()">Dark Theme</mat-slide-toggle>
+          <mat-slide-toggle id="themetoggle" [formControl]="changethemeevent" (change)="changeTheme()"><p>Dark Theme</p></mat-slide-toggle>
         </div>
       </div>
     </div>
@@ -306,13 +312,13 @@
         <ul class="forward_roomlist">
           <li *ngFor="let room of items | async">
             <div class="container" [attr.data-value]="(roomkey == room.key) ? 'selected' : null" (click)="forwardTo(room.key)">
-              <img src="{{ room.img }}" alt="room image" class="room_image">
+              <img src="{{ room.image }}" alt="room image" class="room_image">
               <div class="rightpartroomlist">
                 <div class="firstroomline">
                   <div class="roomname">{{ room.name }}</div>
                   <div class="roomtime">{{ room.newestMessage.displayTime }}</div>
                 </div>
-                <div class="category">{{ room.newestMessage.msg }}</div>
+                <div class="category">{{ room.newestMessage.text }}</div>
               </div>
             </div>
           </li>

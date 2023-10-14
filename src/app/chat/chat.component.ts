@@ -6,25 +6,32 @@ import { appname } from '../../environments/appname';
 import { TranslateService } from '../translate.service';
 import { TranslatePipe } from '../translate.pipe';
 
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/storage';
-import 'firebase/database';
+import { environment } from '../../environments/environment';
+
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/database";
+import "firebase/compat/storage";
+
 import { FormControl } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
 
 class Room {
-  constructor(public key: String, public name: String, public caty: String, public time: String, public passwd: String, public admin: String, public desc: String, public newestMessage: Message, public img: String) { }
+  constructor(public key: String, public name: String, public category: number, public time: String, public password: String, public admin: String, public description: String, public newestMessage: Message, public image: String) { }
 }
 
 class Message {
-  constructor(public key: String, public msg: String, public img: String, public name: String, public time: String, public quote: String, public pin: String, public userid: String, public pb_url: String, public displayTime: String, public quotedMessage: Message) {}
+  constructor(public key: String, public text: String, public image: String, public sender: String, public time: String, public quote: String, public pinned: boolean, public userid: String, public pb_url: String, public displayTime: String, public quotedMessage: Message, public forwarded: boolean) {}
 }
 
 class User {
-  constructor(public key: String, public name: String, public bio: String, public bday: String, public loc: String, public favc: String, public ownpi: String, public profile_image: String, public profile_banner: String) {}
+  constructor(public key: String, public name: String, public description: String, public birthday: String, public location: String, public favColour: number, public ownProfileImage: boolean, public profile_image: String, public profile_banner: String) {}
 }
 
-const mca_firebase = firebase;
+const app = firebase.initializeApp(environment.firebase);
+const database = firebase.database(app);
+const auth = firebase.auth(app);
+const storage = firebase.storage(app);
 
 let roomlist: Array<Room> = [];
 let messagelist: Array<Message> = [];
@@ -33,12 +40,12 @@ let userid: string;
 
 @Component({
   selector: 'app-mychatapp',
-  templateUrl: './mychatapp.component.html',
-  styleUrls: ['./mychatapp.component.scss'],
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.scss'],
   providers: [TranslatePipe]
 })
 
-export class MychatappComponent implements OnInit {
+export class ChatComponent implements OnInit {
 
   appname: string = appname;
   theme: string;
@@ -58,13 +65,13 @@ export class MychatappComponent implements OnInit {
   hide: boolean;
 
   ngOnInit() {
-    mca_firebase.auth().onAuthStateChanged(user => {
+    auth.onAuthStateChanged(user => {
       if (user) {
         if (user.emailVerified) {
           userid = user.uid;
           this.userid = user.uid;
         } else {
-          mca_firebase.auth().signOut;
+          auth.signOut;
           this.router.navigate(['login']);
         }
       } else {
@@ -74,10 +81,10 @@ export class MychatappComponent implements OnInit {
   }
 
   roomkey: string = "";
-  messageRef = mca_firebase.database().ref('/rooms');
+  messageRef = database.ref('/rooms');
 
   ngOnDestroy() {
-    let roomRef = mca_firebase.database().ref('/rooms');
+    let roomRef = database.ref('/rooms');
     roomRef.off("child_added");
   }
 
@@ -107,67 +114,67 @@ export class MychatappComponent implements OnInit {
     window.onclick = function(event) {
       let modal = document.getElementById("myModal");
       if (event.target == modal) {
-        modal.style.display = "none";
+        modal!.style.display = "none";
       }
 
       let roommodal = document.getElementById("roomModal");
       if (event.target == roommodal) {
-        roommodal.style.display = "none";
+        roommodal!.style.display = "none";
       }
 
       let imagemodal = document.getElementById("imageModal");
       if (event.target == imagemodal) {
-        imagemodal.style.display = "none";
+        imagemodal!.style.display = "none";
       }
 
       let settingsmodal = document.getElementById("settingsModal");
       if (event.target == settingsmodal) {
-        settingsmodal.style.display = "none";
+        settingsmodal!.style.display = "none";
       }
 
       let forwardmodal = document.getElementById("forwardModal");
       if (event.target == forwardmodal) {
-        forwardmodal.style.display = "none";
+        forwardmodal!.style.display = "none";
       }
 
       let editprofilemodal = document.getElementById("editProfileModal");
       if (event.target == editprofilemodal) {
-        editprofilemodal.style.display = "none";
+        editprofilemodal!.style.display = "none";
       }
 
       let contextmenu = document.getElementById("contextmenu");
-      contextmenu.style.display = "none";
+      contextmenu!.style.display = "none";
     }
 
-    let userRef = mca_firebase.database().ref('/users');
+    let userRef = database.ref('/users');
     userlist = [];
-    userRef.on("child_added", (snapshot, prevChildKey) => {
+    userRef.on("child_added", (snapshot) => {
       let userData = snapshot.val();
       let name = userData.name;
-      let bio = userData.bio;
-      let bday = userData.bday;
-      bday = bday.substring(6, 8) + "." + bday.substring(4, 6) + "." + bday.substring(0, 4);
-      let loc = userData.loc;
-      let favc = userData.favc;
-      let ownpi = userData.ownpi;
-      let img = userData.img;
+      let description = userData.description;
+      let birthday = userData.birthday;
+      birthday = birthday.substring(6, 8) + "." + birthday.substring(4, 6) + "." + birthday.substring(0, 4);
+      let location = userData.location;
+      let favColour = userData.favColour;
+      let ownProfileImage = userData.ownProifleImage;
+      let image = userData.image;
       let banner = userData.banner;
 
-      let u = new User(snapshot.key, name, bio, bday, loc, favc, ownpi, "", "");
+      let u = new User(snapshot.key!, name, description, birthday, location, favColour, ownProfileImage, "", "");
       userlist.push(u);
       if (u.key == userid) {
         this.currentUser = u;
       }
 
-      let storage_images = mca_firebase.storage().ref('/profile_images').child(img);
+      let storage_images = storage.ref('/profile_images/' + image);
       storage_images.getDownloadURL().then(url_image => {
-        userlist.find(x => x.key == snapshot.key).profile_image = url_image;
+        userlist.find(x => x.key == snapshot.key)!.profile_image = url_image;
         if (snapshot.key == userid) {
           this.currentUser.profile_image = url_image;
         }
-        let storage_banners = mca_firebase.storage().ref('/profile_banners').child(banner);
+        let storage_banners = storage.ref('/profile_banners/' + banner);
         storage_banners.getDownloadURL().then(url_banner => {
-          userlist.find(x => x.key == snapshot.key).profile_banner = url_banner;
+          userlist.find(x => x.key == snapshot.key)!.profile_banner = url_banner;
           if (snapshot.key == userid) {
             this.currentUser.profile_banner = url_banner;
           }
@@ -180,19 +187,19 @@ export class MychatappComponent implements OnInit {
       })
     })
 
-    let roomRef = mca_firebase.database().ref('/rooms');
+    let roomRef = database.ref('/rooms');
     roomlist = [];
     roomRef.on("child_added", function(snapshot, prevChildKey) {
-      let roomdataref = roomRef.child(snapshot.key).child("-0roomdata");
+      let roomdataref = roomRef.child(snapshot.key! + "/roomData");
       roomdataref.once("value").then(function(roomdataSnapshot) {
         let roomData = roomdataSnapshot.val();
         let name = roomData.name;
         let admin = roomData.admin;
-        let caty = roomData.caty;
+        let category = roomData.category;
         let time = roomData.time;
-        let passwd = roomData.passwd;
-        let desc = roomData.desc;
-        let room_image = roomData.img;
+        let password = roomData.password;
+        let description = roomData.description;
+        let room_image = roomData.image;
         let now = new Date();
         let year = String(now.getUTCFullYear());
         let month = (now.getUTCMonth()+1 < 10) ? "0" + String(now.getUTCMonth()+1) : String(now.getUTCMonth()+1);
@@ -202,7 +209,7 @@ export class MychatappComponent implements OnInit {
         let seconds = (now.getUTCSeconds() < 10) ? "0" + String(now.getUTCSeconds()) : String(now.getUTCSeconds());
         let utc_timestamp = year + month + day + "_" + hours + minutes + seconds + "_UTC";
 
-        let displaytime;
+        let displaytime: String;
         let date = new Date(time.substring(0, 4) + '-' + time.substring(4, 6) + '-' +  time.substring(6, 8) + 'T' +  time.substring(9, 11) + ':' + time.substring(11, 13) + ':' + time.substring(13, 15) + '.000Z')
         let display_year = String(date.getFullYear());
         let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
@@ -215,18 +222,19 @@ export class MychatappComponent implements OnInit {
           displaytime = display_day + "." + display_month + "." + display_year;
         }
 
-        let newestMessageRef = roomRef.child(snapshot.key).orderByKey().limitToLast(1);
+        let newestMessageRef = roomRef.child(snapshot.key!).orderByKey().limitToLast(1);
 
         newestMessageRef.on("child_added", function(nmSnapshot, prevChildKey) {
           roomlist.forEach(room => {
             if (room.key == snapshot.key) {
-              if (nmSnapshot.key != "-0roomdata") {
+              if (nmSnapshot.key != "roomData") {
                 let newestMessageData = nmSnapshot.val();
-                let img = newestMessageData.img;
-                let msg = newestMessageData.msg;
-                let messageuserid = newestMessageData.name;
-                let username = userlist.find(x => x.key == messageuserid).name;
-                let pin = newestMessageData.pin;
+                let image = newestMessageData.image;
+                let text = newestMessageData.text;
+                let messageuserid = newestMessageData.sender;
+                let username = userlist.find(x => x.key == messageuserid)!.name;
+                let pinned = newestMessageData.pinned;
+                let forwarded = newestMessageData.forwarded;
                 let quote = newestMessageData.quote;
                 let newesttime = newestMessageData.time;
                 let newestdisplaytime;
@@ -242,23 +250,23 @@ export class MychatappComponent implements OnInit {
                   newestdisplaytime = display_day + "." + display_month + "." + display_year;
                 }
                 let m;
-                if (img != "") {
+                if (image != "") {
                   if (messageuserid == userid) {
-                    m = new Message(nmSnapshot.key, translatepipe.transform("YOU SHARED A PICTURE"), img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                    m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                   } else {
-                    m = new Message(nmSnapshot.key, username + " " + translatepipe.transform("SHARED A PICTURE"), img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                    m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                   }
                 } else {
                   if (messageuserid == userid) {
-                    m = new Message(nmSnapshot.key, translatepipe.transform("YOU") + ": " + msg, img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                    m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                   } else {
-                    m = new Message(nmSnapshot.key, username + ": " + msg, img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                    m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                   }
                 }
-                let oldmessage = roomlist.find(x => x.key == snapshot.key).newestMessage;
-                roomlist.find(x => x.key == snapshot.key).newestMessage = m;
+                let oldmessage = roomlist.find(x => x.key == snapshot.key)!.newestMessage;
+                roomlist.find(x => x.key == snapshot.key)!.newestMessage = m;
                 if (oldmessage.key != m.key) {
-                  let index = roomlist.indexOf(roomlist.find(x => x.key == snapshot.key));
+                  let index = roomlist.indexOf(roomlist.find(x => x.key == snapshot.key)!);
                   let element = roomlist[index];
                   roomlist.splice(index, 1);
                   roomlist.splice(0, 0, element);
@@ -270,17 +278,18 @@ export class MychatappComponent implements OnInit {
 
         newestMessageRef.once("value").then(function(newestMessageSnapshot) {
           newestMessageSnapshot.forEach(function(childSnapshot) {
-            if (childSnapshot.key != "-0roomdata") {
+            if (childSnapshot.key != "roomData") {
               let newestMessageData = childSnapshot.val();
-              let img = newestMessageData.img;
-              let msg = newestMessageData.msg;
-              let messageuserid = newestMessageData.name;
-              let username = userlist.find(x => x.key == messageuserid).name;
-              let pin = newestMessageData.pin;
+              let image = newestMessageData.image;
+              let text = newestMessageData.text;
+              let messageuserid = newestMessageData.sender;
+              let username = userlist.find(x => x.key == messageuserid)!.name;
+              let pinned = newestMessageData.pinned;
+              let forwarded = newestMessageData.forwarded;
               let quote = newestMessageData.quote;
               let newesttime = newestMessageData.time;
               let newestdisplaytime;
-              let adminname = userlist.find(x => x.key == admin).name;
+              let adminname = userlist.find(x => x.key == admin)!.name;
               let date = new Date(newesttime.substring(0, 4) + '-' + newesttime.substring(4, 6) + '-' +  newesttime.substring(6, 8) + 'T' +  newesttime.substring(9, 11) + ':' + newesttime.substring(11, 13) + ':' + newesttime.substring(13, 15) + '.000Z')
               let display_year = String(date.getFullYear());
               let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
@@ -293,27 +302,27 @@ export class MychatappComponent implements OnInit {
                 newestdisplaytime = display_day + "." + display_month + "." + display_year;
               }
               let m;
-              if (img != "") {
+              if (image != "") {
                 if (messageuserid == userid) {
-                  m = new Message(childSnapshot.key, translatepipe.transform("YOU SHARED A PICTURE"), img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                  m = new Message(childSnapshot.key, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 } else {
-                  m = new Message(childSnapshot.key, username + " " + translatepipe.transform("SHARED A PICTURE"), img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                  m = new Message(childSnapshot.key, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 }
               } else {
                 if (messageuserid == userid) {
-                  m = new Message(childSnapshot.key, translatepipe.transform("YOU") + ": " + msg, img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                  m = new Message(childSnapshot.key, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 } else {
-                  m = new Message(childSnapshot.key, username + ": " + msg, img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                  m = new Message(childSnapshot.key, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 }
               }
               if (roomlist.length == 0) {
-                roomlist.push(new Room(snapshot.key, name, caty, time, passwd, adminname, desc, m, ""));
+                roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
               } else {
                 let index = 0;
                 let added = false;
                 for (let r of roomlist) {
                   if (Number(r.newestMessage.time.substring(0, 8) + r.newestMessage.time.substring(9, 15)) < Number(m.time.substring(0, 8) + m.time.substring(9, 15))) {
-                    let newRoom = new Room(snapshot.key, name, caty, time, passwd, adminname, desc, m, "");
+                    let newRoom = new Room(snapshot.key!, name, category, time, password, adminname, description, m, "");
                     roomlist.splice(index, 0, newRoom);
                     added = true;
                     break;
@@ -322,25 +331,25 @@ export class MychatappComponent implements OnInit {
                   }
                 }
                 if (added == false) {
-                  roomlist.push(new Room(snapshot.key, name, caty, time, passwd, adminname, desc, m, ""));
+                  roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
                 }
               }
             } else {
-              let adminname = userlist.find(x => x.key == admin).name;
+              let adminname = userlist.find(x => x.key == admin)!.name;
               let m;
               if (admin == userid) {
-                m = new Message(childSnapshot.key, translatepipe.transform("YOU CREATED THIS ROOM"), null, admin, time, null, null, null, null, displaytime, null);
+                m = new Message(childSnapshot.key, translatepipe.transform("YOU CREATED THIS ROOM"), null, admin, time, null, null, null, null, displaytime, null, false);
               } else {
-                m = new Message(childSnapshot.key, adminname + " " + translatepipe.transform("CREATED THIS ROOM"), null, admin, time, null, null, null, null, displaytime, null);
+                m = new Message(childSnapshot.key, adminname + " " + translatepipe.transform("CREATED THIS ROOM"), null, admin, time, null, null, null, null, displaytime, null, false);
               }
               if (roomlist.length == 0) {
-                roomlist.push(new Room(snapshot.key, name, caty, time, passwd, adminname, desc, m, ""));
+                roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
               } else {
                 let index = 0;
                 let added = false;
                 for (let r of roomlist) {
                   if (Number(r.newestMessage.time.substring(0, 8) + r.newestMessage.time.substring(9, 15)) < Number(time.substring(0, 8) + time.substring(9, 15))) {
-                    let newRoom = new Room(snapshot.key, name, caty, time, passwd, adminname, desc, m, "");
+                    let newRoom = new Room(snapshot.key!, name, category, time, password, adminname, description, m, "");
                     roomlist.splice(index, 0, newRoom);
                     added = true;
                     break;
@@ -349,16 +358,16 @@ export class MychatappComponent implements OnInit {
                   }
                 }
                 if (added == false) {
-                  roomlist.push(new Room(snapshot.key, name, caty, time, passwd, adminname, desc, m, ""));
+                  roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
                 }
               }
             }
           })
         })
 
-        let storage_images = mca_firebase.storage().ref('/room_images').child(room_image);
+        let storage_images = storage.ref('/room_images/' + room_image);
         storage_images.getDownloadURL().then(function(url_image) {
-          roomlist.find(x => x.key == snapshot.key).img = url_image;
+          roomlist.find(x => x.key == snapshot.key)!.image = url_image;
         })
       })
     })
@@ -366,10 +375,10 @@ export class MychatappComponent implements OnInit {
     this.items_messages.next(messagelist);
   }
 
-  public openRoom(roomkey: string): void {
+  public openRoom(roomkey: String): void {
     this.cancelQuote();
     if (this.roomkey != "") {
-      let oldmessageRef = mca_firebase.database().ref('/rooms').child(this.roomkey);
+      let oldmessageRef = database.ref('/rooms/' + this.roomkey + '/messages');
       oldmessageRef.off("child_added");
 
       let currentRoomkey = this.roomkey;
@@ -380,13 +389,14 @@ export class MychatappComponent implements OnInit {
       newestMessageRef.on("child_added", function(nmSnapshot, prevChildKey) {
         roomlist.forEach(room => {
           if (room.key == currentRoomkey) {
-            if (nmSnapshot.key != "-0roomdata") {
+            if (nmSnapshot.key != "roomData") {
               let newestMessageData = nmSnapshot.val();
-              let img = newestMessageData.img;
-              let msg = newestMessageData.msg;
-              let messageuserid = newestMessageData.name;
-              let username = userlist.find(x => x.key == messageuserid).name;
-              let pin = newestMessageData.pin;
+              let image = newestMessageData.image;
+              let text = newestMessageData.text;
+              let messageuserid = newestMessageData.sender;
+              let username = userlist.find(x => x.key == messageuserid)!.name;
+              let pinned = newestMessageData.pinned;
+              let forwarded = newestMessageData.forwarded;
               let quote = newestMessageData.quote;
               let newesttime = newestMessageData.time;
               let newestdisplaytime;
@@ -410,23 +420,23 @@ export class MychatappComponent implements OnInit {
                 newestdisplaytime = display_day + "." + display_month + "." + display_year;
               }
               let m;
-              if (img != "") {
+              if (image != "") {
                 if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key, translatepipe.transform("YOU SHARED A PICTURE"), img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 } else {
-                  m = new Message(nmSnapshot.key, username + " " + translatepipe.transform("SHARED A PICTURE"), img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                  m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 }
               } else {
                 if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key, translatepipe.transform("YOU") + ": " + msg, img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 } else {
-                  m = new Message(nmSnapshot.key, username + ": " + msg, img, username, newesttime, quote, pin, messageuserid, null, newestdisplaytime, null);
+                  m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 }
               }
-              let oldmessage = roomlist.find(x => x.key == currentRoomkey).newestMessage;
-              roomlist.find(x => x.key == currentRoomkey).newestMessage = m;
+              let oldmessage = roomlist.find(x => x.key == currentRoomkey)!.newestMessage;
+              roomlist.find(x => x.key == currentRoomkey)!.newestMessage = m;
               if (oldmessage.key != m.key) {
-                let index = roomlist.indexOf(roomlist.find(x => x.key == currentRoomkey));
+                let index = roomlist.indexOf(roomlist.find(x => x.key == currentRoomkey)!);
                 let element = roomlist[index];
                 roomlist.splice(index, 1);
                 roomlist.splice(0, 0, element);
@@ -437,7 +447,7 @@ export class MychatappComponent implements OnInit {
       })
     }
 
-    let old_time;
+    let old_time: String;
     for (let r of roomlist) {
       if (r.key == roomkey) {
         old_time = r.time;
@@ -447,28 +457,29 @@ export class MychatappComponent implements OnInit {
         let day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
         let displaytime = day + "." + month + "." + year
         if (navigator.language.substring(0, 2) == "de") {
-          document.getElementById('headeritem').innerHTML = "Raum wurde am " + displaytime + " von " + r.admin + " erstellt";
+          document.getElementById('headeritem')!.innerHTML = "Raum wurde am " + displaytime + " von " + r.admin + " erstellt";
         } else {
-          document.getElementById('headeritem').innerHTML = "Room was created on " + displaytime + " by " + r.admin;
+          document.getElementById('headeritem')!.innerHTML = "Room was created on " + displaytime + " by " + r.admin;
         }
       }
     }
 
-    document.getElementById('headeritem').style.display = "block";
-    document.getElementById('inputbox').style.display = "";
-    document.getElementById('noroom').style.display = "none";
-    this.roomkey = roomkey;
-    this.messageRef = mca_firebase.database().ref('/rooms').child(roomkey);
+    document.getElementById('headeritem')!.style.display = "block";
+    document.getElementById('inputbox')!.style.display = "";
+    document.getElementById('noroom')!.style.display = "none";
+    this.roomkey = roomkey.toString();
+    this.messageRef = database.ref('/rooms/' + roomkey + '/messages');
     messagelist = [];
     let translatepipe = this.translatepipe;
     this.messageRef.on("child_added", function(snapshot, prevChildKey) {
-      if (snapshot.key != "-0roomdata") {
+      if (snapshot.key != "roomData") {
         let messageData = snapshot.val();
-        let img = messageData.img;
-        let msg = messageData.msg;
-        let userid = messageData.name;
-        let name = userlist.find(x => x.key == userid).name;
-        let pin = messageData.pin;
+        let image = messageData.image;
+        let text = messageData.text;
+        let userid = messageData.sender;
+        let name = userlist.find(x => x.key == userid)!.name;
+        let pinned = messageData.pinned;
+        let forwarded = messageData.forwarded;
         let quote = messageData.quote;
         let time = messageData.time;
 
@@ -483,41 +494,41 @@ export class MychatappComponent implements OnInit {
 
         if (year + month + day != old_year + old_month + old_day) {
           let displaytime = day + "." + month + "." + year;
-          let m = new Message("time", displaytime, "", name, time, quote, pin, userid, null, null, null);
+          let m = new Message("time", displaytime, "", name, time, quote, pinned, userid, null, null, null, false);
           messagelist.push(m);
         }
 
         let displaytime = (date.getHours() < 10 ? "0" + String(date.getHours()) : String(date.getHours())) + ":" + (date.getMinutes() < 10 ? "0" + String(date.getMinutes()) : String(date.getMinutes()))
 
-        let pb_url = userlist.find(x => x.key == userid).profile_image;
+        let pb_url = userlist.find(x => x.key == userid)!.profile_image;
         let m;
         if (quote != "") {
           for (let message of messagelist) {
             if (message.key == quote) {
-              m = new Message(snapshot.key, msg, "", name, time, quote, pin, userid, pb_url, displaytime, message);
+              m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, message, forwarded);
             }
           }
         } else {
-          m = new Message(snapshot.key, msg, "", name, time, quote, pin, userid, pb_url, displaytime, null);
+          m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, forwarded);
         }
-        messagelist.push(m);
+        messagelist.push(m!);
         let tmpmessagelist = messagelist;
         messagelist = [];
         messagelist = tmpmessagelist;
 
         old_time = time;
 
-        if (img != "") {
-          let storage_img = mca_firebase.storage().ref('/images').child(img);
+        if (image != "") {
+          let storage_img = storage.ref('/images/' + image);
           storage_img.getDownloadURL().then(function(url_img) {
-            messagelist.find(x => x.key == snapshot.key).img = url_img;
+            messagelist.find(x => x.key == snapshot.key)!.image = url_img;
           })
         }
         setTimeout(function() { 
           let messagebox = document.getElementById("messages");
-          messagebox.scrollTop = messagebox.scrollHeight;
-          if (img == "") {
-            document.getElementById('messagecontent_' + snapshot.key).innerHTML = document.getElementById('messagecontent_' + snapshot.key).innerHTML.replace(
+          messagebox!.scrollTop = messagebox!.scrollHeight;
+          if (image == "") {
+            document.getElementById('messagecontent_' + snapshot.key)!.innerHTML = document.getElementById('messagecontent_' + snapshot.key)!.innerHTML.replace(
               /((http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/g,
               '<a href="$1" target="_blank" title="' + translatepipe.transform('OPEN LINK') + '" style="color: white">$1</a>'
             );
@@ -526,18 +537,26 @@ export class MychatappComponent implements OnInit {
       }
     })
     this.items_messages.next(messagelist);
-    document.getElementById("messageinput").focus();
+    document.getElementById("messageinput")!.focus();
   }
 
-  public sendMessage(message: String): void {
+  public sendMessage(message: string): void {
     message = message.trim();
     if (message != "" && this.roomkey != "") {
-      let newMessage = new Message(null, message, "", userid, this.getCurrentTime(), this.quote, "0", null, null, null, null);
-      let messageRef = mca_firebase.database().ref('/rooms/' + this.roomkey);
-      messageRef.push(newMessage);
+      let messageRef = database.ref('/rooms/' + this.roomkey + '/messages');
+      let newMessageKey = messageRef.push().key;
+      messageRef.child(newMessageKey).update({
+        image: "",
+        text: message,
+        sender: userid,
+        pinned: false,
+        forwarded: false,
+        quote: "",
+        time: this.getCurrentTime()
+      });
       this.quote = "";
-      document.getElementById("quotebox").style.display = "none";
-      document.getElementById("chatbox").style.maxHeight = "calc(100vh - 95px)"
+      document.getElementById("quotebox")!.style.display = "none";
+      document.getElementById("chatbox")!.style.maxHeight = "calc(100vh - 95px)"
     }
   }
 
@@ -562,32 +581,32 @@ export class MychatappComponent implements OnInit {
     this.room_image = "";
     this.profile_banner = "";
     this.profile_image = "";
-    mca_firebase.auth().signOut();
+    auth.signOut();
     this.router.navigate(['login']);
   }
 
   public showProfile(type: number) {
     if (type == 0) {
-      document.getElementById('edit_profile_button').style.display = "block";
+      document.getElementById('edit_profile_button')!.style.display = "block";
       this.displayUser = this.currentUser;
       let modal = document.getElementById("myModal");
-      modal.style.display = "block";
+      modal!.style.display = "block";
     } else {
-      let userkey = messagelist.find(x => x.key == this.cm_message).userid;
+      let userkey = messagelist.find(x => x.key == this.cm_message)!.userid;
       if (userkey == userid) {
-        document.getElementById('edit_profile_button').style.display = "block";
+        document.getElementById('edit_profile_button')!.style.display = "block";
       } else {
-        document.getElementById('edit_profile_button').style.display = "none";
+        document.getElementById('edit_profile_button')!.style.display = "none";
       }
-      this.displayUser = userlist.find(x => x.key == userkey);
+      this.displayUser = userlist.find(x => x.key == userkey)!;
       let modal = document.getElementById("myModal");
-      modal.style.display = "block";
+      modal!.style.display = "block";
     }
   }
 
   public closeProfile() {
     let modal = document.getElementById("myModal");
-    modal.style.display = "none";
+    modal!.style.display = "none";
   }
 
   public showSettings() {
@@ -595,22 +614,22 @@ export class MychatappComponent implements OnInit {
       this.changethemeevent.setValue(true)
     }
     let modal = document.getElementById("settingsModal");
-    modal.style.display = "block";
+    modal!.style.display = "block";
   }
 
   public closeSettings() {
     let modal = document.getElementById("settingsModal");
-    modal.style.display = "none";
+    modal!.style.display = "none";
   }
 
   public changeTheme() {
     if (this.changethemeevent.value == true) {
       document.documentElement.setAttribute('data-theme', 'dark');
-      this.theme = document.documentElement.getAttribute('data-theme');
+      this.theme = document.documentElement.getAttribute('data-theme')!;
       this.setCookie("theme", "dark", 30)
     } else {
       document.documentElement.setAttribute('data-theme', 'light');
-      this.theme = document.documentElement.getAttribute('data-theme');
+      this.theme = document.documentElement.getAttribute('data-theme')!;
       this.setCookie("theme", "light", 30)
     }
   }
@@ -619,68 +638,74 @@ export class MychatappComponent implements OnInit {
     let fullscreenimage = document.getElementById("fullscreenimage") as HTMLImageElement;
     fullscreenimage.src = imagesrc;
 
-    document.getElementById("image-modal-content").style.width = "auto";
-    document.getElementById("image-modal-content").style.height = "auto";
+    document.getElementById("image-modal-content")!.style.width = "auto";
+    document.getElementById("image-modal-content")!.style.height = "auto";
 
     fullscreenimage.onload = function() {
       if (fullscreenimage.width/window.innerWidth > fullscreenimage.height/window.innerHeight) {
         let imagewidth = fullscreenimage.width;
         let imageheight = fullscreenimage.height;
-        document.getElementById("image-modal-content").style.width = "90%";
-        document.getElementById("image-modal-content").style.height = "calc(90vw * (" + imageheight + " / " + imagewidth + ") + 35px)";
+        document.getElementById("image-modal-content")!.style.width = "90%";
+        document.getElementById("image-modal-content")!.style.height = "calc(90vw * (" + imageheight + " / " + imagewidth + ") + 35px)";
       } else {
         let imagewidth = fullscreenimage.width;
         let imageheight = fullscreenimage.height;
-        document.getElementById("image-modal-content").style.height = "90%";
-        document.getElementById("image-modal-content").style.width = "calc(90vh * (" + imagewidth + " / " + imageheight + ") - 35px)";
+        document.getElementById("image-modal-content")!.style.height = "90%";
+        document.getElementById("image-modal-content")!.style.width = "calc(90vh * (" + imagewidth + " / " + imageheight + ") - 35px)";
       }
     }
 
     let modal = document.getElementById("imageModal");
-    modal.style.display = "block";
+    modal!.style.display = "block";
   }
 
   public closeFullscreen() {
     let modal = document.getElementById("imageModal");
-    modal.style.display = "none";
+    modal!.style.display = "none";
   }
 
   public addRoom() {
     this.room_image = "";
     let modal = document.getElementById("roomModal");
-    modal.style.display = "block";
+    modal!.style.display = "block";
   }
 
   public cancelAddingRoom() {
     let modal = document.getElementById("roomModal");
-    modal.style.display = "none";
+    modal!.style.display = "none";
   }
 
-  public createRoom(name: HTMLInputElement, desc: HTMLTextAreaElement, cat: HTMLInputElement, passwd: HTMLInputElement, passwdr: HTMLInputElement) {
-    if (name.value.trim() != '' && desc.value.trim() != '' && cat.value != '0' && passwd.value.trim() != '' && passwd.value.trim() == passwdr.value.trim()) {
-      let randomNumber = Math.floor(Math.random() * 4) + 1;
-      let r;
+  public createRoom(name: HTMLInputElement, desc: HTMLTextAreaElement, cat: MatSelect, passwd: HTMLInputElement, passwdr: HTMLInputElement) {
+    if (name.value.trim() != '' && desc.value.trim() != '' && cat.value != 0 && passwd.value.trim() != '' && passwd.value.trim() == passwdr.value.trim()) {
       if (this.room_image == "") {
-        r = new Room(null, name.value.trim(), cat.value, this.getCurrentTime(), passwd.value.trim(), userid, desc.value.trim(), null, "standard" + randomNumber);
-      } else {
-        r = new Room(null, name.value.trim(), cat.value, this.getCurrentTime(), passwd.value.trim(), userid, desc.value.trim(), null, this.room_image);
+        let randomNumber = Math.floor(Math.random() * 4) + 1;
+        this.room_image = "standard" + randomNumber;
       }
-      let roomRef = mca_firebase.database().ref('/rooms/');
-      roomRef.push().child('-0roomdata').set(r);
+      let roomRef = database.ref('/rooms/');
+      let newRoomKey = roomRef.push().key;
+      roomRef.child(newRoomKey).child('roomData').update({
+        admin: userid,
+        category: parseInt(cat.value),
+        description: desc.value.trim(),
+        image: this.room_image,
+        name: name.value.trim(),
+        password: passwd.value.trim(),
+        time: this.getCurrentTime()
+      });
       let modal = document.getElementById("roomModal");
-      modal.style.display = "none";
+      modal!.style.display = "none";
       name.value = '';
       desc.value = '';
       passwd.value = '';
       passwdr.value = '';
-      cat.value = '0';
+      cat.value = 0;
       this.room_image = '';
     }
   }
 
-  public onFileUpload(event, type: number) {
-    const uuidv1 = require('uuid/v1');
-    let uuid = uuidv1();
+  public onFileUpload(event: any, type: number) {
+    const uuid = require('uuid');
+    let imageName = uuid.v4();
 
     if (type == 0) {
       if (this.roomkey != "") {
@@ -688,50 +713,58 @@ export class MychatappComponent implements OnInit {
         let rk = this.roomkey;
         
         let file = event.target.files[0];
-        let storageRef = mca_firebase.storage().ref();
+        let storageRef = storage.ref();
         let quoteid = this.quote;
         this.quote = "";
-        document.getElementById("quotebox").style.display = "none";
-        document.getElementById("chatbox").style.maxHeight = "calc(100vh - 95px)"
+        document.getElementById("quotebox")!.style.display = "none";
+        document.getElementById("chatbox")!.style.maxHeight = "calc(100vh - 95px)"
   
-        storageRef.child('images/tmp-'+uuid).put(file).then(function(snapshot) {
+        storageRef.child('images/' + imageName).put(file).then(function(snapshot) {
           console.log("upload successful");
-          let newMessage = new Message(null, "", uuid, userid, time, quoteid, "0", null, null, null, null);
-          let messageRef = mca_firebase.database().ref('/rooms/' + rk);
-          messageRef.push(newMessage);
+          let messageRef = database.ref('/rooms/' + rk + '/messages');
+          let newMessageKey = messageRef.push().key;
+          messageRef.child(newMessageKey).update({
+            image: imageName,
+            text: "",
+            sender: userid,
+            pinned: false,
+            forwarded: false,
+            quote: quoteid,
+            time: time
+          });
         }, function(error) {
           console.log("upload failed");
         })
       }
     } else if (type == 1) {
       let file = event.target.files[0];
-      let storageRef = mca_firebase.storage().ref();
+      let storageRef = storage.ref();
 
-      this.room_image = uuid;
+      this.room_image = imageName;
 
-      storageRef.child('room_images/tmp-'+uuid).put(file).then(function(snapshot) {
+      storageRef.child('room_images/' + imageName).put(file).then(function(snapshot) {
         console.log("upload successful");
       }, function(error) {
         console.log("upload failed");
       })
     } else if (type == 2) {
       let file = event.target.files[0];
-      let storageRef = mca_firebase.storage().ref();
+      let storageRef = storage.ref();
 
-      this.profile_image = uuid;
+      this.profile_image = imageName;
 
-      storageRef.child('profile_images/tmp-'+uuid).put(file).then(function(snapshot) {
+      storageRef.child('profile_images/' + imageName).put(file).then(function(snapshot) {
         console.log("upload successful");
       }, function(error) {
         console.log("upload failed");
       })
     } else if (type == 3) {
       let file = event.target.files[0];
-      let storageRef = mca_firebase.storage().ref();
+      let storageRef = storage.ref();
 
-      this.profile_banner = uuid;
+      this.profile_banner = imageName;
 
-      storageRef.child('profile_banners/tmp-'+uuid).put(file).then(function(snapshot) {
+      storageRef.child('profile_banners/' + imageName).put(file).then(function(snapshot) {
         console.log("upload successful");
       }, function(error) {
         console.log("upload failed");
@@ -762,17 +795,17 @@ export class MychatappComponent implements OnInit {
     return '';
   }
 
-  public openMessageMenu({ x, y }: MouseEvent, messageid: string) {
-    this.cm_message = messageid;
+  public openMessageMenu({ x, y }: MouseEvent, messageid: String) {
+    this.cm_message = messageid.toString();
     let modalcontent = document.getElementById("contextmenu");
     let m = messagelist.find(x => x.key == messageid);
-    if (m.img == "") {
-      document.getElementById('cmdownloadbutton').style.display = "none";
+    if (m!.image == "") {
+      document.getElementById('cmdownloadbutton')!.style.display = "none";
     } else {
-      document.getElementById('cmdownloadbutton').style.display = "";
+      document.getElementById('cmdownloadbutton')!.style.display = "";
     }
-    if (m.pin == "0") {
-      document.getElementById('pin_button_text').innerHTML = this.translatepipe.transform("PIN");
+    if (!m!.pinned) {
+      document.getElementById('pin_button_text')!.innerHTML = this.translatepipe.transform("PIN");
       let pin_icon = document.getElementById('pin_icon') as HTMLImageElement;
       if (this.theme == 'dark') {
         pin_icon.src = "assets/img/ic_pin_dark.png";
@@ -780,7 +813,7 @@ export class MychatappComponent implements OnInit {
         pin_icon.src = "assets/img/ic_pin.png";
       }
     } else {
-      document.getElementById('pin_button_text').innerHTML = this.translatepipe.transform("UNPIN");
+      document.getElementById('pin_button_text')!.innerHTML = this.translatepipe.transform("UNPIN");
       let pin_icon = document.getElementById('pin_icon') as HTMLImageElement;
       if (this.theme == 'dark') {
         pin_icon.src = "assets/img/ic_unpin_dark.png";
@@ -789,121 +822,129 @@ export class MychatappComponent implements OnInit {
       }
     }
     if (y < 200) {
-      modalcontent.style.top = "200px";
+      modalcontent!.style.top = "200px";
     } else {
-      modalcontent.style.top = y + "px";
+      modalcontent!.style.top = y + "px";
     }
-    modalcontent.style.left = x + "px";
-    modalcontent.style.display = "block";
+    modalcontent!.style.left = x + "px";
+    modalcontent!.style.display = "block";
     return false;
   }
 
   public quoteMessage() {
     this.quote = this.cm_message;
-    document.getElementById("quotebox").style.display = "flex";
-    document.getElementById("chatbox").style.maxHeight = "calc(100vh - 130px)"
-    if (messagelist.find(x => x.key == this.quote).userid == this.userid) {
-      document.getElementById("quotetext").innerHTML = this.translatepipe.transform("YOU") + ": " + messagelist.find(x => x.key == this.quote).msg.toString();
+    document.getElementById("quotebox")!.style.display = "flex";
+    document.getElementById("chatbox")!.style.maxHeight = "calc(100vh - 130px)"
+    if (messagelist.find(x => x.key == this.quote)!.userid == this.userid) {
+      document.getElementById("quotetext")!.innerHTML = this.translatepipe.transform("YOU") + ": " + messagelist.find(x => x.key == this.quote)!.text.toString();
     } else {
-      document.getElementById("quotetext").innerHTML = messagelist.find(x => x.key == this.quote).name.toString() + ": " + messagelist.find(x => x.key == this.quote).msg.toString();
+      document.getElementById("quotetext")!.innerHTML = messagelist.find(x => x.key == this.quote)!.sender.toString() + ": " + messagelist.find(x => x.key == this.quote)!.text.toString();
     }
-    if(messagelist.find(x => x.key == this.quote).img != "") {
-      document.getElementById('quoteimage').style.display = "block";
-      (document.getElementById('quoteimage') as HTMLImageElement).src = String(messagelist.find(x => x.key == this.quote).img);
+    if(messagelist.find(x => x.key == this.quote)!.image != "") {
+      document.getElementById('quoteimage')!.style.display = "block";
+      (document.getElementById('quoteimage') as HTMLImageElement).src = String(messagelist.find(x => x.key == this.quote)!.image);
     } else {
-      document.getElementById('quoteimage').style.display = "none";
+      document.getElementById('quoteimage')!.style.display = "none";
     }
-    document.getElementById("messageinput").focus();
+    document.getElementById("messageinput")!.focus();
   }
 
   public cancelQuote() {
     this.quote = "";
-    document.getElementById("quotebox").style.display = "none";
-    document.getElementById("chatbox").style.maxHeight = "calc(100vh - 95px)"
+    document.getElementById("quotebox")!.style.display = "none";
+    document.getElementById("chatbox")!.style.maxHeight = "calc(100vh - 95px)"
   }
 
   public forwardMessage() {
     if (roomlist.length > 1) {
       let modal = document.getElementById("forwardModal");
-      modal.style.display = "block";
+      modal!.style.display = "block";
     }
   }
 
   public cancelForwarding() {
     let modal = document.getElementById("forwardModal");
-    modal.style.display = "none";
+    modal!.style.display = "none";
   }
 
   public forwardTo(roomkey: String) {
     let modal = document.getElementById("forwardModal");
-    modal.style.display = "none";
+    modal!.style.display = "none";
     let message = messagelist.find(x => x.key == this.cm_message);
-    let m = new Message(null, "(Forwarded) " + message.msg, "", userid, this.getCurrentTime(), "", "0", null, null, null, null);
-    let messageRef = mca_firebase.database().ref('/rooms/' + roomkey);
-    messageRef.push(m);
+    let messageRef = database.ref('/rooms/' + roomkey + '/messages');
+    let newMessageKey = messageRef.push().key;
+    messageRef.child(newMessageKey).update({
+      image: "",
+      text: message.text,
+      sender: userid,
+      pinned: false,
+      forwarded: true,
+      quote: "",
+      time: this.getCurrentTime()
+    });
 
     this.showToast(this.translatepipe.transform("MESSAGE FORWARDED"));
   }
 
-  public jumpToQuotedMessage(messageid: string) {
-    let quoteid = messagelist.find(x => x.key == messageid).quote;
+  public jumpToQuotedMessage(messageid: String) {
+    let quoteid = messagelist.find(x => x.key == messageid)!.quote;
     if (quoteid != "") {
       let targetMessage = document.getElementById('message_' + quoteid)
-      document.getElementById('messages').scrollTop = (targetMessage.offsetTop - 55);
-      targetMessage.style.background = "grey";
+      document.getElementById('messages')!.scrollTop = (targetMessage!.offsetTop - 55);
+      targetMessage!.style.background = "grey";
       setTimeout(function() {
-        targetMessage.style.background = null;
+        targetMessage!.style.background = "null";
       }, 1000);
     }
   }
 
   public pinMessage() {
     let m = messagelist.find(x => x.key == this.cm_message)
-    if (m.pin == "0") {
-      m.pin = "1"
-      mca_firebase.database().ref('/rooms/' + this.roomkey + '/' + this.cm_message + '/pin').set("1");
+    if (!m!.pinned) {
+      m!.pinned = true
+      database.ref('/rooms/' + this.roomkey + '/messages/' + this.cm_message + '/pinned').set(true);
       this.showToast(this.translatepipe.transform("MESSAGE PINNED"));
     } else {
-      m.pin = "0"
-      mca_firebase.database().ref('/rooms/' + this.roomkey + '/' + this.cm_message + '/pin').set("0");
+      m!.pinned = false
+      database.ref('/rooms/' + this.roomkey + '/messages/' + this.cm_message + '/pinned').set(false);
       this.showToast(this.translatepipe.transform("MESSAGE UNPINNED"));
     }
   }
 
   public openEditProfile() {
     (document.getElementById('edit_profile_name') as HTMLInputElement).value = String(this.currentUser.name);
-    (document.getElementById('edit_profile_bio') as HTMLInputElement).value = String(this.currentUser.bio);
-    (document.getElementById('edit_profile_birthday') as HTMLInputElement).value = String(this.currentUser.bday).substring(6, 10) + "-" + String(this.currentUser.bday).substring(3, 5) + "-" + String(this.currentUser.bday).substring(0, 2);
-    (document.getElementById('edit_profile_location') as HTMLInputElement).value = String(this.currentUser.loc);
+    (document.getElementById('edit_profile_bio') as HTMLInputElement).value = String(this.currentUser.description);
+    (document.getElementById('edit_profile_birthday') as HTMLInputElement).value = String(this.currentUser.birthday).substring(6, 10) + "-" + String(this.currentUser.birthday).substring(3, 5) + "-" + String(this.currentUser.birthday).substring(0, 2);
+    (document.getElementById('edit_profile_location') as HTMLInputElement).value = String(this.currentUser.location);
     (document.getElementById('profile_image_input') as HTMLInputElement).src = String(this.currentUser.profile_image);
     (document.getElementById('profile_banner_input') as HTMLInputElement).src = String(this.currentUser.profile_banner);
-    document.getElementById('editProfileModal').style.display = "block";
+    document.getElementById('editProfileModal')!.style.display = "block";
   }
 
   public cancelEditProfile() {
-    document.getElementById('editProfileModal').style.display = "none";
+    document.getElementById('editProfileModal')!.style.display = "none";
     this.profile_banner = "";
     this.profile_image = "";
   }
 
-  public editProfile(name: string, bio: string, birthday: string, location: string) {
-    if (name.trim() != '' && bio.trim() != '' && birthday != '0' && location.trim()) {
-      mca_firebase.database().ref('/users/' + userid + '/name').set(name);
-      mca_firebase.database().ref('/users/' + userid + '/bio').set(bio);
-      mca_firebase.database().ref('/users/' + userid + '/bday').set(birthday.replace(/-/g, ""));
-      mca_firebase.database().ref('/users/' + userid + '/loc').set(location);
+  public editProfile(name: string, description: string, birthday: string, location: string) {
+    if (name.trim() != '' && description.trim() != '' && birthday != '0' && location.trim()) {
+      database.ref('/users/' + userid + '/name').set(name);
+      database.ref('/users/' + userid + '/description').set(description);
+      database.ref('/users/' + userid + '/birthday').set(birthday.replace(/-/g, ""));
+      database.ref('/users/' + userid + '/location').set(location);
       if (this.profile_image != "") {
-        mca_firebase.database().ref('/users/' + userid + '/img').set(this.profile_image);
-        mca_firebase.database().ref('/users/' + userid + '/ownpi').set("1");
+        database.ref('/users/' + userid + '/image').set(this.profile_image);
+        database.ref('/users/' + userid + '/ownProfileImage').set(true);
       }
       if (this.profile_banner != "") {
-        mca_firebase.database().ref('/users/' + userid + '/banner').set(this.profile_banner);
+        database.ref('/users/' + userid + '/banner').set(this.profile_banner);
       }
-      document.getElementById('editProfileModal').style.display = "none";
+      document.getElementById('editProfileModal')!.style.display = "none";
       this.currentUser.name = name;
-      this.currentUser.bio = bio;
-      this.currentUser.bday = birthday.substring(8, 10) + "." + birthday.substring(5, 7) + "." + birthday.substring(0, 4);
-      this.currentUser.loc = location;
+      this.currentUser.description = description;
+      this.currentUser.birthday = birthday.substring(8, 10) + "." + birthday.substring(5, 7) + "." + birthday.substring(0, 4);
+      this.currentUser.location = location;
 
       this.profile_banner = "";
       this.profile_image = "";
@@ -913,10 +954,10 @@ export class MychatappComponent implements OnInit {
   }
 
   public showToast(message: string) {
-    document.getElementById('toast').style.display = "block";
-    document.getElementById('toasttext').innerHTML = message;
+    document.getElementById('toast')!.style.display = "block";
+    document.getElementById('toasttext')!.innerHTML = message;
     setTimeout(function() {
-      document.getElementById('toast').style.display = "none";
+      document.getElementById('toast')!.style.display = "none";
     }, 2000);
   }
 
@@ -937,13 +978,13 @@ export class MychatappComponent implements OnInit {
   public async downloadFile() {
     let m = messagelist.find(x => x.key == this.cm_message)
     var a = document.createElement("a");
-    a.href = await this.toDataURL(m.img);
+    a.href = await this.toDataURL(new URL(m!.image.toString()));
     let currentdate = this.getCurrentTime();
     a.download = "MyChatApp_" + currentdate.substring(0, 15);
     a.click();
   }
 
-  toDataURL(url) {
+  toDataURL(url: URL) {
     return fetch(url).then((response) => {
         return response.blob();
     }).then(blob => {

@@ -735,9 +735,17 @@ body {
                 }
             }
         }
-
     }
+}
 
+.forwardedflag {
+    display: flex;
+    flex-flow: row;
+
+    img {
+        height: 14px;
+        width: 14px !important;
+    }
 }
 
 ::-webkit-scrollbar {
@@ -1088,10 +1096,13 @@ body {
         flex-flow: column;
 
         mat-slide-toggle {
-            color: black;
-            color: var(--fontcolor);
             font-size: 20px;
             line-height: 34px;
+
+            p {
+                color: black;
+                color: var(--fontcolor);
+            }
         }
     }
 

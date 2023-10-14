@@ -1,21 +1,17 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-
-//import { environment_mca } from '../environments/environment_mca';
-import { environment_dev } from '../environments/environment_dev';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MychatappComponent } from './mychatapp/mychatapp.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { LoginComponent } from './login/login.component';
 
-import * as firebase from 'firebase/app';
+import { ChatComponent } from './chat/chat.component';
+import { LoginComponent } from './login/login.component';
 import { ChangelogComponent } from './changelog/changelog.component';
 
-import { HttpClientModule } from '@angular/common/http';
 import { TranslateService } from './translate.service';
 import { TranslatePipe } from './translate.pipe';
+
+import { HttpClientModule } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -32,14 +28,13 @@ export function setupTranslateFactory(
 @NgModule({
   declarations: [
     AppComponent,
-    MychatappComponent,
+    ChatComponent,
     LoginComponent,
     ChangelogComponent,
     TranslatePipe
   ],
   imports: [
     BrowserModule,
-    NgbModule,
     AppRoutingModule,
     HttpClientModule,
     MatFormFieldModule,
@@ -47,9 +42,9 @@ export function setupTranslateFactory(
     MatSelectModule,
     MatIconModule,
     MatSlideToggleModule,
-    BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule
   ],
   providers: [
     TranslateService,
@@ -62,9 +57,4 @@ export function setupTranslateFactory(
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor() {         
-    //firebase.initializeApp(environment_mca.firebase);
-    firebase.initializeApp(environment_dev.firebase);
-  }
-}
+export class AppModule { }

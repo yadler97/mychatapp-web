@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
+
 import { Router } from '@angular/router';
 import { appname } from '../../environments/appname';
 import { TranslateService } from '../translate.service';
 import { TranslatePipe } from '../translate.pipe';
+
+import firebase from "firebase/compat/app";
+import { environment } from '../../environments/environment';
+
+import "firebase/compat/auth";
+
+const app = firebase.initializeApp(environment.firebase);
+const auth = firebase.auth(app);
 
 @Component({
   selector: 'app-login',
@@ -13,6 +20,7 @@ import { TranslatePipe } from '../translate.pipe';
   styleUrls: ['./login.component.scss'],
   providers: [TranslatePipe]
 })
+
 export class LoginComponent implements OnInit {
 
   appname: string = appname;
@@ -26,7 +34,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    firebase.auth().onAuthStateChanged(user => {
+    auth.onAuthStateChanged(user => {
       if (user) {
         if (user.emailVerified) {
           this.router.navigate(['']);
@@ -37,20 +45,18 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  public login(email: string, password: string, passwordfield: HTMLObjectElement): void {
-    let mAuth = firebase.auth();
-
+  public login(email: string, password: string, passwordfield: HTMLInputElement): void {
     if (password == "") {
       passwordfield.setCustomValidity(this.translatepipe.transform("ENTER PASSWORD"));
     }
 
-    mAuth.signInWithEmailAndPassword(email, password).then(success => {
-      mAuth.onAuthStateChanged(user => {
-        if (user.emailVerified) {
+    auth.signInWithEmailAndPassword(email, password).then(success => {
+      auth.onAuthStateChanged(user => {
+        if (user!.emailVerified) {
           this.router.navigate(['']);
         } else {
           let modal = document.getElementById("resendModal");
-          modal.style.display = "block";
+          modal!.style.display = "block";
         }
       })
     }).catch(error => {
@@ -61,17 +67,18 @@ export class LoginComponent implements OnInit {
   }
 
   public resendEmail() {
-    firebase.auth().onAuthStateChanged(user => {
-      user.sendEmailVerification();
-      let modal = document.getElementById("resendModal");
-      modal.style.display = "none";
+    auth.onAuthStateChanged(user => {
+      user!.sendEmailVerification().then(() => {
+        let modal = document.getElementById("resendModal");
+        modal!.style.display = "none";
+      });
     })
   }
 
   public cancelResendingEmail() {
     let modal = document.getElementById("resendModal");
-    modal.style.display = "none";
-    firebase.auth().signOut();
+    modal!.style.display = "none";
+    auth.signOut();
   }
 
   private getCookie(name: string) {

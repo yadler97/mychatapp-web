@@ -735,9 +735,17 @@ body {
                 }
             }
         }
-
     }
+}
 
+.forwardedflag {
+    display: flex;
+    flex-flow: row;
+
+    img {
+        height: 14px;
+        width: 14px !important;
+    }
 }
 
 ::-webkit-scrollbar {

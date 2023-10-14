@@ -116,7 +116,13 @@
                         <ng-template #textmessage>
                           <div *ngIf="message.quote == ''; then textmessagenormal else textmessagequote"></div>
                           <ng-template #textmessagenormal>
-                            <div class="messageitem" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
+                            <div class="messageitem" id="messagecontent_{{ message.key }}">
+                              <div *ngIf="message.forwarded; then forwardedflag"></div>
+                              <ng-template #forwardedflag>
+                                <div class="forwardedflag"><img src="assets/img/ic_fw_dark.png" alt="forward icon"> {{ 'FORWARDED' | translate }}</div>
+                              </ng-template>
+                              {{ message.text }}
+                            </div>
                           </ng-template>
                           <ng-template #textmessagequote>
                             <div class="messageitem">

@@ -234,6 +234,7 @@ export class ChatComponent implements OnInit {
                 let messageuserid = newestMessageData.sender;
                 let username = userlist.find(x => x.key == messageuserid)!.name;
                 let pinned = newestMessageData.pinned;
+                let forwarded = newestMessageData.forwarded;
                 let quote = newestMessageData.quote;
                 let newesttime = newestMessageData.time;
                 let newestdisplaytime;
@@ -251,15 +252,15 @@ export class ChatComponent implements OnInit {
                 let m;
                 if (image != "") {
                   if (messageuserid == userid) {
-                    m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                    m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                   } else {
-                    m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                    m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                   }
                 } else {
                   if (messageuserid == userid) {
-                    m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                    m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                   } else {
-                    m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                    m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                   }
                 }
                 let oldmessage = roomlist.find(x => x.key == snapshot.key)!.newestMessage;
@@ -284,6 +285,7 @@ export class ChatComponent implements OnInit {
               let messageuserid = newestMessageData.sender;
               let username = userlist.find(x => x.key == messageuserid)!.name;
               let pinned = newestMessageData.pinned;
+              let forwarded = newestMessageData.forwarded;
               let quote = newestMessageData.quote;
               let newesttime = newestMessageData.time;
               let newestdisplaytime;
@@ -302,15 +304,15 @@ export class ChatComponent implements OnInit {
               let m;
               if (image != "") {
                 if (messageuserid == userid) {
-                  m = new Message(childSnapshot.key, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                  m = new Message(childSnapshot.key, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 } else {
-                  m = new Message(childSnapshot.key, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                  m = new Message(childSnapshot.key, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 }
               } else {
                 if (messageuserid == userid) {
-                  m = new Message(childSnapshot.key, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                  m = new Message(childSnapshot.key, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 } else {
-                  m = new Message(childSnapshot.key, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                  m = new Message(childSnapshot.key, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 }
               }
               if (roomlist.length == 0) {
@@ -394,6 +396,7 @@ export class ChatComponent implements OnInit {
               let messageuserid = newestMessageData.sender;
               let username = userlist.find(x => x.key == messageuserid)!.name;
               let pinned = newestMessageData.pinned;
+              let forwarded = newestMessageData.forwarded;
               let quote = newestMessageData.quote;
               let newesttime = newestMessageData.time;
               let newestdisplaytime;
@@ -419,15 +422,15 @@ export class ChatComponent implements OnInit {
               let m;
               if (image != "") {
                 if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 } else {
-                  m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                  m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 }
               } else {
                 if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 } else {
-                  m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, false);
+                  m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
                 }
               }
               let oldmessage = roomlist.find(x => x.key == currentRoomkey)!.newestMessage;
@@ -476,6 +479,7 @@ export class ChatComponent implements OnInit {
         let userid = messageData.sender;
         let name = userlist.find(x => x.key == userid)!.name;
         let pinned = messageData.pinned;
+        let forwarded = messageData.forwarded;
         let quote = messageData.quote;
         let time = messageData.time;
 
@@ -501,11 +505,11 @@ export class ChatComponent implements OnInit {
         if (quote != "") {
           for (let message of messagelist) {
             if (message.key == quote) {
-              m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, message, false);
+              m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, message, forwarded);
             }
           }
         } else {
-          m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, false);
+          m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, forwarded);
         }
         messagelist.push(m!);
         let tmpmessagelist = messagelist;

@@ -53,6 +53,11 @@
       <button id="addroombutton" (click)="addRoom()" class="addroom">+</button>
     </div>
     <div class="chatroom">
+      <div class="roomheader" id="roomheader" style="display: none">
+        <img id="roomheaderimage" alt="room image" class="roomheaderimage">
+        <p class="roomheadername" id="roomheadername"></p>
+        <button class="roomheaderinfobutton" (click)="openRoomInfo()"><img class="roomheaderinfoimage" src="assets/img/ic_info.png"></button>
+      </div>
       <div class="chatbox" id="chatbox">
         <div class="messages" id="messages">
           <div class="noroom" id="noroom">

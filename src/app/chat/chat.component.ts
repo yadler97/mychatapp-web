@@ -461,11 +461,14 @@ export class ChatComponent implements OnInit {
         } else {
           document.getElementById('headeritem')!.innerHTML = "Room was created on " + displaytime + " by " + r.admin;
         }
+        document.getElementById('roomheadername')!.innerHTML = String(r.name);
+        (document.getElementById('roomheaderimage') as HTMLInputElement).src = String(r.image);
       }
     }
 
     document.getElementById('headeritem')!.style.display = "block";
     document.getElementById('inputbox')!.style.display = "";
+    document.getElementById('roomheader')!.style.display = "";
     document.getElementById('noroom')!.style.display = "none";
     this.roomkey = roomkey.toString();
     this.messageRef = database.ref('/rooms/' + roomkey + '/messages');
@@ -995,5 +998,9 @@ export class ChatComponent implements OnInit {
   public deleteSearchInput() {
     (document.getElementById('roomsearchinput') as HTMLInputElement).value = "";
     this.searchRoom("");
+  }
+
+  public openRoomInfo() {
+    console.log(this.roomkey);
   }
 }

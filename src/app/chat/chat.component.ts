@@ -588,23 +588,20 @@ export class ChatComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
-  public showProfile(type: number) {
-    if (type == 0) {
+  public showProfile(key: String) {
+    if (key == userid) {
       document.getElementById('edit_profile_button')!.style.display = "block";
       this.displayUser = this.currentUser;
-      let modal = document.getElementById("myModal");
-      modal!.style.display = "block";
+    } else if (key != null) {
+      document.getElementById('edit_profile_button')!.style.display = "none";
+      this.displayUser = userlist.find(x => x.key == key)!;
     } else {
-      let userkey = messagelist.find(x => x.key == this.cm_message)!.userid;
-      if (userkey == userid) {
-        document.getElementById('edit_profile_button')!.style.display = "block";
-      } else {
-        document.getElementById('edit_profile_button')!.style.display = "none";
-      }
-      this.displayUser = userlist.find(x => x.key == userkey)!;
-      let modal = document.getElementById("myModal");
-      modal!.style.display = "block";
+      document.getElementById('edit_profile_button')!.style.display = "none";
+      let key = messagelist.find(x => x.key == this.cm_message)!.userid;
+      this.displayUser = userlist.find(x => x.key == key)!;
     }
+    let modal = document.getElementById("myModal");
+    modal!.style.display = "block";
   }
 
   public closeProfile() {

@@ -20,9 +20,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-export function setupTranslateFactory(
-  service: TranslateService): Function {
-  return () => service.use(navigator.language.substring(0, 2));
+export function setupTranslateFactory(service: TranslateService): Function {
+  const lang = navigator.language.substring(0, 2);
+  if (["de"].includes(lang)) {
+    return () => service.use(lang);
+  } else {
+    return () => service.use("en");
+  }
 }
 
 @NgModule({

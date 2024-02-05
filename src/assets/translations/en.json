@@ -59,5 +59,10 @@
     "SEARCH ROOM": "Search room...",
     "NO ROOM FOUND": "No room found",
     "OPEN LINK": "Open link",
-    "DOWNLOAD": "Download"
+    "DOWNLOAD": "Download",
+    "ROOM INFO": "Room info",
+    "CATEGORY": "Category",
+    "FOUNDATION": "Foundation",
+    "SENT MESSAGES": "Sent messages",
+    "MEMBERS": "Members"
 }

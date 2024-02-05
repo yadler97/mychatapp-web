@@ -35,6 +35,7 @@ const storage = firebase.storage(app);
 
 let roomlist: Array<Room> = [];
 let messagelist: Array<Message> = [];
+let roommemberlist: Array<User> = [];
 let userlist: Array<User> = [];
 let userid: string;
 
@@ -90,6 +91,7 @@ export class ChatComponent implements OnInit {
 
   items: BehaviorSubject<Room[]> = new BehaviorSubject<Room[]>([]);
   items_messages: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
+  items_members: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 
   constructor(private titleService: Title, public router: Router, private translate: TranslateService, public translatepipe: TranslatePipe) { 
     this.titleService.setTitle(appname);
@@ -140,6 +142,11 @@ export class ChatComponent implements OnInit {
       let editprofilemodal = document.getElementById("editProfileModal");
       if (event.target == editprofilemodal) {
         editprofilemodal!.style.display = "none";
+      }
+
+      let roomInfoModal = document.getElementById("roomInfoModal");
+      if (event.target == roomInfoModal) {
+        roomInfoModal!.style.display = "none";
       }
 
       let contextmenu = document.getElementById("contextmenu");
@@ -375,7 +382,30 @@ export class ChatComponent implements OnInit {
     this.items_messages.next(messagelist);
   }
 
+  public formatDate(timestamp: String): string {
+    let now = new Date();
+    let year = String(now.getUTCFullYear());
+    let month = (now.getUTCMonth()+1 < 10) ? "0" + String(now.getUTCMonth()+1) : String(now.getUTCMonth()+1);
+    let day = (now.getUTCDate() < 10) ? "0" + String(now.getUTCDate()) : String(now.getUTCDate());
+    let hours = (now.getUTCHours() < 10) ? "0" + String(now.getUTCHours()) : String(now.getUTCHours());
+    let minutes = (now.getUTCMinutes() < 10) ? "0" + String(now.getUTCMinutes()) : String(now.getUTCMinutes());
+    let seconds = (now.getUTCSeconds() < 10) ? "0" + String(now.getUTCSeconds()) : String(now.getUTCSeconds());
+    let utc_timestamp = year + month + day + "_" + hours + minutes + seconds + "_UTC";
+    let date = new Date(timestamp.substring(0, 4) + '-' + timestamp.substring(4, 6) + '-' +  timestamp.substring(6, 8) + 'T' +  timestamp.substring(9, 11) + ':' + timestamp.substring(11, 13) + ':' + timestamp.substring(13, 15) + '.000Z')
+    let display_year = String(date.getFullYear());
+    let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
+    let display_day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
+    let display_hour = (date.getHours() < 10) ? "0" + String(date.getHours()) : String(date.getHours());
+    let display_minutes = (date.getMinutes() < 10) ? "0" + String(date.getMinutes()) : String(date.getMinutes());
+    if (display_year + display_month + display_day == utc_timestamp.substring(0,8)) {
+      return display_hour + ":" + display_minutes;
+    } else {
+      return display_day + "." + display_month + "." + display_year;
+    }
+  }
+
   public openRoom(roomkey: String): void {
+    roommemberlist = [];
     this.cancelQuote();
     if (this.roomkey != "") {
       let oldmessageRef = database.ref('/rooms/' + this.roomkey + '/messages');
@@ -385,6 +415,7 @@ export class ChatComponent implements OnInit {
       let newestMessageRef = oldmessageRef.orderByKey().limitToLast(1);
 
       let translatepipe = this.translatepipe;
+      let formatDate = this.formatDate;
 
       newestMessageRef.on("child_added", function(nmSnapshot, prevChildKey) {
         roomlist.forEach(room => {
@@ -399,26 +430,7 @@ export class ChatComponent implements OnInit {
               let forwarded = newestMessageData.forwarded;
               let quote = newestMessageData.quote;
               let newesttime = newestMessageData.time;
-              let newestdisplaytime;
-              let now = new Date();
-              let year = String(now.getUTCFullYear());
-              let month = (now.getUTCMonth()+1 < 10) ? "0" + String(now.getUTCMonth()+1) : String(now.getUTCMonth()+1);
-              let day = (now.getUTCDate() < 10) ? "0" + String(now.getUTCDate()) : String(now.getUTCDate());
-              let hours = (now.getUTCHours() < 10) ? "0" + String(now.getUTCHours()) : String(now.getUTCHours());
-              let minutes = (now.getUTCMinutes() < 10) ? "0" + String(now.getUTCMinutes()) : String(now.getUTCMinutes());
-              let seconds = (now.getUTCSeconds() < 10) ? "0" + String(now.getUTCSeconds()) : String(now.getUTCSeconds());
-              let utc_timestamp = year + month + day + "_" + hours + minutes + seconds + "_UTC";
-              let date = new Date(newesttime.substring(0, 4) + '-' + newesttime.substring(4, 6) + '-' +  newesttime.substring(6, 8) + 'T' +  newesttime.substring(9, 11) + ':' + newesttime.substring(11, 13) + ':' + newesttime.substring(13, 15) + '.000Z')
-              let display_year = String(date.getFullYear());
-              let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
-              let display_day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
-              let display_hour = (date.getHours() < 10) ? "0" + String(date.getHours()) : String(date.getHours());
-              let display_minutes = (date.getMinutes() < 10) ? "0" + String(date.getMinutes()) : String(date.getMinutes());
-              if (display_year + display_month + display_day == utc_timestamp.substring(0,8)) {
-                newestdisplaytime = display_hour + ":" + display_minutes;
-              } else {
-                newestdisplaytime = display_day + "." + display_month + "." + display_year;
-              }
+              let newestdisplaytime = formatDate(newesttime);
               let m;
               if (image != "") {
                 if (messageuserid == userid) {
@@ -463,6 +475,10 @@ export class ChatComponent implements OnInit {
         }
         document.getElementById('roomheadername')!.innerHTML = String(r.name);
         (document.getElementById('roomheaderimage') as HTMLInputElement).src = String(r.image);
+        document.getElementById('roomInfoName')!.innerHTML = String(r.name);
+        (document.getElementById('roomInfoImage') as HTMLInputElement).src = String(r.image);
+        document.getElementById('roomInfoCategory')!.innerHTML = String(r.category);
+        document.getElementById('roomInfoCreated')!.innerHTML = String(this.formatDate(r.time));
       }
     }
 
@@ -474,8 +490,11 @@ export class ChatComponent implements OnInit {
     this.messageRef = database.ref('/rooms/' + roomkey + '/messages');
     messagelist = [];
     let translatepipe = this.translatepipe;
+    let messageCount = 0;
     this.messageRef.on("child_added", function(snapshot, prevChildKey) {
       if (snapshot.key != "roomData") {
+        messageCount++;
+        document.getElementById('roomInfoPostedMessages')!.innerHTML = String(messageCount);
         let messageData = snapshot.val();
         let image = messageData.image;
         let text = messageData.text;
@@ -485,6 +504,10 @@ export class ChatComponent implements OnInit {
         let forwarded = messageData.forwarded;
         let quote = messageData.quote;
         let time = messageData.time;
+
+        if (!roommemberlist.includes(userlist.find(x => x.key == userid))) {
+          roommemberlist.push(userlist.find(x => x.key == userid));
+        }
 
         let old_date = new Date(old_time.substring(0, 4) + '-' + old_time.substring(4, 6) + '-' +  old_time.substring(6, 8) + 'T' +  old_time.substring(9, 11) + ':' + old_time.substring(11, 13) + ':' + old_time.substring(13, 15) + '.000Z')
         let date = new Date(time.substring(0, 4) + '-' + time.substring(4, 6) + '-' +  time.substring(6, 8) + 'T' +  time.substring(9, 11) + ':' + time.substring(11, 13) + ':' + time.substring(13, 15) + '.000Z')
@@ -540,6 +563,7 @@ export class ChatComponent implements OnInit {
       }
     })
     this.items_messages.next(messagelist);
+    this.items_members.next(roommemberlist);
     document.getElementById("messageinput")!.focus();
   }
 
@@ -998,6 +1022,10 @@ export class ChatComponent implements OnInit {
   }
 
   public openRoomInfo() {
-    console.log(this.roomkey);
+    document.getElementById("roomInfoModal")!.style.display = "block";
+  }
+
+  public closeRoomInfo() {
+    document.getElementById('roomInfoModal')!.style.display = "none";
   }
 }

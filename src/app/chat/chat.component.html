@@ -378,4 +378,54 @@
       </div>
     </div>
   </div>
+
+  <div id="roomInfoModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close" (click)="closeRoomInfo()">&times;</span>
+        <h2>{{ 'ROOM INFO' | translate }}</h2>
+      </div>
+      <div class="modal-body">
+        <div class="roomInfo_content">
+          <div class="roomInfoImageContainer">
+            <img id="roomInfoImage" class="roomInfoImage">
+          </div>
+          <p id="roomInfoName" class="roomInfoName"></p>
+          <table>
+            <tr>
+              <td>
+                <p>{{ 'CATEGORY' | translate }}</p>
+              </td>
+              <td>
+                <p id="roomInfoCategory"></p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p>{{ 'FOUNDATION' | translate }}</p>
+              </td>
+              <td>
+                <p id="roomInfoCreated"></p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p>{{ 'SENT MESSAGES' | translate }}</p>
+              </td>
+              <td>
+                <p id="roomInfoPostedMessages"></p>
+              </td>
+            </tr>
+          </table>
+          <p>{{ 'MEMBERS' | translate }}</p>
+          <ul>
+            <li *ngFor="let member of items_members | async" class="memberListItem">
+              <img src="{{ member.profile_image }}">
+              <p>{{ member.name }}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>

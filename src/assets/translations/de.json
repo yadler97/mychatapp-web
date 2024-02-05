@@ -59,5 +59,10 @@
     "SEARCH ROOM": "Raum suchen...",
     "NO ROOM FOUND": "Kein Raum gefunden",
     "OPEN LINK": "Link öffnen",
-    "DOWNLOAD": "Herunterladen"
+    "DOWNLOAD": "Herunterladen",
+    "ROOM INFO": "Rauminfo",
+    "CATEGORY": "Kategorie",
+    "FOUNDATION": "Gründung",
+    "SENT MESSAGES": "Gepostete Nachrichten",
+    "MEMBERS": "Mitglieder"
 }

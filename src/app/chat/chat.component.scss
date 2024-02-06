@@ -345,6 +345,7 @@ body {
                 .roomheaderinfobutton:hover {
                     filter:brightness(0.93);
                     background: #D1D1D1;
+                    background: var(--roomhover);
                 }
             }
 
@@ -1329,6 +1330,10 @@ body {
     .roomInfo_content {
         padding: 16px;
 
+        p {
+            color: var(--fontcolor);
+        }
+
         .roomInfoImageContainer {
             display: flex;
             justify-content: center;
@@ -1380,6 +1385,7 @@ body {
                 button:hover {
                     filter:brightness(0.93);
                     background: #D1D1D1;
+                    background: var(--roomhover);
                 }
             }
         }

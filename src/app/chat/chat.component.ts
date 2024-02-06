@@ -610,13 +610,16 @@ export class ChatComponent implements OnInit {
     if (key == userid) {
       document.getElementById('edit_profile_button')!.style.display = "block";
       this.displayUser = this.currentUser;
+      document.getElementById('profileHeader')!.innerHTML = this.translatepipe.transform('MY PROFILE');
     } else if (key != null) {
       document.getElementById('edit_profile_button')!.style.display = "none";
       this.displayUser = userlist.find(x => x.key == key)!;
+      document.getElementById('profileHeader')!.innerHTML = this.translatepipe.transform('PROFILE OF') + " " + this.displayUser.name;
     } else {
       document.getElementById('edit_profile_button')!.style.display = "none";
       let key = messagelist.find(x => x.key == this.cm_message)!.userid;
       this.displayUser = userlist.find(x => x.key == key)!;
+      document.getElementById('profileHeader')!.innerHTML = this.translatepipe.transform('PROFILE OF') + " " + this.displayUser.name;
     }
     let modal = document.getElementById("myModal");
     modal!.style.display = "block";

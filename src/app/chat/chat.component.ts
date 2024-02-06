@@ -232,49 +232,49 @@ export class ChatComponent implements OnInit {
         let newestMessageRef = roomRef.child(snapshot.key!).child("messages").orderByKey().limitToLast(1);
 
         newestMessageRef.on("child_added", function(nmSnapshot, prevChildKey) {
-              let newestMessageData = nmSnapshot.val();
-              let image = newestMessageData.image;
-              let text = newestMessageData.text;
-              let messageuserid = newestMessageData.sender;
-              let username = userlist.find(x => x.key == messageuserid)!.name;
-              let pinned = newestMessageData.pinned;
-              let forwarded = newestMessageData.forwarded;
-              let quote = newestMessageData.quote;
-              let newesttime = newestMessageData.time;
-              let newestdisplaytime;
-              let date = new Date(newesttime.substring(0, 4) + '-' + newesttime.substring(4, 6) + '-' +  newesttime.substring(6, 8) + 'T' +  newesttime.substring(9, 11) + ':' + newesttime.substring(11, 13) + ':' + newesttime.substring(13, 15) + '.000Z')
-              let display_year = String(date.getFullYear());
-              let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
-              let display_day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
-              let display_hour = (date.getHours() < 10) ? "0" + String(date.getHours()) : String(date.getHours());
-              let display_minutes = (date.getMinutes() < 10) ? "0" + String(date.getMinutes()) : String(date.getMinutes());
-              if (display_year + display_month + display_day == utc_timestamp.substring(0,8)) {
-                newestdisplaytime = display_hour + ":" + display_minutes;
-              } else {
-                newestdisplaytime = display_day + "." + display_month + "." + display_year;
-              }
-              let m;
-              if (image != "") {
-                if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                } else {
-                  m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                }
-              } else {
-                if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                } else {
-                  m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                }
-              }
-              let oldmessage = roomlist.find(x => x.key == snapshot.key)!.newestMessage;
-              roomlist.find(x => x.key == snapshot.key)!.newestMessage = m;
-              if (oldmessage.key != m.key) {
-                let index = roomlist.indexOf(roomlist.find(x => x.key == snapshot.key)!);
-                let element = roomlist[index];
-                roomlist.splice(index, 1);
-                roomlist.splice(0, 0, element);
-              }
+          let newestMessageData = nmSnapshot.val();
+          let image = newestMessageData.image;
+          let text = newestMessageData.text;
+          let messageuserid = newestMessageData.sender;
+          let username = userlist.find(x => x.key == messageuserid)!.name;
+          let pinned = newestMessageData.pinned;
+          let forwarded = newestMessageData.forwarded;
+          let quote = newestMessageData.quote;
+          let newesttime = newestMessageData.time;
+          let newestdisplaytime;
+          let date = new Date(newesttime.substring(0, 4) + '-' + newesttime.substring(4, 6) + '-' +  newesttime.substring(6, 8) + 'T' +  newesttime.substring(9, 11) + ':' + newesttime.substring(11, 13) + ':' + newesttime.substring(13, 15) + '.000Z')
+          let display_year = String(date.getFullYear());
+          let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
+          let display_day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
+          let display_hour = (date.getHours() < 10) ? "0" + String(date.getHours()) : String(date.getHours());
+          let display_minutes = (date.getMinutes() < 10) ? "0" + String(date.getMinutes()) : String(date.getMinutes());
+          if (display_year + display_month + display_day == utc_timestamp.substring(0,8)) {
+            newestdisplaytime = display_hour + ":" + display_minutes;
+          } else {
+            newestdisplaytime = display_day + "." + display_month + "." + display_year;
+          }
+          let m;
+          if (image != "") {
+            if (messageuserid == userid) {
+              m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
+            } else {
+              m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
+            }
+          } else {
+            if (messageuserid == userid) {
+              m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
+            } else {
+              m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
+            }
+          }
+          let oldmessage = roomlist.find(x => x.key == snapshot.key)!.newestMessage;
+          roomlist.find(x => x.key == snapshot.key)!.newestMessage = m;
+          if (oldmessage.key != m.key) {
+            let index = roomlist.indexOf(roomlist.find(x => x.key == snapshot.key)!);
+            let element = roomlist[index];
+            roomlist.splice(index, 1);
+            roomlist.splice(0, 0, element);
+          }
         })
 
         newestMessageRef.once("value").then(function(newestMessageSnapshot) {

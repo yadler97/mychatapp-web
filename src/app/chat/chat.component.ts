@@ -179,18 +179,20 @@ export class ChatComponent implements OnInit {
         if (snapshot.key == userid) {
           this.currentUser.profile_image = url_image;
         }
-        let storage_banners = storage.ref('/profile_banners/' + banner);
-        storage_banners.getDownloadURL().then(url_banner => {
-          userlist.find(x => x.key == snapshot.key)!.profile_banner = url_banner;
-          if (snapshot.key == userid) {
-            this.currentUser.profile_banner = url_banner;
-          }
-        }).catch(error => {
-          switch (error.code) {
-            case 'storage/object-not-found':
-              break;
-          }
-        })
+        if (banner != "") {
+          let storage_banners = storage.ref('/profile_banners/' + banner);
+          storage_banners.getDownloadURL().then(url_banner => {
+            userlist.find(x => x.key == snapshot.key)!.profile_banner = url_banner;
+            if (snapshot.key == userid) {
+              this.currentUser.profile_banner = url_banner;
+            }
+          }).catch(error => {
+            switch (error.code) {
+              case 'storage/object-not-found':
+                break;
+            }
+          })
+        }
       })
     })
 
@@ -523,10 +525,15 @@ export class ChatComponent implements OnInit {
         let pb_url = userlist.find(x => x.key == userid)!.profile_image;
         let m;
         if (quote != "") {
+          let found = false;
           for (let message of messagelist) {
             if (message.key == quote) {
               m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, message, forwarded);
+              found = true;
             }
+          }
+          if (!found) {
+            m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, forwarded);
           }
         } else {
           m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, forwarded);

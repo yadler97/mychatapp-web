@@ -696,8 +696,8 @@ export class ChatComponent implements OnInit {
     modal!.style.display = "none";
   }
 
-  public createRoom(name: HTMLInputElement, desc: HTMLTextAreaElement, cat: MatSelect, passwd: HTMLInputElement, passwdr: HTMLInputElement) {
-    if (name.value.trim() != '' && desc.value.trim() != '' && cat.value != 0 && passwd.value.trim() != '' && passwd.value.trim() == passwdr.value.trim()) {
+  public createRoom(name: HTMLInputElement, description: HTMLTextAreaElement, category: MatSelect, password: HTMLInputElement, passwordRepeat: HTMLInputElement) {
+    if (name.value.trim() != '' && category.value != 0 && password.value.trim() != '' && password.value.trim() == passwordRepeat.value.trim()) {
       if (this.room_image == "") {
         let randomNumber = Math.floor(Math.random() * 4) + 1;
         this.room_image = "standard" + randomNumber;
@@ -706,20 +706,20 @@ export class ChatComponent implements OnInit {
       let newRoomKey = roomRef.push().key;
       roomRef.child(newRoomKey).child('roomData').update({
         admin: userid,
-        category: parseInt(cat.value),
-        description: desc.value.trim(),
+        category: parseInt(category.value),
+        description: description.value.trim(),
         image: this.room_image,
         name: name.value.trim(),
-        password: passwd.value.trim(),
+        password: password.value.trim(),
         time: this.getCurrentTime()
       });
       let modal = document.getElementById("roomModal");
       modal!.style.display = "none";
       name.value = '';
-      desc.value = '';
-      passwd.value = '';
-      passwdr.value = '';
-      cat.value = 0;
+      description.value = '';
+      password.value = '';
+      passwordRepeat.value = '';
+      category.value = 0;
       this.room_image = '';
     }
   }
@@ -949,7 +949,7 @@ export class ChatComponent implements OnInit {
   }
 
   public editProfile(name: string, description: string, birthday: string, location: string) {
-    if (name.trim() != '' && description.trim() != '' && birthday != '0' && location.trim()) {
+    if (name.trim() != '' && birthday != '0' && location.trim()) {
       database.ref('/users/' + userid + '/name').set(name);
       database.ref('/users/' + userid + '/description').set(description);
       database.ref('/users/' + userid + '/birthday').set(birthday.replace(/-/g, ""));
@@ -970,7 +970,7 @@ export class ChatComponent implements OnInit {
       this.profile_banner = "";
       this.profile_image = "";
 
-      //this.showToast(this.translatepipe.transform("PROFILE EDITED"));
+      this.showToast(this.translatepipe.transform("PROFILE EDITED"));
     }
   }
 

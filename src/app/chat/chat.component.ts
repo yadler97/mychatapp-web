@@ -82,6 +82,7 @@ export class ChatComponent implements OnInit {
   }
 
   roomkey: string = "";
+  room: Room;
   messageRef = database.ref('/rooms');
 
   ngOnDestroy() {
@@ -292,7 +293,6 @@ export class ChatComponent implements OnInit {
               let quote = newestMessageData.quote;
               let newesttime = newestMessageData.time;
               let newestdisplaytime;
-              let adminname = userlist.find(x => x.key == admin)!.name;
               let date = new Date(newesttime.substring(0, 4) + '-' + newesttime.substring(4, 6) + '-' +  newesttime.substring(6, 8) + 'T' +  newesttime.substring(9, 11) + ':' + newesttime.substring(11, 13) + ':' + newesttime.substring(13, 15) + '.000Z')
               let display_year = String(date.getFullYear());
               let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
@@ -319,13 +319,13 @@ export class ChatComponent implements OnInit {
                 }
               }
               if (roomlist.length == 0) {
-                roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
+                roomlist.push(new Room(snapshot.key!, name, category, time, password, admin, description, m, ""));
               } else {
                 let index = 0;
                 let added = false;
                 for (let r of roomlist) {
                   if (Number(r.newestMessage.time.substring(0, 8) + r.newestMessage.time.substring(9, 15)) < Number(m.time.substring(0, 8) + m.time.substring(9, 15))) {
-                    let newRoom = new Room(snapshot.key!, name, category, time, password, adminname, description, m, "");
+                    let newRoom = new Room(snapshot.key!, name, category, time, password, admin, description, m, "");
                     roomlist.splice(index, 0, newRoom);
                     added = true;
                     break;
@@ -334,7 +334,7 @@ export class ChatComponent implements OnInit {
                   }
                 }
                 if (added == false) {
-                  roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
+                  roomlist.push(new Room(snapshot.key!, name, category, time, password, admin, description, m, ""));
                 }
               }
             } else {
@@ -346,13 +346,13 @@ export class ChatComponent implements OnInit {
                 m = new Message(childSnapshot.key, adminname + " " + translatepipe.transform("CREATED THIS ROOM"), null, admin, time, null, null, null, null, displaytime, null, false);
               }
               if (roomlist.length == 0) {
-                roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
+                roomlist.push(new Room(snapshot.key!, name, category, time, password, admin, description, m, ""));
               } else {
                 let index = 0;
                 let added = false;
                 for (let r of roomlist) {
                   if (Number(r.newestMessage.time.substring(0, 8) + r.newestMessage.time.substring(9, 15)) < Number(time.substring(0, 8) + time.substring(9, 15))) {
-                    let newRoom = new Room(snapshot.key!, name, category, time, password, adminname, description, m, "");
+                    let newRoom = new Room(snapshot.key!, name, category, time, password, admin, description, m, "");
                     roomlist.splice(index, 0, newRoom);
                     added = true;
                     break;
@@ -361,7 +361,7 @@ export class ChatComponent implements OnInit {
                   }
                 }
                 if (added == false) {
-                  roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
+                  roomlist.push(new Room(snapshot.key!, name, category, time, password, admin, description, m, ""));
                 }
               }
             }
@@ -416,39 +416,37 @@ export class ChatComponent implements OnInit {
       newestMessageRef.on("child_added", function(nmSnapshot, prevChildKey) {
         roomlist.forEach(room => {
           if (room.key == currentRoomkey) {
-            if (nmSnapshot.key != "roomData") {
-              let newestMessageData = nmSnapshot.val();
-              let image = newestMessageData.image;
-              let text = newestMessageData.text;
-              let messageuserid = newestMessageData.sender;
-              let username = userlist.find(x => x.key == messageuserid)!.name;
-              let pinned = newestMessageData.pinned;
-              let forwarded = newestMessageData.forwarded;
-              let quote = newestMessageData.quote;
-              let newesttime = newestMessageData.time;
-              let newestdisplaytime = formatDate(newesttime);
-              let m;
-              if (image != "") {
-                if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                } else {
-                  m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                }
+            let newestMessageData = nmSnapshot.val();
+            let image = newestMessageData.image;
+            let text = newestMessageData.text;
+            let messageuserid = newestMessageData.sender;
+            let username = userlist.find(x => x.key == messageuserid)!.name;
+            let pinned = newestMessageData.pinned;
+            let forwarded = newestMessageData.forwarded;
+            let quote = newestMessageData.quote;
+            let newesttime = newestMessageData.time;
+            let newestdisplaytime = formatDate(newesttime);
+            let m;
+            if (image != "") {
+              if (messageuserid == userid) {
+                m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
               } else {
-                if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                } else {
-                  m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                }
+                m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
               }
-              let oldmessage = roomlist.find(x => x.key == currentRoomkey)!.newestMessage;
-              roomlist.find(x => x.key == currentRoomkey)!.newestMessage = m;
-              if (oldmessage.key != m.key) {
-                let index = roomlist.indexOf(roomlist.find(x => x.key == currentRoomkey)!);
-                let element = roomlist[index];
-                roomlist.splice(index, 1);
-                roomlist.splice(0, 0, element);
+            } else {
+              if (messageuserid == userid) {
+                m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
+              } else {
+                m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
               }
+            }
+            let oldmessage = roomlist.find(x => x.key == currentRoomkey)!.newestMessage;
+            roomlist.find(x => x.key == currentRoomkey)!.newestMessage = m;
+            if (oldmessage.key != m.key) {
+              let index = roomlist.indexOf(roomlist.find(x => x.key == currentRoomkey)!);
+              let element = roomlist[index];
+              roomlist.splice(index, 1);
+              roomlist.splice(0, 0, element);
             }
           }
         });
@@ -458,16 +456,18 @@ export class ChatComponent implements OnInit {
     let old_time: String;
     for (let r of roomlist) {
       if (r.key == roomkey) {
+        this.room = r;
         old_time = r.time;
         let date = new Date(r.time.substring(0, 4) + '-' + r.time.substring(4, 6) + '-' +  r.time.substring(6, 8) + 'T' +  r.time.substring(9, 11) + ':' + r.time.substring(11, 13) + ':' + r.time.substring(13, 15) + '.000Z')
         let year = String(date.getFullYear());
         let month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
         let day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
         let displaytime = day + "." + month + "." + year
+        let adminname = userlist.find(x => x.key == r.admin)!.name;
         if (navigator.language.substring(0, 2) == "de") {
-          document.getElementById('headeritem')!.innerHTML = "Raum wurde am " + displaytime + " von " + r.admin + " erstellt";
+          document.getElementById('headeritem')!.innerHTML = "Raum wurde am " + displaytime + " von " + adminname + " erstellt";
         } else {
-          document.getElementById('headeritem')!.innerHTML = "Room was created on " + displaytime + " by " + r.admin;
+          document.getElementById('headeritem')!.innerHTML = "Room was created on " + displaytime + " by " + adminname;
         }
         document.getElementById('roomheadername')!.innerHTML = String(r.name);
         (document.getElementById('roomheaderimage') as HTMLInputElement).src = String(r.image);

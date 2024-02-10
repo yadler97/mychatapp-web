@@ -239,8 +239,18 @@
           <ul>
             <li *ngFor="let member of items_members | async" class="memberListItem">
               <button (click)="showProfile(member.key)">
-                <img src="{{ member.profile_image }}">
-                <p>{{ member.name }}</p>
+                <div *ngIf="member.key == this.room.admin; then admin_template else normal_template"></div>
+                <ng-template #admin_template>
+                  <img src="{{ member.profile_image }}">
+                  <div>
+                    <p>{{ member.name }}</p>
+                    <p class="adminflag">Admin</p>
+                  </div>
+                </ng-template>
+                <ng-template #normal_template>
+                  <img src="{{ member.profile_image }}">
+                  <p>{{ member.name }}</p>
+                </ng-template>
               </button>
             </li>
           </ul>

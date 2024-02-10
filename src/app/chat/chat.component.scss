@@ -1373,7 +1373,12 @@ body {
                     border: none;
                     width: 100%;
                     padding: 10px;
+                    border-radius: 10px;
                     cursor: pointer;
+
+                    div {
+                        margin: auto 0;
+                    }
     
                     img {
                         width: 50px;
@@ -1385,6 +1390,12 @@ body {
                         margin: auto 0;
                         margin-left: 10px;
                         font-size: 16px;
+                        text-align: left;
+                    }
+
+                    .adminflag {
+                        font-weight: lighter;
+                        font-size: 14px;
                     }
                 }
     

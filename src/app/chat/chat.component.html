@@ -55,7 +55,7 @@
     <div class="chatroom">
       <div class="roomheader" id="roomheader" style="display: none">
         <img id="roomheaderimage" alt="room image" class="roomheaderimage">
-        <p class="roomheadername" id="roomheadername"></p>
+        <p class="roomheadername" id="roomheadername">{{ this.room?.name }}</p>
         <button class="roomheaderinfobutton" (click)="openRoomInfo()"><img class="roomheaderinfoimage" src="assets/img/ic_info.png"></button>
       </div>
       <div class="chatbox" id="chatbox">
@@ -208,7 +208,8 @@
           <div class="roomInfoImageContainer">
             <img id="roomInfoImage" class="roomInfoImage">
           </div>
-          <p id="roomInfoName" class="roomInfoName"></p>
+          <p id="roomInfoName" class="roomInfoName">{{ this.room?.name }}</p>
+          <p>{{ this.room?.description }}</p>
           <table>
             <tr>
               <td>
@@ -254,6 +255,10 @@
               </button>
             </li>
           </ul>
+          <div *ngIf="this.currentUser?.key == this.room?.admin; then edit_room_button"></div>
+          <ng-template #edit_room_button>
+            <button class="edit_room_button" (click)="openEditRoom()">{{ 'EDIT ROOM' | translate }}</button>
+          </ng-template>
         </div>
       </div>
     </div>
@@ -457,6 +462,65 @@
             </div>
 
             <button id="editprofilesubmitbutton" (click)="editProfile(name.value, bio.value, birthday.value, location.value)">{{ 'CONFIRM' | translate }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="editRoomModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="canceladdingroombutton" class="close" (click)="cancelEditingRoom()">&times;</span>
+        <h2>{{ 'EDIT ROOM' | translate }}</h2>
+      </div>
+      <div class="modal-body">
+        <div class="roomform">
+          <form onsubmit="return false">
+            <mat-form-field>
+              <input #editroomname matInput type="text" id="edit_room_name" placeholder="{{ 'ROOM NAME' | translate }}" maxlength="25" name="roomnameinput" ngModel required/>
+              <mat-hint align=end>{{editroomname.value?.length || 0}} / 25</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <textarea #editdescription matInput type="text" id="edit_room_description" placeholder="{{ 'DESCRIPTION' | translate}}" rows="4" maxlength="150" name="descriptioninput" ngModel required></textarea>
+              <mat-hint align=end>{{editdescription.value?.length || 0}} / 150</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-select #editcategory [(value)]="this.selectedCategory" name="category" id="edit_room_category" placeholder="{{ 'SELECT CATEGORY' | translate }}" name="categoryselect" ngModel required>
+                <mat-option id="edit_room_category_1" value=1>{{ 'STUDY AND WORK' | translate }}</mat-option>
+                <mat-option id="edit_room_category_2" value=2>{{ 'GAMING' | translate }}</mat-option>
+                <mat-option id="edit_room_category_3" value=3>{{ 'POLITICS' | translate }}</mat-option>
+                <mat-option id="edit_room_category_4" value=4>{{ 'GEOGRAPHY' | translate }}</mat-option>
+                <mat-option id="edit_room_category_5" value=5>{{ 'LANGUAGES' | translate }}</mat-option>
+                <mat-option id="edit_room_category_6" value=6>{{ 'LITERATURE' | translate }}</mat-option>
+                <mat-option id="edit_room_category_7" value=7>{{ 'TECHNICS' | translate }}</mat-option>
+                <mat-option id="edit_room_category_8" value=8>{{ 'TV' | translate }}</mat-option>
+                <mat-option id="edit_room_category_9" value=9>{{ 'SPORTS' | translate }}</mat-option>
+                <mat-option id="edit_room_category_10" value=10>{{ 'CULTURE AND ART' | translate }}</mat-option>
+                <mat-option id="edit_room_category_11" value=11>{{ 'MUSIC' | translate }}</mat-option>
+                <mat-option id="edit_room_category_12" value=12>{{ 'MISC' | translate }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="imageupload">
+              <p class="modal-text">{{ 'ROOM IMAGE' | translate }}</p>
+              <input class="uploadelement" #fileInput5 type="file" accept="image/*" (change)="onFileUpload($event, 1)">
+              <input id="edit_room_image" type="image" src="assets/img/ic_image.png" (click)="fileInput5.click(); $event.preventDefault()" class="uploadimagebutton">
+            </div>
+            <mat-form-field>
+              <input #editpassword matInput id="edit_room_password" placeholder="{{ 'PASSWORD' | translate }}" maxlength="16" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
+              <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              </button>
+              <mat-hint align=end>{{editpassword.value?.length || 0}} / 16</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <input #editconfirmpassword matInput id="edit_room_confirm_password" placeholder="{{ 'CONFIRM PASSWORD' | translate }}" maxlength="16" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
+              <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              </button>
+              <mat-hint align=end>{{editconfirmpassword.value?.length || 0}} / 16</mat-hint>
+            </mat-form-field>
+            <button id="editroomsubmitbutton" class="createroombutton" (click)="editRoom(editroomname, editdescription, editcategory, editpassword, editconfirmpassword); hide = false">{{ 'CONFIRM' | translate }}</button>
           </form>
         </div>
       </div>

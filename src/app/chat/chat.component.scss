@@ -335,6 +335,9 @@ body {
                     background: none;
                     border: none;
                     display: flex;
+                    border-radius: 40em;
+                    width: 50px;
+                    height: 50px;
                     cursor: pointer;
 
                     .roomheaderinfoimage {
@@ -346,6 +349,15 @@ body {
                     filter:brightness(0.93);
                     background: #D1D1D1;
                     background: var(--roomhover);
+                }
+
+                .roomheaderinfobutton:focus {
+                    filter:brightness(0.85);
+                    outline-width: 0;
+                }
+    
+                .roomheaderinfobutton::-moz-focus-inner {
+                    border:0;
                 }
             }
 
@@ -1405,6 +1417,31 @@ body {
                     background: var(--roomhover);
                 }
             }
+        }
+
+        .edit_room_button {
+            background: red;
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 40em;
+            font-weight: bold;
+            float: right;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .edit_room_button:hover {
+            filter:brightness(0.93);
+        }
+
+        .edit_room_button:focus {
+            filter:brightness(0.85);
+            outline-width: 0;
+        }
+
+        .edit_room_button::-moz-focus-inner {
+            border:0;
         }
     }
 }

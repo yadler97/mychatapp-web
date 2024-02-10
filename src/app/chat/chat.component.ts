@@ -83,6 +83,7 @@ export class ChatComponent implements OnInit {
 
   roomkey: string = "";
   room: Room;
+  selectedCategory: string;
   messageRef = database.ref('/rooms');
 
   ngOnDestroy() {
@@ -270,7 +271,7 @@ export class ChatComponent implements OnInit {
               m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
             }
           }
-          let oldmessage = roomlist.find(x => x.key == snapshot.key)!.newestMessage;
+          let oldmessage = roomlist.find(x => x.key == snapshot.key)!?.newestMessage;
           roomlist.find(x => x.key == snapshot.key)!.newestMessage = m;
           if (oldmessage.key != m.key) {
             let index = roomlist.indexOf(roomlist.find(x => x.key == snapshot.key)!);
@@ -469,9 +470,7 @@ export class ChatComponent implements OnInit {
         } else {
           document.getElementById('headeritem')!.innerHTML = "Room was created on " + displaytime + " by " + adminname;
         }
-        document.getElementById('roomheadername')!.innerHTML = String(r.name);
         (document.getElementById('roomheaderimage') as HTMLInputElement).src = String(r.image);
-        document.getElementById('roomInfoName')!.innerHTML = String(r.name);
         (document.getElementById('roomInfoImage') as HTMLInputElement).src = String(r.image);
         document.getElementById('roomInfoCategory')!.innerHTML = this.convertCategory(r.category);
         document.getElementById('roomInfoCreated')!.innerHTML = String(this.formatDate(r.time));
@@ -1061,6 +1060,48 @@ export class ChatComponent implements OnInit {
         return this.translatepipe.transform("MISC");
       default:
         return ""; // TODO
+    }
+  }
+
+  public openEditRoom() {
+    (document.getElementById('edit_room_name') as HTMLInputElement).value = String(this.room.name);
+    (document.getElementById('edit_room_description') as HTMLInputElement).value = String(this.room.description);
+    this.selectedCategory = String(this.room.category);
+    (document.getElementById('edit_room_password') as HTMLInputElement).value = String(this.room.password);
+    (document.getElementById('edit_room_confirm_password') as HTMLInputElement).value = String(this.room.password);
+    this.room_image = this.room.image.toString();
+    document.getElementById("editRoomModal")!.style.display = "block";
+  }
+
+  public cancelEditingRoom() {
+    document.getElementById('editRoomModal')!.style.display = "none";
+  }
+
+  public editRoom(name: HTMLInputElement, description: HTMLTextAreaElement, category: MatSelect, password: HTMLInputElement, passwordRepeat: HTMLInputElement) {
+    if (name.value.trim() != '' && category.value != 0 && password.value.trim() != '' && password.value.trim() == passwordRepeat.value.trim()) {
+      if (this.room_image == "") {
+        let randomNumber = Math.floor(Math.random() * 4) + 1;
+        this.room_image = "standard" + randomNumber;
+      }
+      let roomRef = database.ref('/rooms/');
+      roomRef.child(this.roomkey).child('roomData').update({
+        category: parseInt(category.value),
+        description: description.value.trim(),
+        // image: this.room_image, // TODO
+        name: name.value.trim(),
+        password: password.value.trim(),
+      });
+      let modal = document.getElementById("editRoomModal");
+      modal!.style.display = "none";
+      this.room.name = name.value.trim();
+      this.room.description = description.value.trim();
+      // TODO category
+      name.value = '';
+      description.value = '';
+      password.value = '';
+      passwordRepeat.value = '';
+      category.value = 0;
+      this.room_image = '';
     }
   }
 }

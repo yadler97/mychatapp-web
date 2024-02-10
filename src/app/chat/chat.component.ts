@@ -473,7 +473,7 @@ export class ChatComponent implements OnInit {
         (document.getElementById('roomheaderimage') as HTMLInputElement).src = String(r.image);
         document.getElementById('roomInfoName')!.innerHTML = String(r.name);
         (document.getElementById('roomInfoImage') as HTMLInputElement).src = String(r.image);
-        document.getElementById('roomInfoCategory')!.innerHTML = String(r.category);
+        document.getElementById('roomInfoCategory')!.innerHTML = this.convertCategory(r.category);
         document.getElementById('roomInfoCreated')!.innerHTML = String(this.formatDate(r.time));
       }
     }
@@ -1031,5 +1031,36 @@ export class ChatComponent implements OnInit {
 
   public closeRoomInfo() {
     document.getElementById('roomInfoModal')!.style.display = "none";
+  }
+
+  public convertCategory(categoryID: number): string {
+    switch (categoryID) {
+      case 1:
+        return this.translatepipe.transform("STUDY AND WORK");
+      case 2:
+        return this.translatepipe.transform("GAMING");
+      case 3:
+        return this.translatepipe.transform("POLITICS");
+      case 4:
+        return this.translatepipe.transform("GEOGRAPHY");
+      case 5:
+        return this.translatepipe.transform("LANGUAGES");
+      case 6:
+        return this.translatepipe.transform("LITERATURE");
+      case 7:
+        return this.translatepipe.transform("TECHNICS");
+      case 8:
+        return this.translatepipe.transform("TV");
+      case 9:
+        return this.translatepipe.transform("SPORTS");
+      case 10:
+        return this.translatepipe.transform("CULTURE AND ART");
+      case 11:
+        return this.translatepipe.transform("MUSIC");
+      case 12:
+        return this.translatepipe.transform("MISC");
+      default:
+        return ""; // TODO
+    }
   }
 }

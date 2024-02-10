@@ -1428,6 +1428,7 @@ body {
             font-weight: bold;
             float: right;
             margin-bottom: 20px;
+            margin-left: 10px;
             cursor: pointer;
         }
 
@@ -1442,6 +1443,27 @@ body {
 
         .edit_room_button::-moz-focus-inner {
             border:0;
+        }
+    }
+
+    .deleteRoom_content {
+        padding: 16px;
+
+        p {
+            color: var(--fontcolor);
+        }
+        
+        .deleteroombutton {
+            background: red;
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 40em;
+            font-weight: bold;
+            float: right;
+            margin-bottom: 20px;
+            margin-left: 10px;
+            cursor: pointer;
         }
     }
 }

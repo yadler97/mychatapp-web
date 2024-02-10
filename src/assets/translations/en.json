@@ -68,5 +68,7 @@
     "PROFILE OF": "Profile of",
     "PROFILE EDITED": "Profile successfully edited",
     "QUOTED MESSAGE NO LONGER AVAILABLE": "Quoted message no longer available",
-    "EDIT ROOM": "Edit room"
+    "EDIT ROOM": "Edit room",
+    "DELETE ROOM": "Delete room",
+    "DO YOU REALLY WANT TO DELETE THIS ROOM": "Do you really want to delete this room?"
 }

@@ -216,7 +216,7 @@
                 <p>{{ 'CATEGORY' | translate }}</p>
               </td>
               <td>
-                <p id="roomInfoCategory"></p>
+                <p id="roomInfoCategory">{{ this.convertCategory(this.room?.category) }}</p>
               </td>
             </tr>
             <tr>
@@ -258,6 +258,7 @@
           <div *ngIf="this.currentUser?.key == this.room?.admin; then edit_room_button"></div>
           <ng-template #edit_room_button>
             <button class="edit_room_button" (click)="openEditRoom()">{{ 'EDIT ROOM' | translate }}</button>
+            <button class="edit_room_button" (click)="openDeleteRoom()">{{ 'DELETE ROOM' | translate }}</button>
           </ng-template>
         </div>
       </div>
@@ -471,7 +472,7 @@
   <div id="editRoomModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <span id="canceladdingroombutton" class="close" (click)="cancelEditingRoom()">&times;</span>
+        <span id="canceleditingroombutton" class="close" (click)="cancelEditingRoom()">&times;</span>
         <h2>{{ 'EDIT ROOM' | translate }}</h2>
       </div>
       <div class="modal-body">
@@ -522,6 +523,21 @@
             </mat-form-field>
             <button id="editroomsubmitbutton" class="createroombutton" (click)="editRoom(editroomname, editdescription, editcategory, editpassword, editconfirmpassword); hide = false">{{ 'CONFIRM' | translate }}</button>
           </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="deleteRoomModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="canceldeletingroombutton" class="close" (click)="cancelDeleteRoom()">&times;</span>
+        <h2>{{ 'DELETE ROOM' | translate }}</h2>
+      </div>
+      <div class="modal-body">
+        <div class="deleteRoom_content">
+          <p>{{ 'DO YOU REALLY WANT TO DELETE THIS ROOM' | translate }}</p>
+          <button id="deleteroomsubmitbutton" class="deleteroombutton" (click)="deleteRoom(); hide = false">{{ 'CONFIRM' | translate }}</button>
         </div>
       </div>
     </div>

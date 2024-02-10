@@ -472,7 +472,6 @@ export class ChatComponent implements OnInit {
         }
         (document.getElementById('roomheaderimage') as HTMLInputElement).src = String(r.image);
         (document.getElementById('roomInfoImage') as HTMLInputElement).src = String(r.image);
-        document.getElementById('roomInfoCategory')!.innerHTML = this.convertCategory(r.category);
         document.getElementById('roomInfoCreated')!.innerHTML = String(this.formatDate(r.time));
       }
     }
@@ -487,80 +486,78 @@ export class ChatComponent implements OnInit {
     let translatepipe = this.translatepipe;
     let messageCount = 0;
     this.messageRef.on("child_added", function(snapshot, prevChildKey) {
-      if (snapshot.key != "roomData") {
-        messageCount++;
-        document.getElementById('roomInfoPostedMessages')!.innerHTML = String(messageCount);
-        let messageData = snapshot.val();
-        let image = messageData.image;
-        let text = messageData.text;
-        let userid = messageData.sender;
-        let name = userlist.find(x => x.key == userid)!.name;
-        let pinned = messageData.pinned;
-        let forwarded = messageData.forwarded;
-        let quote = messageData.quote;
-        let time = messageData.time;
+      messageCount++;
+      document.getElementById('roomInfoPostedMessages')!.innerHTML = String(messageCount);
+      let messageData = snapshot.val();
+      let image = messageData.image;
+      let text = messageData.text;
+      let userid = messageData.sender;
+      let name = userlist.find(x => x.key == userid)!.name;
+      let pinned = messageData.pinned;
+      let forwarded = messageData.forwarded;
+      let quote = messageData.quote;
+      let time = messageData.time;
 
-        if (!roommemberlist.includes(userlist.find(x => x.key == userid))) {
-          roommemberlist.push(userlist.find(x => x.key == userid));
-        }
+      if (!roommemberlist.includes(userlist.find(x => x.key == userid))) {
+        roommemberlist.push(userlist.find(x => x.key == userid));
+      }
 
-        let old_date = new Date(old_time.substring(0, 4) + '-' + old_time.substring(4, 6) + '-' +  old_time.substring(6, 8) + 'T' +  old_time.substring(9, 11) + ':' + old_time.substring(11, 13) + ':' + old_time.substring(13, 15) + '.000Z')
-        let date = new Date(time.substring(0, 4) + '-' + time.substring(4, 6) + '-' +  time.substring(6, 8) + 'T' +  time.substring(9, 11) + ':' + time.substring(11, 13) + ':' + time.substring(13, 15) + '.000Z')
-        let year = String(date.getFullYear());
-        let month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
-        let day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
-        let old_year = String(old_date.getFullYear());
-        let old_month = (old_date.getMonth()+1 < 10) ? "0" + String(old_date.getMonth()+1) : String(old_date.getMonth()+1);
-        let old_day = (old_date.getDate() < 10) ? "0" + String(old_date.getDate()) : String(old_date.getDate());
+      let old_date = new Date(old_time.substring(0, 4) + '-' + old_time.substring(4, 6) + '-' +  old_time.substring(6, 8) + 'T' +  old_time.substring(9, 11) + ':' + old_time.substring(11, 13) + ':' + old_time.substring(13, 15) + '.000Z')
+      let date = new Date(time.substring(0, 4) + '-' + time.substring(4, 6) + '-' +  time.substring(6, 8) + 'T' +  time.substring(9, 11) + ':' + time.substring(11, 13) + ':' + time.substring(13, 15) + '.000Z')
+      let year = String(date.getFullYear());
+      let month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
+      let day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
+      let old_year = String(old_date.getFullYear());
+      let old_month = (old_date.getMonth()+1 < 10) ? "0" + String(old_date.getMonth()+1) : String(old_date.getMonth()+1);
+      let old_day = (old_date.getDate() < 10) ? "0" + String(old_date.getDate()) : String(old_date.getDate());
 
-        if (year + month + day != old_year + old_month + old_day) {
-          let displaytime = day + "." + month + "." + year;
-          let m = new Message("time", displaytime, "", name, time, quote, pinned, userid, null, null, null, false);
-          messagelist.push(m);
-        }
+      if (year + month + day != old_year + old_month + old_day) {
+        let displaytime = day + "." + month + "." + year;
+        let m = new Message("time", displaytime, "", name, time, quote, pinned, userid, null, null, null, false);
+        messagelist.push(m);
+      }
 
-        let displaytime = (date.getHours() < 10 ? "0" + String(date.getHours()) : String(date.getHours())) + ":" + (date.getMinutes() < 10 ? "0" + String(date.getMinutes()) : String(date.getMinutes()))
+      let displaytime = (date.getHours() < 10 ? "0" + String(date.getHours()) : String(date.getHours())) + ":" + (date.getMinutes() < 10 ? "0" + String(date.getMinutes()) : String(date.getMinutes()))
 
-        let pb_url = userlist.find(x => x.key == userid)!.profile_image;
-        let m;
-        if (quote != "") {
-          let found = false;
-          for (let message of messagelist) {
-            if (message.key == quote) {
-              m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, message, forwarded);
-              found = true;
-            }
+      let pb_url = userlist.find(x => x.key == userid)!.profile_image;
+      let m;
+      if (quote != "") {
+        let found = false;
+        for (let message of messagelist) {
+          if (message.key == quote) {
+            m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, message, forwarded);
+            found = true;
           }
-          if (!found) {
-            m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, forwarded);
-          }
-        } else {
+        }
+        if (!found) {
           m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, forwarded);
         }
-        messagelist.push(m!);
-        let tmpmessagelist = messagelist;
-        messagelist = [];
-        messagelist = tmpmessagelist;
-
-        old_time = time;
-
-        if (image != "") {
-          let storage_img = storage.ref('/images/' + image);
-          storage_img.getDownloadURL().then(function(url_img) {
-            messagelist.find(x => x.key == snapshot.key)!.image = url_img;
-          })
-        }
-        setTimeout(function() { 
-          let messagebox = document.getElementById("messages");
-          messagebox!.scrollTop = messagebox!.scrollHeight;
-          if (image == "") {
-            document.getElementById('messagecontent_' + snapshot.key)!.innerHTML = document.getElementById('messagecontent_' + snapshot.key)!.innerHTML.replace(
-              /((http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/g,
-              '<a href="$1" target="_blank" title="' + translatepipe.transform('OPEN LINK') + '" style="color: white">$1</a>'
-            );
-          }
-        }, 10);
+      } else {
+        m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, forwarded);
       }
+      messagelist.push(m!);
+      let tmpmessagelist = messagelist;
+      messagelist = [];
+      messagelist = tmpmessagelist;
+
+      old_time = time;
+
+      if (image != "") {
+        let storage_img = storage.ref('/images/' + image);
+        storage_img.getDownloadURL().then(function(url_img) {
+          messagelist.find(x => x.key == snapshot.key)!.image = url_img;
+        })
+      }
+      setTimeout(function() { 
+        let messagebox = document.getElementById("messages");
+        messagebox!.scrollTop = messagebox!.scrollHeight;
+        if (image == "") {
+          document.getElementById('messagecontent_' + snapshot.key)!.innerHTML = document.getElementById('messagecontent_' + snapshot.key)!.innerHTML.replace(
+            /((http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/g,
+            '<a href="$1" target="_blank" title="' + translatepipe.transform('OPEN LINK') + '" style="color: white">$1</a>'
+          );
+        }
+      }, 10);
     })
     this.items_messages.next(messagelist);
     this.items_members.next(roommemberlist);
@@ -1095,7 +1092,7 @@ export class ChatComponent implements OnInit {
       modal!.style.display = "none";
       this.room.name = name.value.trim();
       this.room.description = description.value.trim();
-      // TODO category
+      this.room.category = parseInt(category.value);
       name.value = '';
       description.value = '';
       password.value = '';
@@ -1103,5 +1100,28 @@ export class ChatComponent implements OnInit {
       category.value = 0;
       this.room_image = '';
     }
+  }
+
+  public openDeleteRoom() {
+    document.getElementById("deleteRoomModal")!.style.display = "block";
+  }
+
+  public cancelDeleteRoom() {
+    document.getElementById('deleteRoomModal')!.style.display = "none";
+  }
+
+  public deleteRoom() {
+    let roomRef = database.ref('/rooms/');
+    roomRef.child(this.roomkey).remove();
+    document.getElementById('deleteRoomModal')!.style.display = "none";
+    document.getElementById('roomInfoModal')!.style.display = "none";
+    this.roomkey = "";
+    this.room = null;
+    document.getElementById('headeritem')!.style.display = "none";
+    document.getElementById('inputbox')!.style.display = "none";
+    document.getElementById('roomheader')!.style.display = "none";
+    document.getElementById('noroom')!.style.display = "block";
+    messagelist = [];
+    this.items_messages.next(messagelist);
   }
 }

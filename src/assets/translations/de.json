@@ -68,5 +68,7 @@
     "PROFILE OF": "Profil von",
     "PROFILE EDITED": "Profil erfolgreich bearbeitet",
     "QUOTED MESSAGE NO LONGER AVAILABLE": "Zitierte Nachricht nicht mehr verfügbar",
-    "EDIT ROOM": "Raum bearbeiten"
+    "EDIT ROOM": "Raum bearbeiten",
+    "DELETE ROOM": "Raum löschen",
+    "DO YOU REALLY WANT TO DELETE THIS ROOM": "Möchtest du diesen Raum wirklich löschen?"
 }

@@ -914,10 +914,10 @@ export class ChatComponent implements OnInit {
     let quoteid = messagelist.find(x => x.key == messageid)!.quote;
     if (quoteid != "") {
       let targetMessage = document.getElementById('message_' + quoteid)
-      document.getElementById('messages')!.scrollTop = (targetMessage!.offsetTop - 55);
+      document.getElementById('messages')!.scrollTop = (targetMessage!.offsetTop - 125);
       targetMessage!.style.background = "grey";
       setTimeout(function() {
-        targetMessage!.style.background = "null";
+        targetMessage!.style.background = "none";
       }, 1000);
     }
   }

@@ -337,18 +337,18 @@
               <input id="room_image_input" type="image" src="assets/img/ic_image.png" (click)="fileInput4.click(); $event.preventDefault()" class="uploadimagebutton">
             </div>
             <mat-form-field>
-              <input #password matInput id="roompasswordinput" placeholder="{{ 'PASSWORD' | translate }}" maxlength="16" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
+              <input #password matInput id="roompasswordinput" placeholder="{{ 'PASSWORD' | translate }}" maxlength="32" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
               <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
               </button>
-              <mat-hint align=end>{{password.value?.length || 0}} / 16</mat-hint>
+              <mat-hint align=end>{{password.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
             <mat-form-field>
-              <input #confirmpassword matInput id="roomconfirmpasswordinput" placeholder="{{ 'CONFIRM PASSWORD' | translate }}" maxlength="16" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
+              <input #confirmpassword matInput id="roomconfirmpasswordinput" placeholder="{{ 'CONFIRM PASSWORD' | translate }}" maxlength="32" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
               <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
               </button>
-              <mat-hint align=end>{{confirmpassword.value?.length || 0}} / 16</mat-hint>
+              <mat-hint align=end>{{confirmpassword.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
             <button id="addroomsubmitbutton" class="createroombutton" (click)="createRoom(roomname, description, category, password, confirmpassword); hide = false">{{ 'CREATE ROOM' | translate }}</button>
           </form>
@@ -507,18 +507,18 @@
               <input id="edit_room_image" type="image" src="assets/img/ic_image.png" (click)="fileInput5.click(); $event.preventDefault()" class="uploadimagebutton">
             </div>
             <mat-form-field>
-              <input #editpassword matInput id="edit_room_password" placeholder="{{ 'PASSWORD' | translate }}" maxlength="16" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
+              <input #editpassword matInput id="edit_room_password" placeholder="{{ 'PASSWORD' | translate }}" maxlength="32" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
               <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
               </button>
-              <mat-hint align=end>{{editpassword.value?.length || 0}} / 16</mat-hint>
+              <mat-hint align=end>{{editpassword.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
             <mat-form-field>
-              <input #editconfirmpassword matInput id="edit_room_confirm_password" placeholder="{{ 'CONFIRM PASSWORD' | translate }}" maxlength="16" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
+              <input #editconfirmpassword matInput id="edit_room_confirm_password" placeholder="{{ 'CONFIRM PASSWORD' | translate }}" maxlength="32" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
               <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
               </button>
-              <mat-hint align=end>{{editconfirmpassword.value?.length || 0}} / 16</mat-hint>
+              <mat-hint align=end>{{editconfirmpassword.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
             <button id="editroomsubmitbutton" class="createroombutton" (click)="editRoom(editroomname, editdescription, editcategory, editpassword, editconfirmpassword); hide = false">{{ 'CONFIRM' | translate }}</button>
           </form>

@@ -859,6 +859,7 @@ body {
     overflow-y: auto;
     max-height: 100vh;
     min-width: 400px;
+    border-radius: 1em;
 }
 
 .image-modal-content {
@@ -973,6 +974,7 @@ body {
                 height: fit-content;
                 background: none;
                 border: none;
+                border-radius: 1em;
                 cursor: pointer;
 
                 &:hover {
@@ -1056,7 +1058,6 @@ body {
 
         input, textarea {
             color: black;
-            color: var(--fontcolor);
         }
 
         textarea {
@@ -1264,7 +1265,6 @@ body {
 
         input, textarea {
             color: black;
-            color: var(--fontcolor);
         }
 
         textarea {

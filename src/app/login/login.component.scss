@@ -186,20 +186,33 @@ body {
         text-align: center;
     }
 
+    form {
+        display: flex;
+        flex-flow: column;
+    }
+
+    mat-form-field {
+        margin: 10px;
+    }
+
+    mat-hint {
+        color: black;
+        color: var(--fontcolor);
+    }
+
     button {
         margin-top: 1em;
         border: none;
         border-radius: 40em;
-        width: 70%;
-        margin-left: 15%;
+        margin-right: 10px;
         margin-bottom: 1em;
         background: #FF0000;
         background: var(--button);
         color: white;
         font-size: 1em;
-        padding-top: 0.5em;
-        padding-bottom: 0.5em;
+        padding: 0.5em;
         font-weight: bold;
+        float: right;
         cursor: pointer;
     }
 
@@ -210,6 +223,43 @@ body {
     button:focus {
         filter:brightness(0.85);
         outline-width: 0;
+    }
+}
+
+.toast {
+    display: none;
+    position: fixed;
+    width: 100vw;
+    text-align: center;
+    bottom: 60px;
+
+    -webkit-animation: fadeIn 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeIn 1s; /* Firefox < 16 */
+    -ms-animation: fadeIn 1s; /* Internet Explorer */
+    -o-animation: fadeIn 1s; /* Opera < 12.1 */
+    animation: fadeIn 1s;
+
+    @-webkit-keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .toastcontent {
+        margin: auto;
+        width: fit-content;
+        max-width: 80%;
+
+        .toasttext {
+            background: #555C;
+            color: white;
+            padding: 15px;
+            border-radius: 40em;
+            font-size: 32px;
+        }
     }
 }
 

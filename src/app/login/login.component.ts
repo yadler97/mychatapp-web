@@ -81,6 +81,23 @@ export class LoginComponent implements OnInit {
     auth.signOut();
   }
 
+  public openForgotPasswordModal() {
+    document.getElementById("forgotPasswordModal")!.style.display = "block";
+  }
+
+  public closeForgotPasswordModal() {
+    document.getElementById("forgotPasswordModal")!.style.display = "none";
+  }
+
+  public resetPassword(email: string) {
+    auth.sendPasswordResetEmail(email).then(success => {
+      document.getElementById("forgotPasswordModal")!.style.display = "none";
+      this.showToast(this.translatepipe.transform("PASSWORD RESET MAIL SENT"));
+    }).catch(error => {
+      this.showToast(this.translatepipe.transform("SENDING PASSWORD RESET MAIL FAILED"));
+    });
+  }
+
   private getCookie(name: string) {
     let ca: Array<string> = document.cookie.split(';');
     let caLen: number = ca.length;
@@ -99,5 +116,13 @@ export class LoginComponent implements OnInit {
   public setCustomValidityInTemplate() {
     let inputelement = document.getElementById('emailinput') as HTMLObjectElement
     inputelement.setCustomValidity(this.translatepipe.transform("ENTER EMAIL"));
+  }
+
+  public showToast(message: string) {
+    document.getElementById('toast')!.style.display = "block";
+    document.getElementById('toasttext')!.innerHTML = message;
+    setTimeout(function() {
+      document.getElementById('toast')!.style.display = "none";
+    }, 2000);
   }
 }

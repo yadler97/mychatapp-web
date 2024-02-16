@@ -70,5 +70,10 @@
     "QUOTED MESSAGE NO LONGER AVAILABLE": "Quoted message no longer available",
     "EDIT ROOM": "Edit room",
     "DELETE ROOM": "Delete room",
-    "DO YOU REALLY WANT TO DELETE THIS ROOM": "Do you really want to delete this room?"
+    "DO YOU REALLY WANT TO DELETE THIS ROOM": "Do you really want to delete this room?",
+    "FORGOT PASSWORD": "Forgot password?",
+    "PLEASE ENTER EMAIL": "Please enter mail address",
+    "SEND PASSWORD RESET MAIL": "Send password reset mail",
+    "PASSWORD RESET MAIL SENT": "Password reset mail sent",
+    "SENDING PASSWORD RESET MAIL FAILED": "Sending password reset mail failed"
 }

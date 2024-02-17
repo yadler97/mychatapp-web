@@ -1080,12 +1080,13 @@ body {
             background-color: #FF0000;
             background-color: var(--button);
             color: white;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            margin: 8px 30px;
+            margin-top: 1em;
             font-weight: bold;
-            cursor: pointer;
             border-radius: 40em;
+            font-size: 1em;
+            padding: 0.5em;
+            float: right;
+            cursor: pointer;
         }
 
         .createroombutton:hover, .visibilitytoggle:hover {
@@ -1272,17 +1273,18 @@ body {
         }
 
         button {
-            width: calc(100% - 60px);
             border: none;
             background-color: #FF0000;
             background-color: var(--button);
             color: white;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            margin: 8px 30px;
+            margin-top: 1em;
+            margin-bottom: 1em;
             font-weight: bold;
-            cursor: pointer;
             border-radius: 40em;
+            font-size: 1em;
+            padding: 0.5em;
+            float: right;
+            cursor: pointer;
         }
 
         button:hover {
@@ -1421,11 +1423,13 @@ body {
 
         .edit_room_button {
             background: red;
+            background-color: var(--button);
             border: none;
             color: white;
-            padding: 15px;
+            padding: 0.5em;
             border-radius: 40em;
             font-weight: bold;
+            font-size: 1em;
             float: right;
             margin-bottom: 20px;
             margin-left: 10px;
@@ -1455,15 +1459,30 @@ body {
         
         .deleteroombutton {
             background: red;
+            background-color: var(--button);
             border: none;
             color: white;
-            padding: 15px;
+            padding: 0.5em;
             border-radius: 40em;
             font-weight: bold;
+            font-size: 1em;
             float: right;
             margin-bottom: 20px;
             margin-left: 10px;
             cursor: pointer;
+        }
+
+        .deleteroombutton:hover {
+            filter:brightness(0.93);
+        }
+
+        .deleteroombutton:focus {
+            filter:brightness(0.85);
+            outline-width: 0;
+        }
+
+        .deleteroombutton::-moz-focus-inner {
+            border:0;
         }
     }
 }

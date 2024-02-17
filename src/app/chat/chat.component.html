@@ -351,7 +351,9 @@
               </button>
               <mat-hint align=end>{{confirmpassword.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
-            <button id="addroomsubmitbutton" class="createroombutton" (click)="createRoom(roomname, description, category, password, confirmpassword); hide = false">{{ 'CREATE ROOM' | translate }}</button>
+            <div>
+              <button id="addroomsubmitbutton" class="createroombutton" (click)="createRoom(roomname, description, category, password, confirmpassword); hide = false">{{ 'CREATE ROOM' | translate }}</button>
+            </div>
           </form>
         </div>
       </div>
@@ -521,7 +523,9 @@
               </button>
               <mat-hint align=end>{{editconfirmpassword.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
-            <button id="editroomsubmitbutton" class="createroombutton" (click)="editRoom(editroomname, editdescription, editcategory, editpassword, editconfirmpassword); hide = false">{{ 'CONFIRM' | translate }}</button>
+            <div>
+              <button id="editroomsubmitbutton" class="createroombutton" (click)="editRoom(editroomname, editdescription, editcategory, editpassword, editconfirmpassword); hide = false">{{ 'CONFIRM' | translate }}</button>
+            </div>
           </form>
         </div>
       </div>

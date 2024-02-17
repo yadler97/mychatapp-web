@@ -93,6 +93,7 @@ export class ChatComponent implements OnInit {
 
   items: BehaviorSubject<Room[]> = new BehaviorSubject<Room[]>([]);
   items_messages: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
+  items_pinned: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
   items_members: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 
   constructor(private titleService: Title, public router: Router, private translate: TranslateService, public translatepipe: TranslatePipe) { 
@@ -149,6 +150,11 @@ export class ChatComponent implements OnInit {
       let roomInfoModal = document.getElementById("roomInfoModal");
       if (event.target == roomInfoModal) {
         roomInfoModal!.style.display = "none";
+      }
+
+      let pinboardModal = document.getElementById("pinboardModal");
+      if (event.target == pinboardModal) {
+        pinboardModal!.style.display = "none";
       }
 
       let contextmenu = document.getElementById("contextmenu");
@@ -922,6 +928,17 @@ export class ChatComponent implements OnInit {
     }
   }
 
+  public jumpToPinnedMessage(messageid: String) {
+    document.getElementById('roomInfoModal')!.style.display = "none";
+    document.getElementById('pinboardModal')!.style.display = "none";
+    let targetMessage = document.getElementById('message_' + messageid)
+    document.getElementById('messages')!.scrollTop = (targetMessage!.offsetTop - 125);
+    targetMessage!.style.background = "grey";
+    setTimeout(function() {
+      targetMessage!.style.background = "none";
+    }, 1000);
+  }
+
   public pinMessage() {
     let m = messagelist.find(x => x.key == this.cm_message)
     if (!m!.pinned) {
@@ -1123,5 +1140,15 @@ export class ChatComponent implements OnInit {
     document.getElementById('noroom')!.style.display = "block";
     messagelist = [];
     this.items_messages.next(messagelist);
+  }
+
+  public openPinboard() {
+    document.getElementById("pinboardModal")!.style.display = "block";
+    let pinnedList = messagelist.filter(m => m.pinned);
+    this.items_pinned.next(pinnedList);
+  }
+
+  public closePinboard() {
+    document.getElementById("pinboardModal")!.style.display = "none";
   }
 }

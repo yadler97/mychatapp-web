@@ -563,7 +563,13 @@
                   <p class="name_field">{{ message.sender }}</p>
                   <p>{{ this.formatDate(message.time) }}</p>
                 </div>
-                <p>{{ message.text }}</p>
+                <div *ngIf="message.image == ''; then pinned_message else pinned_image"></div>
+                <ng-template #pinned_message>
+                  <p>{{ message.text }}</p>
+                </ng-template>
+                <ng-template #pinned_image>
+                  <img src="{{ message.image }}" alt="image">
+                </ng-template>
               </button>
             </li>
           </ul>

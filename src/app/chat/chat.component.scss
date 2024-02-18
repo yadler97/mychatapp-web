@@ -42,64 +42,79 @@ header {
         }
     }
 
-    nav {
+    .nav_profile_image_box {
         justify-self: right;
         float: right;
+        height: 45px;
+        border-radius: 50%;
+        margin: 5px;
+        cursor: pointer;
+
+        .nav_profile_image {
+            height: 35px;
+            min-width: 35px;
+            max-width: 35px;
+            margin: 5px;
+            border-radius: 50%;
+        }
+
+        &:hover {
+            background: #5f8336;
+            background: var(--headerhover);
+            filter:brightness(0.93);
+        }
+
+        &:focus {
+            outline-width: 0;
+            filter:brightness(0.85);
+        }
+
+        &::-moz-focus-inner {
+            border:0;
+        }
+    }
+}
+
+.usermenu {
+    position: absolute;
+    right: 10px;
+    top: 50px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    display: none;
+    flex-flow: column;
+    background: #EBEBEB;
+    background: var(--inputbox);
+
+    button {
+        padding-left: 1em;
+        padding-right: 1em;
+        line-height: 55px;
         height: 55px;
-    
-        ul {
-            list-style-type: none;
-            margin: 0; padding: 0;
+        max-height: 55px;
+        text-transform: uppercase;
+        font-size: .8em;
+        display: inline-block;
+        background: none;
+        border: none;
+        color: #000000;
+        color: var(--fontcolor);
+        margin: 5px;
+        border-radius: 10px;
+        cursor: pointer;
 
-            li {
-                float: left;
+        &:hover {
+            background: #5f8336;
+            background: var(--usermenuhover);
+        }
 
-                button {
-                    padding-left: 1em;
-                    padding-right: 1em;
-                    line-height: 55px;
-                    height: 55px;
-                    max-height: 55px;
-                    text-transform: uppercase;
-                    font-size: .8em;
-                    display: inline-block;
-                    background: none;
-                    border: none;
-                    color: white;
-                    cursor: pointer;
+        &:focus {
+            outline-width: 0;
+            filter:brightness(0.95);
+        }
 
-                    &:hover, &:focus {
-                        background: #5f8336;
-                        background: var(--headerhover);
-                    }
-
-                    &:focus {
-                        outline-width: 0;
-                    }
-
-                    &::-moz-focus-inner {
-                        border:0;
-                    }
-                }
-            }
-
-            .nav_profile_image_box {
-                height: 55px;
-                cursor: pointer;
-
-                .nav_profile_image {
-                    height: 35px;
-                    min-width: 35px;
-                    max-width: 35px;
-                    margin: 10px;
-                    border-radius: 50%;
-                }
-
-                &:hover, &:focus {
-                    background: #5f8336;
-                    background: var(--headerhover);
-                }
-            }
+        &::-moz-focus-inner {
+            border:0;
         }
     }
 }

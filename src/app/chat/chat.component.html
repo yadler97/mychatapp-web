@@ -10,16 +10,17 @@
       </ng-template>
       <a routerLink="/" class="appname">{{ appname }}</a>
     </div>
-    <nav>
-      <ul>
-        <li><button id="showprofilebutton" (click)="showProfile(currentUser.key)">{{ 'MY PROFILE' | translate }}</button></li>
-        <li><button id="showsettingsbutton" (click)="showSettings()">{{ 'SETTINGS' | translate }}</button></li>
-        <li><button id="logoutbutton" (click)="logout()">{{ 'LOGOUT' | translate }}</button></li>
-        <li class="nav_profile_image_box"><img src="{{ currentUser?.profile_image }}" alt="profile image" class="nav_profile_image"></li>
-      </ul>
-    </nav>
+    <div class="nav_profile_image_box" (click)="openUserMenu()">
+      <img src="{{ currentUser?.profile_image }}" alt="profile image" class="nav_profile_image">
+    </div>
   </div>
 </header>
+
+<div class="usermenu" id="usermenu" (mouseleave)="openUserMenu()">
+  <button id="showprofilebutton" (click)="showProfile(currentUser.key)">{{ 'MY PROFILE' | translate }}</button>
+  <button id="showsettingsbutton" (click)="showSettings()">{{ 'SETTINGS' | translate }}</button>
+  <button id="logoutbutton" (click)="logout()">{{ 'LOGOUT' | translate }}</button>
+</div>
 
 <body id="body">
   <div class="appcontainer">

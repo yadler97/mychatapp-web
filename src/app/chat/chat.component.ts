@@ -1151,4 +1151,12 @@ export class ChatComponent implements OnInit {
   public closePinboard() {
     document.getElementById("pinboardModal")!.style.display = "none";
   }
+
+  public openUserMenu() {
+    if (document.getElementById("usermenu")!.style.display != "flex") {
+      document.getElementById("usermenu")!.style.display = "flex";
+    } else {
+      document.getElementById("usermenu")!.style.display = "none";
+    }
+  }
 }

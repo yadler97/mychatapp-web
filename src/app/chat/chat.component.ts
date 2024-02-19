@@ -857,7 +857,7 @@ export class ChatComponent implements OnInit {
       modalcontent!.style.top = y + "px";
     }
     modalcontent!.style.left = x + "px";
-    modalcontent!.style.display = "block";
+    modalcontent!.style.display = "flex";
     return false;
   }
 

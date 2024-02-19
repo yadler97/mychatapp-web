@@ -85,6 +85,8 @@ header {
     flex-flow: column;
     background: #EBEBEB;
     background: var(--inputbox);
+    padding-top: 5px;
+    padding-bottom: 5px;
 
     button {
         padding-left: 1em;
@@ -94,12 +96,13 @@ header {
         max-height: 55px;
         text-transform: uppercase;
         font-size: .8em;
-        display: inline-block;
+        display: flex;
         background: none;
         border: none;
         color: #000000;
         color: var(--fontcolor);
-        margin: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
         border-radius: 10px;
         cursor: pointer;
 
@@ -115,6 +118,15 @@ header {
 
         &::-moz-focus-inner {
             border:0;
+        }
+
+        mat-icon {
+            margin: auto 0;
+            margin-right: 10px;
+        }
+
+        p {
+            margin: auto 0;
         }
     }
 }
@@ -355,8 +367,10 @@ body {
                     height: 50px;
                     cursor: pointer;
 
-                    .roomheaderinfoimage {
+                    mat-icon {
                         margin: auto;
+                        color: #000000;
+                        color: var(--fontcolor);
                     }
                 }
 
@@ -817,9 +831,15 @@ body {
     display: flex;
     flex-flow: row;
 
-    img {
-        height: 14px;
-        width: 14px !important;
+    mat-icon {
+        height: 16px;
+        width: 16px !important;
+        font-size: 16px;
+        margin-right: 2px;
+    }
+
+    p {
+        margin: 0;
     }
 }
 
@@ -1013,6 +1033,9 @@ body {
                 .iconedit {
                     width: calc(100vw * 0.55 / 24);
                     height: calc(100vw * 0.55 / 24);
+                    font-size: calc(100vw * 0.55 / 24);
+                    color: #000000;
+                    color: var(--fontcolor);
                 }
             }
         }
@@ -1646,20 +1669,20 @@ body {
 
 .contextmenu {
     display: none;
+    flex-flow: column;
     position: absolute;
     background-color: #F7F7F7;
     background-color: var(--background);
     margin: auto;
     padding-top: 5px;
     padding-bottom: 5px;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     transform: translate(-100%, -100%);
 
     button {
         border: none;
         background: none;
-        width: 100%;
         padding: 10px;
         cursor: pointer;
         font-size: 15px;
@@ -1669,10 +1692,21 @@ body {
         display: flex;
         flex-flow: row;
         white-space: nowrap;
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 10px;
 
         img {
-            height: 20px;
+            height: 24px;
             margin-right: 10px;
+        }
+
+        mat-icon {
+            margin-right: 10px;
+        }
+
+        p {
+            margin: auto 0;
         }
     }
 

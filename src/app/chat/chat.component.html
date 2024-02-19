@@ -17,9 +17,18 @@
 </header>
 
 <div class="usermenu" id="usermenu" (mouseleave)="openUserMenu()">
-  <button id="showprofilebutton" (click)="showProfile(currentUser.key)">{{ 'MY PROFILE' | translate }}</button>
-  <button id="showsettingsbutton" (click)="showSettings()">{{ 'SETTINGS' | translate }}</button>
-  <button id="logoutbutton" (click)="logout()">{{ 'LOGOUT' | translate }}</button>
+  <button id="showprofilebutton" (click)="showProfile(currentUser.key)">
+    <mat-icon>account_circle</mat-icon>
+    <p>{{ 'MY PROFILE' | translate }}</p>
+  </button>
+  <button id="showsettingsbutton" (click)="showSettings()">
+    <mat-icon>settings</mat-icon>
+    <p>{{ 'SETTINGS' | translate }}</p>
+  </button>
+  <button id="logoutbutton" (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+    <p>{{ 'LOGOUT' | translate }}</p>
+  </button>
 </div>
 
 <body id="body">
@@ -57,7 +66,7 @@
       <div class="roomheader" id="roomheader" style="display: none">
         <img id="roomheaderimage" alt="room image" class="roomheaderimage">
         <p class="roomheadername" id="roomheadername">{{ this.room?.name }}</p>
-        <button class="roomheaderinfobutton" (click)="openRoomInfo()"><img class="roomheaderinfoimage" src="assets/img/ic_info.png"></button>
+        <button class="roomheaderinfobutton" (click)="openRoomInfo()"><mat-icon>info_outlined</mat-icon></button>
       </div>
       <div class="chatbox" id="chatbox">
         <div class="messages" id="messages">
@@ -136,7 +145,10 @@
                             <div class="messageitem" id="messagecontent_{{ message.key }}">
                               <div *ngIf="message.forwarded; then forwardedflag"></div>
                               <ng-template #forwardedflag>
-                                <div class="forwardedflag"><img src="assets/img/ic_fw_dark.png" alt="forward icon"> {{ 'FORWARDED' | translate }}</div>
+                                <div class="forwardedflag">
+                                  <mat-icon class="material-symbols-outlined">forward</mat-icon>
+                                  <p>{{ 'FORWARDED' | translate }}</p>
+                                </div>
                               </ng-template>
                               {{ message.text }}
                             </div>
@@ -281,13 +293,7 @@
           <div class="profile_name">
             <img src="{{ displayUser?.profile_image }}" alt="profile image" class="profile_image">
             <div class="username">{{ displayUser?.name }}</div>
-            <div *ngIf="theme == 'dark'; then dark_edit else light_edit"></div>
-            <ng-template #light_edit>
-              <button class="editbutton" id="edit_profile_button" (click)="openEditProfile()"><img src="assets/img/ic_edit.png" alt="edit icon" class="iconedit"></button>
-            </ng-template>
-            <ng-template #dark_edit>
-              <button class="editbutton" id="edit_profile_button" (click)="openEditProfile()"><img src="assets/img/ic_edit_dark.png" alt="edit icon" class="iconedit"></button>
-            </ng-template>
+            <button class="editbutton" id="edit_profile_button" (click)="openEditProfile()"><mat-icon class="iconedit material-symbols-outlined">edit</mat-icon></button>
           </div>
           <div class="userbio">{{ displayUser?.description }}</div>
           <div class="bdayandloc">
@@ -384,21 +390,11 @@
   </div>
 
   <div id="contextmenu" class="contextmenu">
-    <div *ngIf="theme == 'dark'; then dark_menu else light_menu"></div>
-    <ng-template #light_menu>
-      <button (click)="quoteMessage()" id="cmquotebutton"><img src="assets/img/ic_quote.png" alt="quote icon">{{ 'QUOTE' | translate }}</button>
-      <button (click)="forwardMessage()" id="cmforwardbutton"><img src="assets/img/ic_fw.png" alt="forward icon">{{ 'FORWARD' | translate }}</button>
-      <button (click)="pinMessage()" id="cmpinbutton"><img src="assets/img/ic_pin.png" alt="pin icon" id="pin_icon"><div id="pin_button_text">{{ 'PIN' | translate }}</div></button>
-      <button (click)="downloadFile()" id="cmdownloadbutton"><img src="assets/img/ic_download.png" alt="download icon">{{ 'DOWNLOAD' | translate }}</button>
-      <button (click)="showProfile(null)" id="cmprofilebutton"><img src="assets/img/ic_account.png" alt="profile icon">{{ 'SHOW PROFILE' | translate }}</button>
-    </ng-template>
-    <ng-template #dark_menu>
-      <button (click)="quoteMessage()" id="cmquotebutton"><img src="assets/img/ic_quote_dark.png" alt="quote icon">{{ 'QUOTE' | translate }}</button>
-      <button (click)="forwardMessage()" id="cmforwardbutton"><img src="assets/img/ic_fw_dark.png" alt="forward icon">{{ 'FORWARD' | translate }}</button>
-      <button (click)="pinMessage()" id="cmpinbutton"><img src="assets/img/ic_pin_dark.png" alt="pin icon" id="pin_icon"><div id="pin_button_text">{{ 'PIN' | translate }}</div></button>
-      <button (click)="downloadFile()" id="cmdownloadbutton"><img src="assets/img/ic_download_dark.png" alt="download icon">{{ 'DOWNLOAD' | translate }}</button>
-      <button (click)="showProfile(null)" id="cmprofilebutton"><img src="assets/img/ic_account_dark.png" alt="profile icon">{{ 'SHOW PROFILE' | translate }}</button>
-    </ng-template>
+    <button (click)="quoteMessage()" id="cmquotebutton"><mat-icon class="material-symbols-outlined">comment</mat-icon><p>{{ 'QUOTE' | translate }}</p></button>
+    <button (click)="forwardMessage()" id="cmforwardbutton"><mat-icon class="material-symbols-outlined">forward</mat-icon><p>{{ 'FORWARD' | translate }}</p></button>
+    <button (click)="pinMessage()" id="cmpinbutton"><img src="assets/img/ic_pin.png" alt="pin icon" id="pin_icon"><p id="pin_button_text">{{ 'PIN' | translate }}</p></button>
+    <button (click)="downloadFile()" id="cmdownloadbutton"><mat-icon class="material-symbols-outlined">download</mat-icon><p>{{ 'DOWNLOAD' | translate }}</p></button>
+    <button (click)="showProfile(null)" id="cmprofilebutton"><mat-icon class="material-symbols">account_circle</mat-icon><p>{{ 'SHOW PROFILE' | translate }}</p></button>
   </div>
 
   <div id="forwardModal" class="modal">

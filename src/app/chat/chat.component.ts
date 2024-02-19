@@ -117,7 +117,7 @@ export class ChatComponent implements OnInit {
     });
 
     window.onclick = function(event) {
-      let modal = document.getElementById("myModal");
+      let modal = document.getElementById("profileModal");
       if (event.target == modal) {
         modal!.style.display = "none";
       }
@@ -630,12 +630,12 @@ export class ChatComponent implements OnInit {
       this.displayUser = userlist.find(x => x.key == key)!;
       document.getElementById('profileHeader')!.innerHTML = this.translatepipe.transform('PROFILE OF') + " " + this.displayUser.name;
     }
-    let modal = document.getElementById("myModal");
+    let modal = document.getElementById("profileModal");
     modal!.style.display = "block";
   }
 
   public closeProfile() {
-    let modal = document.getElementById("myModal");
+    let modal = document.getElementById("profileModal");
     modal!.style.display = "none";
   }
 

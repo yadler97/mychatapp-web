@@ -279,7 +279,7 @@
     </div>
   </div>
 
-  <div id="myModal" class="modal">
+  <div id="profileModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <span id="closeprofilebutton" class="close" (click)="closeProfile()">&times;</span>
@@ -292,10 +292,14 @@
         <div class="profile_content">
           <div class="profile_name">
             <img src="{{ displayUser?.profile_image }}" alt="profile image" class="profile_image">
-            <div class="username">{{ displayUser?.name }}</div>
-            <button class="editbutton" id="edit_profile_button" (click)="openEditProfile()"><mat-icon class="iconedit material-symbols-outlined">edit</mat-icon></button>
+            <div>
+              <p class="username">{{ displayUser?.name }}</p>
+              <button class="editbutton" id="edit_profile_button" (click)="openEditProfile()">
+                <mat-icon class="iconedit material-symbols-outlined">edit</mat-icon>
+              </button>
+            </div>
           </div>
-          <div class="userbio">{{ displayUser?.description }}</div>
+          <p class="userbio">{{ displayUser?.description }}</p>
           <div class="bdayandloc">
             <mat-icon class="icon">location_city</mat-icon>
             <p class="location">{{ displayUser?.location }}</p>

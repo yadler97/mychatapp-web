@@ -519,7 +519,7 @@ body {
                     flex: 1;
                     overflow-y: scroll;
                     overflow-x: hidden;
-                    padding-bottom: 10px;
+                    padding-bottom: 60px;
 
                     .noroom {
                         margin: 0;
@@ -603,7 +603,7 @@ body {
                                         font-weight: bold;
                                         font-size: 14px;
                                         padding-right: 5px;
-                                        padding-bottom: 1px;
+                                        padding-bottom: 5px;
                                         width: 100%;
                                         color: #000000;
                                         color: var(--fontcolor);
@@ -988,60 +988,64 @@ body {
             padding-bottom: 1em;
 
             .profile_image {
-                height: calc(100vw * 0.55 / 16 * 4);
+                height: 13.75vw;
                 border-radius: 50%;
-                margin-top: calc(-1 * 100vw * 0.55 / 16 * 2);
+                margin-top: -6.875vw;
             }
 
-            .username {
-                font-weight: bold;
-                font-size: calc(100vw * 0.55 / 16);
-                padding-left: 0.5em;
-                padding-top: 0.3em;
-                color: #000000;
-                color: var(--fontcolor);
-            }
+            div {
+                height: 6.875vw;
+                display: flex;
 
-            .editbutton {
-                margin-left: 20px;
-                margin-top: calc(0.3em + (100vw * 0.55 / 32) - 10px);
-                padding: 5px;
-                height: fit-content;
-                background: none;
-                border: none;
-                border-radius: 1em;
-                cursor: pointer;
-
-                &:hover {
-                    background: #CDCDCD;
-                    background: var(--buttonhover);
-                }
-
-                &:active {
-                    background: #ADADAD;
-                    background: var(--buttonfocus);
-                }
-
-                &:focus {
-                    outline-width: 0;
-                }
-
-                &::-moz-focus-inner {
-                    border: 0;
-                }
-
-                .iconedit {
-                    width: calc(100vw * 0.55 / 24);
-                    height: calc(100vw * 0.55 / 24);
-                    font-size: calc(100vw * 0.55 / 24);
+                .username {
+                    font-weight: bold;
+                    font-size: 3.4375vw;
+                    margin: auto;
+                    margin-left: 0.5em;
                     color: #000000;
                     color: var(--fontcolor);
+                }
+    
+                .editbutton {
+                    margin: auto;
+                    margin-left: 20px;
+                    background: none;
+                    border: none;
+                    border-radius: 1em;
+                    cursor: pointer;
+    
+                    &:hover {
+                        background: #CDCDCD;
+                        background: var(--buttonhover);
+                    }
+    
+                    &:active {
+                        background: #ADADAD;
+                        background: var(--buttonfocus);
+                    }
+    
+                    &:focus {
+                        outline-width: 0;
+                    }
+    
+                    &::-moz-focus-inner {
+                        border: 0;
+                    }
+    
+                    .iconedit {
+                        width: calc(100vw * 0.55 / 24);
+                        height: calc(100vw * 0.55 / 24);
+                        font-size: calc(100vw * 0.55 / 24);
+                        color: #000000;
+                        color: var(--fontcolor);
+                    }
                 }
             }
         }
 
         .userbio {
             font-size: 20px;
+            overflow-wrap: break-word;
             color: #000000;
             color: var(--fontcolor);
         }

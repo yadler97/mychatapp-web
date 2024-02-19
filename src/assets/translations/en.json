@@ -59,5 +59,22 @@
     "SEARCH ROOM": "Search room...",
     "NO ROOM FOUND": "No room found",
     "OPEN LINK": "Open link",
-    "DOWNLOAD": "Download"
+    "DOWNLOAD": "Download",
+    "ROOM INFO": "Room info",
+    "CATEGORY": "Category",
+    "FOUNDATION": "Foundation",
+    "SENT MESSAGES": "Sent messages",
+    "MEMBERS": "Members",
+    "PROFILE OF": "Profile of",
+    "PROFILE EDITED": "Profile successfully edited",
+    "QUOTED MESSAGE NO LONGER AVAILABLE": "Quoted message no longer available",
+    "EDIT ROOM": "Edit room",
+    "DELETE ROOM": "Delete room",
+    "DO YOU REALLY WANT TO DELETE THIS ROOM": "Do you really want to delete this room?",
+    "FORGOT PASSWORD": "Forgot password?",
+    "PLEASE ENTER EMAIL": "Please enter mail address",
+    "SEND PASSWORD RESET MAIL": "Send password reset mail",
+    "PASSWORD RESET MAIL SENT": "Password reset mail sent",
+    "SENDING PASSWORD RESET MAIL FAILED": "Sending password reset mail failed",
+    "PINBOARD": "Pinboard"
 }

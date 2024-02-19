@@ -42,64 +42,91 @@ header {
         }
     }
 
-    nav {
+    .nav_profile_image_box {
         justify-self: right;
         float: right;
+        height: 45px;
+        border-radius: 50%;
+        margin: 5px;
+        cursor: pointer;
+
+        .nav_profile_image {
+            height: 35px;
+            min-width: 35px;
+            max-width: 35px;
+            margin: 5px;
+            border-radius: 50%;
+        }
+
+        &:hover {
+            background: #5f8336;
+            background: var(--headerhover);
+            filter:brightness(0.93);
+        }
+
+        &:focus {
+            outline-width: 0;
+            filter:brightness(0.85);
+        }
+
+        &::-moz-focus-inner {
+            border:0;
+        }
+    }
+}
+
+.usermenu {
+    position: absolute;
+    right: 10px;
+    top: 50px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    display: none;
+    flex-flow: column;
+    background: #EBEBEB;
+    background: var(--inputbox);
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    button {
+        padding-left: 1em;
+        padding-right: 1em;
+        line-height: 55px;
         height: 55px;
-    
-        ul {
-            list-style-type: none;
-            margin: 0; padding: 0;
+        max-height: 55px;
+        text-transform: uppercase;
+        font-size: .8em;
+        display: flex;
+        background: none;
+        border: none;
+        color: #000000;
+        color: var(--fontcolor);
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 10px;
+        cursor: pointer;
 
-            li {
-                float: left;
+        &:hover {
+            background: #5f8336;
+            background: var(--usermenuhover);
+        }
 
-                button {
-                    padding-left: 1em;
-                    padding-right: 1em;
-                    line-height: 55px;
-                    height: 55px;
-                    max-height: 55px;
-                    text-transform: uppercase;
-                    font-size: .8em;
-                    display: inline-block;
-                    background: none;
-                    border: none;
-                    color: white;
-                    cursor: pointer;
+        &:focus {
+            outline-width: 0;
+            filter:brightness(0.95);
+        }
 
-                    &:hover, &:focus {
-                        background: #5f8336;
-                        background: var(--headerhover);
-                    }
+        &::-moz-focus-inner {
+            border:0;
+        }
 
-                    &:focus {
-                        outline-width: 0;
-                    }
+        mat-icon {
+            margin: auto 0;
+            margin-right: 10px;
+        }
 
-                    &::-moz-focus-inner {
-                        border:0;
-                    }
-                }
-            }
-
-            .nav_profile_image_box {
-                height: 55px;
-                cursor: pointer;
-
-                .nav_profile_image {
-                    height: 35px;
-                    min-width: 35px;
-                    max-width: 35px;
-                    margin: 10px;
-                    border-radius: 50%;
-                }
-
-                &:hover, &:focus {
-                    background: #5f8336;
-                    background: var(--headerhover);
-                }
-            }
+        p {
+            margin: auto 0;
         }
     }
 }
@@ -307,6 +334,62 @@ body {
             display: flex;
             flex-flow: column;
 
+            .roomheader {
+                height: 50px;
+                background: #EBEBEB;
+                background: var(--inputbox);
+                display: flex;
+                flex-flow: row;
+                padding: 10px;
+
+                .roomheaderimage {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                }
+
+                .roomheadername {
+                    padding-left: 20px;
+                    font-weight: bold;
+                    margin-top: auto;
+                    margin-bottom: auto;
+                    color: #000000;
+                    color: var(--fontcolor);
+                    flex: 1;
+                }
+
+                .roomheaderinfobutton {
+                    background: none;
+                    border: none;
+                    display: flex;
+                    border-radius: 40em;
+                    width: 50px;
+                    height: 50px;
+                    cursor: pointer;
+
+                    mat-icon {
+                        margin: auto;
+                        color: #000000;
+                        color: var(--fontcolor);
+                    }
+                }
+
+                .roomheaderinfobutton:hover {
+                    filter:brightness(0.93);
+                    background: #D1D1D1;
+                    background: var(--roomhover);
+                }
+
+                .roomheaderinfobutton:focus {
+                    filter:brightness(0.85);
+                    outline-width: 0;
+                }
+    
+                .roomheaderinfobutton::-moz-focus-inner {
+                    border:0;
+                }
+            }
+
             .quotebox {
                 display: flex;
                 flex-flow: row;
@@ -436,7 +519,7 @@ body {
                     flex: 1;
                     overflow-y: scroll;
                     overflow-x: hidden;
-                    padding-bottom: 10px;
+                    padding-bottom: 60px;
 
                     .noroom {
                         margin: 0;
@@ -520,7 +603,7 @@ body {
                                         font-weight: bold;
                                         font-size: 14px;
                                         padding-right: 5px;
-                                        padding-bottom: 1px;
+                                        padding-bottom: 5px;
                                         width: 100%;
                                         color: #000000;
                                         color: var(--fontcolor);
@@ -691,6 +774,12 @@ body {
                                                     border-radius: 6px;
                                                     background: #AAA;
                                                 }
+
+                                                .quotedMessageNoLongerAvailable {
+                                                    text-align: center;
+                                                    width: 100%;
+                                                    margin: 5px;
+                                                }
                                             }
 
                                             .ownmessage {
@@ -742,9 +831,15 @@ body {
     display: flex;
     flex-flow: row;
 
-    img {
-        height: 14px;
-        width: 14px !important;
+    mat-icon {
+        height: 16px;
+        width: 16px !important;
+        font-size: 16px;
+        margin-right: 2px;
+    }
+
+    p {
+        margin: 0;
     }
 }
 
@@ -799,6 +894,7 @@ body {
     overflow-y: auto;
     max-height: 100vh;
     min-width: 400px;
+    border-radius: 1em;
 }
 
 .image-modal-content {
@@ -892,56 +988,64 @@ body {
             padding-bottom: 1em;
 
             .profile_image {
-                height: calc(100vw * 0.55 / 16 * 4);
+                height: 13.75vw;
                 border-radius: 50%;
-                margin-top: calc(-1 * 100vw * 0.55 / 16 * 2);
+                margin-top: -6.875vw;
             }
 
-            .username {
-                font-weight: bold;
-                font-size: calc(100vw * 0.55 / 16);
-                padding-left: 0.5em;
-                padding-top: 0.3em;
-                color: #000000;
-                color: var(--fontcolor);
-            }
+            div {
+                height: 6.875vw;
+                display: flex;
 
-            .editbutton {
-                margin-left: 20px;
-                margin-top: calc(0.3em + (100vw * 0.55 / 32) - 10px);
-                padding: 5px;
-                height: fit-content;
-                background: none;
-                border: none;
-                cursor: pointer;
-
-                &:hover {
-                    background: #CDCDCD;
-                    background: var(--buttonhover);
+                .username {
+                    font-weight: bold;
+                    font-size: 3.4375vw;
+                    margin: auto;
+                    margin-left: 0.5em;
+                    color: #000000;
+                    color: var(--fontcolor);
                 }
-
-                &:active {
-                    background: #ADADAD;
-                    background: var(--buttonfocus);
-                }
-
-                &:focus {
-                    outline-width: 0;
-                }
-
-                &::-moz-focus-inner {
-                    border: 0;
-                }
-
-                .iconedit {
-                    width: calc(100vw * 0.55 / 24);
-                    height: calc(100vw * 0.55 / 24);
+    
+                .editbutton {
+                    margin: auto;
+                    margin-left: 20px;
+                    background: none;
+                    border: none;
+                    border-radius: 1em;
+                    cursor: pointer;
+    
+                    &:hover {
+                        background: #CDCDCD;
+                        background: var(--buttonhover);
+                    }
+    
+                    &:active {
+                        background: #ADADAD;
+                        background: var(--buttonfocus);
+                    }
+    
+                    &:focus {
+                        outline-width: 0;
+                    }
+    
+                    &::-moz-focus-inner {
+                        border: 0;
+                    }
+    
+                    .iconedit {
+                        width: calc(100vw * 0.55 / 24);
+                        height: calc(100vw * 0.55 / 24);
+                        font-size: calc(100vw * 0.55 / 24);
+                        color: #000000;
+                        color: var(--fontcolor);
+                    }
                 }
             }
         }
 
         .userbio {
             font-size: 20px;
+            overflow-wrap: break-word;
             color: #000000;
             color: var(--fontcolor);
         }
@@ -996,7 +1100,6 @@ body {
 
         input, textarea {
             color: black;
-            color: var(--fontcolor);
         }
 
         textarea {
@@ -1019,12 +1122,13 @@ body {
             background-color: #FF0000;
             background-color: var(--button);
             color: white;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            margin: 8px 30px;
+            margin-top: 1em;
             font-weight: bold;
-            cursor: pointer;
             border-radius: 40em;
+            font-size: 1em;
+            padding: 0.5em;
+            float: right;
+            cursor: pointer;
         }
 
         .createroombutton:hover, .visibilitytoggle:hover {
@@ -1204,7 +1308,6 @@ body {
 
         input, textarea {
             color: black;
-            color: var(--fontcolor);
         }
 
         textarea {
@@ -1212,17 +1315,18 @@ body {
         }
 
         button {
-            width: calc(100% - 60px);
             border: none;
             background-color: #FF0000;
             background-color: var(--button);
             color: white;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            margin: 8px 30px;
+            margin-top: 1em;
+            margin-bottom: 1em;
             font-weight: bold;
-            cursor: pointer;
             border-radius: 40em;
+            font-size: 1em;
+            padding: 0.5em;
+            float: right;
+            cursor: pointer;
         }
 
         button:hover {
@@ -1281,6 +1385,213 @@ body {
     
             input[type=image]::-moz-focus-inner {
                 border:0;
+            }
+        }
+    }
+
+    .roomInfo_content {
+        padding: 16px;
+
+        p {
+            color: var(--fontcolor);
+        }
+
+        .roomInfoImageContainer {
+            display: flex;
+            justify-content: center;
+            
+            .roomInfoImage {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+            }
+        }
+
+        .roomInfoName {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        ul {
+            padding: 0;
+
+            .memberListItem {
+                list-style-type: none;
+                display: flex;
+    
+                button {
+                    display: flex;
+                    background: none;
+                    border: none;
+                    width: 100%;
+                    padding: 10px;
+                    border-radius: 10px;
+                    cursor: pointer;
+
+                    div {
+                        margin: auto 0;
+                    }
+    
+                    img {
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                    }
+        
+                    p {
+                        margin: auto 0;
+                        margin-left: 10px;
+                        font-size: 16px;
+                        text-align: left;
+                    }
+
+                    .adminflag {
+                        font-weight: lighter;
+                        font-size: 14px;
+                    }
+                }
+    
+                button:hover {
+                    filter:brightness(0.93);
+                    background: #D1D1D1;
+                    background: var(--roomhover);
+                }
+
+                button:focus {
+                    filter:brightness(0.85);
+                    outline-width: 0;
+                }
+            }
+        }
+
+        .edit_room_button {
+            background: red;
+            background-color: var(--button);
+            border: none;
+            color: white;
+            padding: 0.5em;
+            border-radius: 40em;
+            font-weight: bold;
+            font-size: 1em;
+            float: right;
+            margin-bottom: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .edit_room_button:hover {
+            filter:brightness(0.93);
+        }
+
+        .edit_room_button:focus {
+            filter:brightness(0.85);
+            outline-width: 0;
+        }
+
+        .edit_room_button::-moz-focus-inner {
+            border:0;
+        }
+    }
+
+    .deleteRoom_content {
+        padding: 16px;
+
+        p {
+            color: var(--fontcolor);
+        }
+        
+        .deleteroombutton {
+            background: red;
+            background-color: var(--button);
+            border: none;
+            color: white;
+            padding: 0.5em;
+            border-radius: 40em;
+            font-weight: bold;
+            font-size: 1em;
+            float: right;
+            margin-bottom: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .deleteroombutton:hover {
+            filter:brightness(0.93);
+        }
+
+        .deleteroombutton:focus {
+            filter:brightness(0.85);
+            outline-width: 0;
+        }
+
+        .deleteroombutton::-moz-focus-inner {
+            border:0;
+        }
+    }
+
+    .pinboard_content {
+        ul {
+            padding: 0;
+            margin-left: 10px;
+            margin-right: 10px;
+
+            li {
+                list-style-type: none;
+                margin-bottom: 10px;
+
+                button {
+                    background: none;
+                    border: none;
+                    width: 100%;
+                    padding: 10px;
+                    border-radius: 10px;
+                    cursor: pointer;
+
+                    .pinned_header {
+                        display: flex;
+                        margin-bottom: 10px;
+
+                        .name_field {
+                            margin-right: 10px;
+                            font-weight: bold;
+                        }
+                    }
+        
+                    p {
+                        color: var(--fontcolor);
+                        text-align: left;
+                        margin: 0;
+                    }
+
+                    img {
+                        border-radius: 12px;
+                        float: left;
+                        width: calc(100vw * 0.25);
+                        height: calc(100vw * 0.25 / 4 * 3);
+                        max-width: calc(100vw * 0.25);
+                        max-height: calc(100vw * 0.25 / 4 * 3);
+                        min-width: calc(100vw * 0.25);
+                        min-height: calc(100vw * 0.25 / 4 * 3);
+                        object-fit: cover;
+                        object-position: center;
+                        background: #AAA;
+                    }
+                }
+
+                button:hover {
+                    filter:brightness(0.93);
+                    background: #D1D1D1;
+                    background: var(--roomhover);
+                }
+
+                button:focus {
+                    filter:brightness(0.85);
+                    outline-width: 0;
+                }
             }
         }
     }
@@ -1362,20 +1673,20 @@ body {
 
 .contextmenu {
     display: none;
+    flex-flow: column;
     position: absolute;
     background-color: #F7F7F7;
     background-color: var(--background);
     margin: auto;
     padding-top: 5px;
     padding-bottom: 5px;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     transform: translate(-100%, -100%);
 
     button {
         border: none;
         background: none;
-        width: 100%;
         padding: 10px;
         cursor: pointer;
         font-size: 15px;
@@ -1385,10 +1696,21 @@ body {
         display: flex;
         flex-flow: row;
         white-space: nowrap;
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 10px;
 
         img {
-            height: 20px;
+            height: 24px;
             margin-right: 10px;
+        }
+
+        mat-icon {
+            margin-right: 10px;
+        }
+
+        p {
+            margin: auto 0;
         }
     }
 
@@ -1434,9 +1756,9 @@ body {
         .toasttext {
             background: #555C;
             color: white;
-            padding: 10px;
+            padding: 15px;
             border-radius: 40em;
-            font-size: 16px;
+            font-size: 32px;
         }
     }
 }

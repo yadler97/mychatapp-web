@@ -1,6 +1,6 @@
 {
   "name": "mychatapp-web",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,25 +10,25 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^16.2.10",
-    "@angular/common": "^16.2.10",
-    "@angular/compiler": "^16.2.10",
-    "@angular/core": "^16.2.10",
-    "@angular/forms": "^16.2.10",
+    "@angular/animations": "^17.2.1",
+    "@angular/common": "^17.2.1",
+    "@angular/compiler": "^17.2.1",
+    "@angular/core": "^17.2.1",
+    "@angular/forms": "^17.2.1",
     "@angular/material": "^16.2.9",
-    "@angular/platform-browser": "^16.2.10",
-    "@angular/platform-browser-dynamic": "^16.2.10",
-    "@angular/router": "^16.2.10",
-    "@ng-bootstrap/ng-bootstrap": "^15.1.1",
-    "firebase": "^10.5.0",
+    "@angular/platform-browser": "^17.2.1",
+    "@angular/platform-browser-dynamic": "^17.2.1",
+    "@angular/router": "^17.2.1",
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "firebase": "^10.8.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.2",
-    "zone.js": "^0.13.3"
+    "zone.js": "^0.14.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.7",
-    "@angular/cli": "^16.2.7",
-    "@angular/compiler-cli": "^16.2.10",
+    "@angular-devkit/build-angular": "^17.2.0",
+    "@angular/cli": "^17.2.0",
+    "@angular/compiler-cli": "^17.2.1",
     "@types/jasmine": "~4.3.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
@@ -36,6 +36,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.1.3"
+    "typescript": "^5.3.3"
   }
 }

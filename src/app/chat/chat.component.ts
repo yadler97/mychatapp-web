@@ -35,6 +35,7 @@ const storage = firebase.storage(app);
 
 let roomlist: Array<Room> = [];
 let messagelist: Array<Message> = [];
+let roommemberlist: Array<User> = [];
 let userlist: Array<User> = [];
 let userid: string;
 
@@ -81,6 +82,8 @@ export class ChatComponent implements OnInit {
   }
 
   roomkey: string = "";
+  room: Room;
+  selectedCategory: string;
   messageRef = database.ref('/rooms');
 
   ngOnDestroy() {
@@ -90,6 +93,8 @@ export class ChatComponent implements OnInit {
 
   items: BehaviorSubject<Room[]> = new BehaviorSubject<Room[]>([]);
   items_messages: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
+  items_pinned: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
+  items_members: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 
   constructor(private titleService: Title, public router: Router, private translate: TranslateService, public translatepipe: TranslatePipe) { 
     this.titleService.setTitle(appname);
@@ -112,7 +117,7 @@ export class ChatComponent implements OnInit {
     });
 
     window.onclick = function(event) {
-      let modal = document.getElementById("myModal");
+      let modal = document.getElementById("profileModal");
       if (event.target == modal) {
         modal!.style.display = "none";
       }
@@ -140,6 +145,16 @@ export class ChatComponent implements OnInit {
       let editprofilemodal = document.getElementById("editProfileModal");
       if (event.target == editprofilemodal) {
         editprofilemodal!.style.display = "none";
+      }
+
+      let roomInfoModal = document.getElementById("roomInfoModal");
+      if (event.target == roomInfoModal) {
+        roomInfoModal!.style.display = "none";
+      }
+
+      let pinboardModal = document.getElementById("pinboardModal");
+      if (event.target == pinboardModal) {
+        pinboardModal!.style.display = "none";
       }
 
       let contextmenu = document.getElementById("contextmenu");
@@ -172,18 +187,20 @@ export class ChatComponent implements OnInit {
         if (snapshot.key == userid) {
           this.currentUser.profile_image = url_image;
         }
-        let storage_banners = storage.ref('/profile_banners/' + banner);
-        storage_banners.getDownloadURL().then(url_banner => {
-          userlist.find(x => x.key == snapshot.key)!.profile_banner = url_banner;
-          if (snapshot.key == userid) {
-            this.currentUser.profile_banner = url_banner;
-          }
-        }).catch(error => {
-          switch (error.code) {
-            case 'storage/object-not-found':
-              break;
-          }
-        })
+        if (banner != "") {
+          let storage_banners = storage.ref('/profile_banners/' + banner);
+          storage_banners.getDownloadURL().then(url_banner => {
+            userlist.find(x => x.key == snapshot.key)!.profile_banner = url_banner;
+            if (snapshot.key == userid) {
+              this.currentUser.profile_banner = url_banner;
+            }
+          }).catch(error => {
+            switch (error.code) {
+              case 'storage/object-not-found':
+                break;
+            }
+          })
+        }
       })
     })
 
@@ -222,58 +239,52 @@ export class ChatComponent implements OnInit {
           displaytime = display_day + "." + display_month + "." + display_year;
         }
 
-        let newestMessageRef = roomRef.child(snapshot.key!).orderByKey().limitToLast(1);
+        let newestMessageRef = roomRef.child(snapshot.key!).child("messages").orderByKey().limitToLast(1);
 
         newestMessageRef.on("child_added", function(nmSnapshot, prevChildKey) {
-          roomlist.forEach(room => {
-            if (room.key == snapshot.key) {
-              if (nmSnapshot.key != "roomData") {
-                let newestMessageData = nmSnapshot.val();
-                let image = newestMessageData.image;
-                let text = newestMessageData.text;
-                let messageuserid = newestMessageData.sender;
-                let username = userlist.find(x => x.key == messageuserid)!.name;
-                let pinned = newestMessageData.pinned;
-                let forwarded = newestMessageData.forwarded;
-                let quote = newestMessageData.quote;
-                let newesttime = newestMessageData.time;
-                let newestdisplaytime;
-                let date = new Date(newesttime.substring(0, 4) + '-' + newesttime.substring(4, 6) + '-' +  newesttime.substring(6, 8) + 'T' +  newesttime.substring(9, 11) + ':' + newesttime.substring(11, 13) + ':' + newesttime.substring(13, 15) + '.000Z')
-                let display_year = String(date.getFullYear());
-                let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
-                let display_day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
-                let display_hour = (date.getHours() < 10) ? "0" + String(date.getHours()) : String(date.getHours());
-                let display_minutes = (date.getMinutes() < 10) ? "0" + String(date.getMinutes()) : String(date.getMinutes());
-                if (display_year + display_month + display_day == utc_timestamp.substring(0,8)) {
-                  newestdisplaytime = display_hour + ":" + display_minutes;
-                } else {
-                  newestdisplaytime = display_day + "." + display_month + "." + display_year;
-                }
-                let m;
-                if (image != "") {
-                  if (messageuserid == userid) {
-                    m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                  } else {
-                    m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                  }
-                } else {
-                  if (messageuserid == userid) {
-                    m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                  } else {
-                    m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                  }
-                }
-                let oldmessage = roomlist.find(x => x.key == snapshot.key)!.newestMessage;
-                roomlist.find(x => x.key == snapshot.key)!.newestMessage = m;
-                if (oldmessage.key != m.key) {
-                  let index = roomlist.indexOf(roomlist.find(x => x.key == snapshot.key)!);
-                  let element = roomlist[index];
-                  roomlist.splice(index, 1);
-                  roomlist.splice(0, 0, element);
-                }
-              }
+          let newestMessageData = nmSnapshot.val();
+          let image = newestMessageData.image;
+          let text = newestMessageData.text;
+          let messageuserid = newestMessageData.sender;
+          let username = userlist.find(x => x.key == messageuserid)!.name;
+          let pinned = newestMessageData.pinned;
+          let forwarded = newestMessageData.forwarded;
+          let quote = newestMessageData.quote;
+          let newesttime = newestMessageData.time;
+          let newestdisplaytime;
+          let date = new Date(newesttime.substring(0, 4) + '-' + newesttime.substring(4, 6) + '-' +  newesttime.substring(6, 8) + 'T' +  newesttime.substring(9, 11) + ':' + newesttime.substring(11, 13) + ':' + newesttime.substring(13, 15) + '.000Z')
+          let display_year = String(date.getFullYear());
+          let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
+          let display_day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
+          let display_hour = (date.getHours() < 10) ? "0" + String(date.getHours()) : String(date.getHours());
+          let display_minutes = (date.getMinutes() < 10) ? "0" + String(date.getMinutes()) : String(date.getMinutes());
+          if (display_year + display_month + display_day == utc_timestamp.substring(0,8)) {
+            newestdisplaytime = display_hour + ":" + display_minutes;
+          } else {
+            newestdisplaytime = display_day + "." + display_month + "." + display_year;
+          }
+          let m;
+          if (image != "") {
+            if (messageuserid == userid) {
+              m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
+            } else {
+              m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
             }
-          });
+          } else {
+            if (messageuserid == userid) {
+              m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
+            } else {
+              m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
+            }
+          }
+          let oldmessage = roomlist.find(x => x.key == snapshot.key)!?.newestMessage;
+          roomlist.find(x => x.key == snapshot.key)!.newestMessage = m;
+          if (oldmessage.key != m.key) {
+            let index = roomlist.indexOf(roomlist.find(x => x.key == snapshot.key)!);
+            let element = roomlist[index];
+            roomlist.splice(index, 1);
+            roomlist.splice(0, 0, element);
+          }
         })
 
         newestMessageRef.once("value").then(function(newestMessageSnapshot) {
@@ -289,7 +300,6 @@ export class ChatComponent implements OnInit {
               let quote = newestMessageData.quote;
               let newesttime = newestMessageData.time;
               let newestdisplaytime;
-              let adminname = userlist.find(x => x.key == admin)!.name;
               let date = new Date(newesttime.substring(0, 4) + '-' + newesttime.substring(4, 6) + '-' +  newesttime.substring(6, 8) + 'T' +  newesttime.substring(9, 11) + ':' + newesttime.substring(11, 13) + ':' + newesttime.substring(13, 15) + '.000Z')
               let display_year = String(date.getFullYear());
               let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
@@ -316,13 +326,13 @@ export class ChatComponent implements OnInit {
                 }
               }
               if (roomlist.length == 0) {
-                roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
+                roomlist.push(new Room(snapshot.key!, name, category, time, password, admin, description, m, ""));
               } else {
                 let index = 0;
                 let added = false;
                 for (let r of roomlist) {
                   if (Number(r.newestMessage.time.substring(0, 8) + r.newestMessage.time.substring(9, 15)) < Number(m.time.substring(0, 8) + m.time.substring(9, 15))) {
-                    let newRoom = new Room(snapshot.key!, name, category, time, password, adminname, description, m, "");
+                    let newRoom = new Room(snapshot.key!, name, category, time, password, admin, description, m, "");
                     roomlist.splice(index, 0, newRoom);
                     added = true;
                     break;
@@ -331,7 +341,7 @@ export class ChatComponent implements OnInit {
                   }
                 }
                 if (added == false) {
-                  roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
+                  roomlist.push(new Room(snapshot.key!, name, category, time, password, admin, description, m, ""));
                 }
               }
             } else {
@@ -343,13 +353,13 @@ export class ChatComponent implements OnInit {
                 m = new Message(childSnapshot.key, adminname + " " + translatepipe.transform("CREATED THIS ROOM"), null, admin, time, null, null, null, null, displaytime, null, false);
               }
               if (roomlist.length == 0) {
-                roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
+                roomlist.push(new Room(snapshot.key!, name, category, time, password, admin, description, m, ""));
               } else {
                 let index = 0;
                 let added = false;
                 for (let r of roomlist) {
                   if (Number(r.newestMessage.time.substring(0, 8) + r.newestMessage.time.substring(9, 15)) < Number(time.substring(0, 8) + time.substring(9, 15))) {
-                    let newRoom = new Room(snapshot.key!, name, category, time, password, adminname, description, m, "");
+                    let newRoom = new Room(snapshot.key!, name, category, time, password, admin, description, m, "");
                     roomlist.splice(index, 0, newRoom);
                     added = true;
                     break;
@@ -358,7 +368,7 @@ export class ChatComponent implements OnInit {
                   }
                 }
                 if (added == false) {
-                  roomlist.push(new Room(snapshot.key!, name, category, time, password, adminname, description, m, ""));
+                  roomlist.push(new Room(snapshot.key!, name, category, time, password, admin, description, m, ""));
                 }
               }
             }
@@ -375,7 +385,30 @@ export class ChatComponent implements OnInit {
     this.items_messages.next(messagelist);
   }
 
+  public formatDate(timestamp: String): string {
+    let now = new Date();
+    let year = String(now.getUTCFullYear());
+    let month = (now.getUTCMonth()+1 < 10) ? "0" + String(now.getUTCMonth()+1) : String(now.getUTCMonth()+1);
+    let day = (now.getUTCDate() < 10) ? "0" + String(now.getUTCDate()) : String(now.getUTCDate());
+    let hours = (now.getUTCHours() < 10) ? "0" + String(now.getUTCHours()) : String(now.getUTCHours());
+    let minutes = (now.getUTCMinutes() < 10) ? "0" + String(now.getUTCMinutes()) : String(now.getUTCMinutes());
+    let seconds = (now.getUTCSeconds() < 10) ? "0" + String(now.getUTCSeconds()) : String(now.getUTCSeconds());
+    let utc_timestamp = year + month + day + "_" + hours + minutes + seconds + "_UTC";
+    let date = new Date(timestamp.substring(0, 4) + '-' + timestamp.substring(4, 6) + '-' +  timestamp.substring(6, 8) + 'T' +  timestamp.substring(9, 11) + ':' + timestamp.substring(11, 13) + ':' + timestamp.substring(13, 15) + '.000Z')
+    let display_year = String(date.getFullYear());
+    let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
+    let display_day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
+    let display_hour = (date.getHours() < 10) ? "0" + String(date.getHours()) : String(date.getHours());
+    let display_minutes = (date.getMinutes() < 10) ? "0" + String(date.getMinutes()) : String(date.getMinutes());
+    if (display_year + display_month + display_day == utc_timestamp.substring(0,8)) {
+      return display_hour + ":" + display_minutes;
+    } else {
+      return display_day + "." + display_month + "." + display_year;
+    }
+  }
+
   public openRoom(roomkey: String): void {
+    roommemberlist = [];
     this.cancelQuote();
     if (this.roomkey != "") {
       let oldmessageRef = database.ref('/rooms/' + this.roomkey + '/messages');
@@ -385,62 +418,42 @@ export class ChatComponent implements OnInit {
       let newestMessageRef = oldmessageRef.orderByKey().limitToLast(1);
 
       let translatepipe = this.translatepipe;
+      let formatDate = this.formatDate;
 
       newestMessageRef.on("child_added", function(nmSnapshot, prevChildKey) {
         roomlist.forEach(room => {
           if (room.key == currentRoomkey) {
-            if (nmSnapshot.key != "roomData") {
-              let newestMessageData = nmSnapshot.val();
-              let image = newestMessageData.image;
-              let text = newestMessageData.text;
-              let messageuserid = newestMessageData.sender;
-              let username = userlist.find(x => x.key == messageuserid)!.name;
-              let pinned = newestMessageData.pinned;
-              let forwarded = newestMessageData.forwarded;
-              let quote = newestMessageData.quote;
-              let newesttime = newestMessageData.time;
-              let newestdisplaytime;
-              let now = new Date();
-              let year = String(now.getUTCFullYear());
-              let month = (now.getUTCMonth()+1 < 10) ? "0" + String(now.getUTCMonth()+1) : String(now.getUTCMonth()+1);
-              let day = (now.getUTCDate() < 10) ? "0" + String(now.getUTCDate()) : String(now.getUTCDate());
-              let hours = (now.getUTCHours() < 10) ? "0" + String(now.getUTCHours()) : String(now.getUTCHours());
-              let minutes = (now.getUTCMinutes() < 10) ? "0" + String(now.getUTCMinutes()) : String(now.getUTCMinutes());
-              let seconds = (now.getUTCSeconds() < 10) ? "0" + String(now.getUTCSeconds()) : String(now.getUTCSeconds());
-              let utc_timestamp = year + month + day + "_" + hours + minutes + seconds + "_UTC";
-              let date = new Date(newesttime.substring(0, 4) + '-' + newesttime.substring(4, 6) + '-' +  newesttime.substring(6, 8) + 'T' +  newesttime.substring(9, 11) + ':' + newesttime.substring(11, 13) + ':' + newesttime.substring(13, 15) + '.000Z')
-              let display_year = String(date.getFullYear());
-              let display_month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
-              let display_day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
-              let display_hour = (date.getHours() < 10) ? "0" + String(date.getHours()) : String(date.getHours());
-              let display_minutes = (date.getMinutes() < 10) ? "0" + String(date.getMinutes()) : String(date.getMinutes());
-              if (display_year + display_month + display_day == utc_timestamp.substring(0,8)) {
-                newestdisplaytime = display_hour + ":" + display_minutes;
+            let newestMessageData = nmSnapshot.val();
+            let image = newestMessageData.image;
+            let text = newestMessageData.text;
+            let messageuserid = newestMessageData.sender;
+            let username = userlist.find(x => x.key == messageuserid)!.name;
+            let pinned = newestMessageData.pinned;
+            let forwarded = newestMessageData.forwarded;
+            let quote = newestMessageData.quote;
+            let newesttime = newestMessageData.time;
+            let newestdisplaytime = formatDate(newesttime);
+            let m;
+            if (image != "") {
+              if (messageuserid == userid) {
+                m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
               } else {
-                newestdisplaytime = display_day + "." + display_month + "." + display_year;
+                m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
               }
-              let m;
-              if (image != "") {
-                if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                } else {
-                  m = new Message(nmSnapshot.key!, username + " " + translatepipe.transform("SHARED A PICTURE"), image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                }
+            } else {
+              if (messageuserid == userid) {
+                m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
               } else {
-                if (messageuserid == userid) {
-                  m = new Message(nmSnapshot.key!, translatepipe.transform("YOU") + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                } else {
-                  m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
-                }
+                m = new Message(nmSnapshot.key!, username + ": " + text, image, username, newesttime, quote, pinned, messageuserid, null, newestdisplaytime, null, forwarded);
               }
-              let oldmessage = roomlist.find(x => x.key == currentRoomkey)!.newestMessage;
-              roomlist.find(x => x.key == currentRoomkey)!.newestMessage = m;
-              if (oldmessage.key != m.key) {
-                let index = roomlist.indexOf(roomlist.find(x => x.key == currentRoomkey)!);
-                let element = roomlist[index];
-                roomlist.splice(index, 1);
-                roomlist.splice(0, 0, element);
-              }
+            }
+            let oldmessage = roomlist.find(x => x.key == currentRoomkey)!.newestMessage;
+            roomlist.find(x => x.key == currentRoomkey)!.newestMessage = m;
+            if (oldmessage.key != m.key) {
+              let index = roomlist.indexOf(roomlist.find(x => x.key == currentRoomkey)!);
+              let element = roomlist[index];
+              roomlist.splice(index, 1);
+              roomlist.splice(0, 0, element);
             }
           }
         });
@@ -450,93 +463,110 @@ export class ChatComponent implements OnInit {
     let old_time: String;
     for (let r of roomlist) {
       if (r.key == roomkey) {
+        this.room = r;
         old_time = r.time;
         let date = new Date(r.time.substring(0, 4) + '-' + r.time.substring(4, 6) + '-' +  r.time.substring(6, 8) + 'T' +  r.time.substring(9, 11) + ':' + r.time.substring(11, 13) + ':' + r.time.substring(13, 15) + '.000Z')
         let year = String(date.getFullYear());
         let month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
         let day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
         let displaytime = day + "." + month + "." + year
+        let adminname = userlist.find(x => x.key == r.admin)!.name;
         if (navigator.language.substring(0, 2) == "de") {
-          document.getElementById('headeritem')!.innerHTML = "Raum wurde am " + displaytime + " von " + r.admin + " erstellt";
+          document.getElementById('headeritem')!.innerHTML = "Raum wurde am " + displaytime + " von " + adminname + " erstellt";
         } else {
-          document.getElementById('headeritem')!.innerHTML = "Room was created on " + displaytime + " by " + r.admin;
+          document.getElementById('headeritem')!.innerHTML = "Room was created on " + displaytime + " by " + adminname;
         }
+        (document.getElementById('roomheaderimage') as HTMLInputElement).src = String(r.image);
+        (document.getElementById('roomInfoImage') as HTMLInputElement).src = String(r.image);
+        document.getElementById('roomInfoCreated')!.innerHTML = String(this.formatDate(r.time));
       }
     }
 
     document.getElementById('headeritem')!.style.display = "block";
     document.getElementById('inputbox')!.style.display = "";
+    document.getElementById('roomheader')!.style.display = "";
     document.getElementById('noroom')!.style.display = "none";
     this.roomkey = roomkey.toString();
     this.messageRef = database.ref('/rooms/' + roomkey + '/messages');
     messagelist = [];
     let translatepipe = this.translatepipe;
+    let messageCount = 0;
     this.messageRef.on("child_added", function(snapshot, prevChildKey) {
-      if (snapshot.key != "roomData") {
-        let messageData = snapshot.val();
-        let image = messageData.image;
-        let text = messageData.text;
-        let userid = messageData.sender;
-        let name = userlist.find(x => x.key == userid)!.name;
-        let pinned = messageData.pinned;
-        let forwarded = messageData.forwarded;
-        let quote = messageData.quote;
-        let time = messageData.time;
+      messageCount++;
+      document.getElementById('roomInfoPostedMessages')!.innerHTML = String(messageCount);
+      let messageData = snapshot.val();
+      let image = messageData.image;
+      let text = messageData.text;
+      let userid = messageData.sender;
+      let name = userlist.find(x => x.key == userid)!.name;
+      let pinned = messageData.pinned;
+      let forwarded = messageData.forwarded;
+      let quote = messageData.quote;
+      let time = messageData.time;
 
-        let old_date = new Date(old_time.substring(0, 4) + '-' + old_time.substring(4, 6) + '-' +  old_time.substring(6, 8) + 'T' +  old_time.substring(9, 11) + ':' + old_time.substring(11, 13) + ':' + old_time.substring(13, 15) + '.000Z')
-        let date = new Date(time.substring(0, 4) + '-' + time.substring(4, 6) + '-' +  time.substring(6, 8) + 'T' +  time.substring(9, 11) + ':' + time.substring(11, 13) + ':' + time.substring(13, 15) + '.000Z')
-        let year = String(date.getFullYear());
-        let month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
-        let day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
-        let old_year = String(old_date.getFullYear());
-        let old_month = (old_date.getMonth()+1 < 10) ? "0" + String(old_date.getMonth()+1) : String(old_date.getMonth()+1);
-        let old_day = (old_date.getDate() < 10) ? "0" + String(old_date.getDate()) : String(old_date.getDate());
+      if (!roommemberlist.includes(userlist.find(x => x.key == userid))) {
+        roommemberlist.push(userlist.find(x => x.key == userid));
+      }
 
-        if (year + month + day != old_year + old_month + old_day) {
-          let displaytime = day + "." + month + "." + year;
-          let m = new Message("time", displaytime, "", name, time, quote, pinned, userid, null, null, null, false);
-          messagelist.push(m);
-        }
+      let old_date = new Date(old_time.substring(0, 4) + '-' + old_time.substring(4, 6) + '-' +  old_time.substring(6, 8) + 'T' +  old_time.substring(9, 11) + ':' + old_time.substring(11, 13) + ':' + old_time.substring(13, 15) + '.000Z')
+      let date = new Date(time.substring(0, 4) + '-' + time.substring(4, 6) + '-' +  time.substring(6, 8) + 'T' +  time.substring(9, 11) + ':' + time.substring(11, 13) + ':' + time.substring(13, 15) + '.000Z')
+      let year = String(date.getFullYear());
+      let month = (date.getMonth()+1 < 10) ? "0" + String(date.getMonth()+1) : String(date.getMonth()+1);
+      let day = (date.getDate() < 10) ? "0" + String(date.getDate()) : String(date.getDate());
+      let old_year = String(old_date.getFullYear());
+      let old_month = (old_date.getMonth()+1 < 10) ? "0" + String(old_date.getMonth()+1) : String(old_date.getMonth()+1);
+      let old_day = (old_date.getDate() < 10) ? "0" + String(old_date.getDate()) : String(old_date.getDate());
 
-        let displaytime = (date.getHours() < 10 ? "0" + String(date.getHours()) : String(date.getHours())) + ":" + (date.getMinutes() < 10 ? "0" + String(date.getMinutes()) : String(date.getMinutes()))
+      if (year + month + day != old_year + old_month + old_day) {
+        let displaytime = day + "." + month + "." + year;
+        let m = new Message("time", displaytime, "", name, time, quote, pinned, userid, null, null, null, false);
+        messagelist.push(m);
+      }
 
-        let pb_url = userlist.find(x => x.key == userid)!.profile_image;
-        let m;
-        if (quote != "") {
-          for (let message of messagelist) {
-            if (message.key == quote) {
-              m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, message, forwarded);
-            }
+      let displaytime = (date.getHours() < 10 ? "0" + String(date.getHours()) : String(date.getHours())) + ":" + (date.getMinutes() < 10 ? "0" + String(date.getMinutes()) : String(date.getMinutes()))
+
+      let pb_url = userlist.find(x => x.key == userid)!.profile_image;
+      let m;
+      if (quote != "") {
+        let found = false;
+        for (let message of messagelist) {
+          if (message.key == quote) {
+            m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, message, forwarded);
+            found = true;
           }
-        } else {
+        }
+        if (!found) {
           m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, forwarded);
         }
-        messagelist.push(m!);
-        let tmpmessagelist = messagelist;
-        messagelist = [];
-        messagelist = tmpmessagelist;
-
-        old_time = time;
-
-        if (image != "") {
-          let storage_img = storage.ref('/images/' + image);
-          storage_img.getDownloadURL().then(function(url_img) {
-            messagelist.find(x => x.key == snapshot.key)!.image = url_img;
-          })
-        }
-        setTimeout(function() { 
-          let messagebox = document.getElementById("messages");
-          messagebox!.scrollTop = messagebox!.scrollHeight;
-          if (image == "") {
-            document.getElementById('messagecontent_' + snapshot.key)!.innerHTML = document.getElementById('messagecontent_' + snapshot.key)!.innerHTML.replace(
-              /((http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/g,
-              '<a href="$1" target="_blank" title="' + translatepipe.transform('OPEN LINK') + '" style="color: white">$1</a>'
-            );
-          }
-        }, 10);
+      } else {
+        m = new Message(snapshot.key!, text, "", name, time, quote, pinned, userid, pb_url, displaytime, null, forwarded);
       }
+      messagelist.push(m!);
+      let tmpmessagelist = messagelist;
+      messagelist = [];
+      messagelist = tmpmessagelist;
+
+      old_time = time;
+
+      if (image != "") {
+        let storage_img = storage.ref('/images/' + image);
+        storage_img.getDownloadURL().then(function(url_img) {
+          messagelist.find(x => x.key == snapshot.key)!.image = url_img;
+        })
+      }
+      setTimeout(function() { 
+        let messagebox = document.getElementById("messages");
+        messagebox!.scrollTop = messagebox!.scrollHeight;
+        if (image == "") {
+          document.getElementById('messagecontent_' + snapshot.key)!.innerHTML = document.getElementById('messagecontent_' + snapshot.key)!.innerHTML.replace(
+            /((http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/g,
+            '<a href="$1" target="_blank" title="' + translatepipe.transform('OPEN LINK') + '" style="color: white">$1</a>'
+          );
+        }
+      }, 10);
     })
     this.items_messages.next(messagelist);
+    this.items_members.next(roommemberlist);
     document.getElementById("messageinput")!.focus();
   }
 
@@ -585,27 +615,27 @@ export class ChatComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
-  public showProfile(type: number) {
-    if (type == 0) {
+  public showProfile(key: String) {
+    if (key == userid) {
       document.getElementById('edit_profile_button')!.style.display = "block";
       this.displayUser = this.currentUser;
-      let modal = document.getElementById("myModal");
-      modal!.style.display = "block";
+      document.getElementById('profileHeader')!.innerHTML = this.translatepipe.transform('MY PROFILE');
+    } else if (key != null) {
+      document.getElementById('edit_profile_button')!.style.display = "none";
+      this.displayUser = userlist.find(x => x.key == key)!;
+      document.getElementById('profileHeader')!.innerHTML = this.translatepipe.transform('PROFILE OF') + " " + this.displayUser.name;
     } else {
-      let userkey = messagelist.find(x => x.key == this.cm_message)!.userid;
-      if (userkey == userid) {
-        document.getElementById('edit_profile_button')!.style.display = "block";
-      } else {
-        document.getElementById('edit_profile_button')!.style.display = "none";
-      }
-      this.displayUser = userlist.find(x => x.key == userkey)!;
-      let modal = document.getElementById("myModal");
-      modal!.style.display = "block";
+      document.getElementById('edit_profile_button')!.style.display = "none";
+      let key = messagelist.find(x => x.key == this.cm_message)!.userid;
+      this.displayUser = userlist.find(x => x.key == key)!;
+      document.getElementById('profileHeader')!.innerHTML = this.translatepipe.transform('PROFILE OF') + " " + this.displayUser.name;
     }
+    let modal = document.getElementById("profileModal");
+    modal!.style.display = "block";
   }
 
   public closeProfile() {
-    let modal = document.getElementById("myModal");
+    let modal = document.getElementById("profileModal");
     modal!.style.display = "none";
   }
 
@@ -675,8 +705,8 @@ export class ChatComponent implements OnInit {
     modal!.style.display = "none";
   }
 
-  public createRoom(name: HTMLInputElement, desc: HTMLTextAreaElement, cat: MatSelect, passwd: HTMLInputElement, passwdr: HTMLInputElement) {
-    if (name.value.trim() != '' && desc.value.trim() != '' && cat.value != 0 && passwd.value.trim() != '' && passwd.value.trim() == passwdr.value.trim()) {
+  public createRoom(name: HTMLInputElement, description: HTMLTextAreaElement, category: MatSelect, password: HTMLInputElement, passwordRepeat: HTMLInputElement) {
+    if (name.value.trim() != '' && category.value != 0 && password.value.trim() != '' && password.value.trim() == passwordRepeat.value.trim()) {
       if (this.room_image == "") {
         let randomNumber = Math.floor(Math.random() * 4) + 1;
         this.room_image = "standard" + randomNumber;
@@ -685,20 +715,20 @@ export class ChatComponent implements OnInit {
       let newRoomKey = roomRef.push().key;
       roomRef.child(newRoomKey).child('roomData').update({
         admin: userid,
-        category: parseInt(cat.value),
-        description: desc.value.trim(),
+        category: parseInt(category.value),
+        description: description.value.trim(),
         image: this.room_image,
         name: name.value.trim(),
-        password: passwd.value.trim(),
+        password: password.value.trim(),
         time: this.getCurrentTime()
       });
       let modal = document.getElementById("roomModal");
       modal!.style.display = "none";
       name.value = '';
-      desc.value = '';
-      passwd.value = '';
-      passwdr.value = '';
-      cat.value = 0;
+      description.value = '';
+      password.value = '';
+      passwordRepeat.value = '';
+      category.value = 0;
       this.room_image = '';
     }
   }
@@ -827,7 +857,7 @@ export class ChatComponent implements OnInit {
       modalcontent!.style.top = y + "px";
     }
     modalcontent!.style.left = x + "px";
-    modalcontent!.style.display = "block";
+    modalcontent!.style.display = "flex";
     return false;
   }
 
@@ -890,12 +920,23 @@ export class ChatComponent implements OnInit {
     let quoteid = messagelist.find(x => x.key == messageid)!.quote;
     if (quoteid != "") {
       let targetMessage = document.getElementById('message_' + quoteid)
-      document.getElementById('messages')!.scrollTop = (targetMessage!.offsetTop - 55);
+      document.getElementById('messages')!.scrollTop = (targetMessage!.offsetTop - 125);
       targetMessage!.style.background = "grey";
       setTimeout(function() {
-        targetMessage!.style.background = "null";
+        targetMessage!.style.background = "none";
       }, 1000);
     }
+  }
+
+  public jumpToPinnedMessage(messageid: String) {
+    document.getElementById('roomInfoModal')!.style.display = "none";
+    document.getElementById('pinboardModal')!.style.display = "none";
+    let targetMessage = document.getElementById('message_' + messageid)
+    document.getElementById('messages')!.scrollTop = (targetMessage!.offsetTop - 125);
+    targetMessage!.style.background = "grey";
+    setTimeout(function() {
+      targetMessage!.style.background = "none";
+    }, 1000);
   }
 
   public pinMessage() {
@@ -928,7 +969,7 @@ export class ChatComponent implements OnInit {
   }
 
   public editProfile(name: string, description: string, birthday: string, location: string) {
-    if (name.trim() != '' && description.trim() != '' && birthday != '0' && location.trim()) {
+    if (name.trim() != '' && birthday != '0' && location.trim()) {
       database.ref('/users/' + userid + '/name').set(name);
       database.ref('/users/' + userid + '/description').set(description);
       database.ref('/users/' + userid + '/birthday').set(birthday.replace(/-/g, ""));
@@ -949,7 +990,7 @@ export class ChatComponent implements OnInit {
       this.profile_banner = "";
       this.profile_image = "";
 
-      //this.showToast(this.translatepipe.transform("PROFILE EDITED"));
+      this.showToast(this.translatepipe.transform("PROFILE EDITED"));
     }
   }
 
@@ -995,5 +1036,127 @@ export class ChatComponent implements OnInit {
   public deleteSearchInput() {
     (document.getElementById('roomsearchinput') as HTMLInputElement).value = "";
     this.searchRoom("");
+  }
+
+  public openRoomInfo() {
+    document.getElementById("roomInfoModal")!.style.display = "block";
+  }
+
+  public closeRoomInfo() {
+    document.getElementById('roomInfoModal')!.style.display = "none";
+  }
+
+  public convertCategory(categoryID: number): string {
+    switch (categoryID) {
+      case 1:
+        return this.translatepipe.transform("STUDY AND WORK");
+      case 2:
+        return this.translatepipe.transform("GAMING");
+      case 3:
+        return this.translatepipe.transform("POLITICS");
+      case 4:
+        return this.translatepipe.transform("GEOGRAPHY");
+      case 5:
+        return this.translatepipe.transform("LANGUAGES");
+      case 6:
+        return this.translatepipe.transform("LITERATURE");
+      case 7:
+        return this.translatepipe.transform("TECHNICS");
+      case 8:
+        return this.translatepipe.transform("TV");
+      case 9:
+        return this.translatepipe.transform("SPORTS");
+      case 10:
+        return this.translatepipe.transform("CULTURE AND ART");
+      case 11:
+        return this.translatepipe.transform("MUSIC");
+      case 12:
+        return this.translatepipe.transform("MISC");
+      default:
+        return ""; // TODO
+    }
+  }
+
+  public openEditRoom() {
+    (document.getElementById('edit_room_name') as HTMLInputElement).value = String(this.room.name);
+    (document.getElementById('edit_room_description') as HTMLInputElement).value = String(this.room.description);
+    this.selectedCategory = String(this.room.category);
+    (document.getElementById('edit_room_password') as HTMLInputElement).value = String(this.room.password);
+    (document.getElementById('edit_room_confirm_password') as HTMLInputElement).value = String(this.room.password);
+    this.room_image = this.room.image.toString();
+    document.getElementById("editRoomModal")!.style.display = "block";
+  }
+
+  public cancelEditingRoom() {
+    document.getElementById('editRoomModal')!.style.display = "none";
+  }
+
+  public editRoom(name: HTMLInputElement, description: HTMLTextAreaElement, category: MatSelect, password: HTMLInputElement, passwordRepeat: HTMLInputElement) {
+    if (name.value.trim() != '' && category.value != 0 && password.value.trim() != '' && password.value.trim() == passwordRepeat.value.trim()) {
+      if (this.room_image == "") {
+        let randomNumber = Math.floor(Math.random() * 4) + 1;
+        this.room_image = "standard" + randomNumber;
+      }
+      let roomRef = database.ref('/rooms/');
+      roomRef.child(this.roomkey).child('roomData').update({
+        category: parseInt(category.value),
+        description: description.value.trim(),
+        // image: this.room_image, // TODO
+        name: name.value.trim(),
+        password: password.value.trim(),
+      });
+      let modal = document.getElementById("editRoomModal");
+      modal!.style.display = "none";
+      this.room.name = name.value.trim();
+      this.room.description = description.value.trim();
+      this.room.category = parseInt(category.value);
+      name.value = '';
+      description.value = '';
+      password.value = '';
+      passwordRepeat.value = '';
+      category.value = 0;
+      this.room_image = '';
+    }
+  }
+
+  public openDeleteRoom() {
+    document.getElementById("deleteRoomModal")!.style.display = "block";
+  }
+
+  public cancelDeleteRoom() {
+    document.getElementById('deleteRoomModal')!.style.display = "none";
+  }
+
+  public deleteRoom() {
+    let roomRef = database.ref('/rooms/');
+    roomRef.child(this.roomkey).remove();
+    document.getElementById('deleteRoomModal')!.style.display = "none";
+    document.getElementById('roomInfoModal')!.style.display = "none";
+    this.roomkey = "";
+    this.room = null;
+    document.getElementById('headeritem')!.style.display = "none";
+    document.getElementById('inputbox')!.style.display = "none";
+    document.getElementById('roomheader')!.style.display = "none";
+    document.getElementById('noroom')!.style.display = "block";
+    messagelist = [];
+    this.items_messages.next(messagelist);
+  }
+
+  public openPinboard() {
+    document.getElementById("pinboardModal")!.style.display = "block";
+    let pinnedList = messagelist.filter(m => m.pinned);
+    this.items_pinned.next(pinnedList);
+  }
+
+  public closePinboard() {
+    document.getElementById("pinboardModal")!.style.display = "none";
+  }
+
+  public openUserMenu() {
+    if (document.getElementById("usermenu")!.style.display != "flex") {
+      document.getElementById("usermenu")!.style.display = "flex";
+    } else {
+      document.getElementById("usermenu")!.style.display = "none";
+    }
   }
 }

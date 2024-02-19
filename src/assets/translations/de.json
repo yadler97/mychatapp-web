@@ -59,5 +59,22 @@
     "SEARCH ROOM": "Raum suchen...",
     "NO ROOM FOUND": "Kein Raum gefunden",
     "OPEN LINK": "Link öffnen",
-    "DOWNLOAD": "Herunterladen"
+    "DOWNLOAD": "Herunterladen",
+    "ROOM INFO": "Rauminfo",
+    "CATEGORY": "Kategorie",
+    "FOUNDATION": "Gründung",
+    "SENT MESSAGES": "Gepostete Nachrichten",
+    "MEMBERS": "Mitglieder",
+    "PROFILE OF": "Profil von",
+    "PROFILE EDITED": "Profil erfolgreich bearbeitet",
+    "QUOTED MESSAGE NO LONGER AVAILABLE": "Zitierte Nachricht nicht mehr verfügbar",
+    "EDIT ROOM": "Raum bearbeiten",
+    "DELETE ROOM": "Raum löschen",
+    "DO YOU REALLY WANT TO DELETE THIS ROOM": "Möchtest du diesen Raum wirklich löschen?",
+    "FORGOT PASSWORD": "Passwort vergessen?",
+    "PLEASE ENTER EMAIL": "Bitte Mail-Adresse eingeben",
+    "SEND PASSWORD RESET MAIL": "Mail zum Zurücksetzen des Passworts verschicken",
+    "PASSWORD RESET MAIL SENT": "Mail zum Zurücksetzen des Passworts verschickt",
+    "SENDING PASSWORD RESET MAIL FAILED": "Senden der Mail zum Zurücksetzen des Passworts fehlgeschlagen",
+    "PINBOARD": "Pinnwand"
 }

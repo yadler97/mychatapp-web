@@ -1,36 +1,53 @@
 <body>
-  <table>
-    <tr>
-      <td>
-        <div class="mcalogo">
-          <div *ngIf="theme == 'dark'; then dark_logo else light_logo"></div>
-          <ng-template #light_logo>
-            <img src="assets/img/ic_splash.png" alt="MyChatApp Logo">
-          </ng-template>
-          <ng-template #dark_logo>
-            <img src="assets/img/ic_splash_dark.png" alt="MyChatApp Logo">
-          </ng-template>
-          <p class="mcatext">{{ appname }}</p>
-        </div>
-      </td>
-      <td>
-        <div class="loginbox">
-          <form id="loginform" method="post" target="/" onsubmit="return false">
-            <input #email type="email" id="emailinput" placeholder="{{ 'EMAIL' | translate }}" maxlength="40" required (invalid)="setCustomValidityInTemplate()" oninput="this.setCustomValidity('')">
-            <input #password type="password" placeholder="{{ 'PASSWORD' | translate }}" maxlength="16" id="passwordinput" (keyup.enter)="login(email.value, password.value, password); password.value='' " oninput="this.setCustomValidity('')">
-            <button id="submitbutton" (click)="login(email.value, password.value, password)">{{ 'LOGIN' | translate }}</button>
-          </form>
-        </div>
-      </td>
-    </tr>
-  </table>
-  <p class="versionnumber">Ver. 1.1.0</p>
+  <div class="loginscreen">
+    <div class="mcalogo">
+      <div *ngIf="theme == 'dark'; then dark_logo else light_logo"></div>
+      <ng-template #light_logo>
+        <img src="assets/img/ic_splash.png" alt="MyChatApp Logo">
+      </ng-template>
+      <ng-template #dark_logo>
+        <img src="assets/img/ic_splash_dark.png" alt="MyChatApp Logo">
+      </ng-template>
+      <p class="mcatext">{{ appname }}</p>
+    </div>
+    <div class="loginbox">
+      <form id="loginform" method="post" target="/" onsubmit="return false">
+        <input #email type="email" id="emailinput" placeholder="{{ 'EMAIL' | translate }}" maxlength="40" required (invalid)="setCustomValidityInTemplate()" oninput="this.setCustomValidity('')">
+        <input #password type="password" placeholder="{{ 'PASSWORD' | translate }}" maxlength="16" id="passwordinput" (keyup.enter)="login(email.value, password.value, password); password.value='' " oninput="this.setCustomValidity('')">
+        <button id="submitbutton" (click)="login(email.value, password.value, password)">{{ 'LOGIN' | translate }}</button>
+      </form>
+      <button class="forgotPasswordButton" (click)="openForgotPasswordModal()">{{ 'FORGOT PASSWORD' | translate }}</button>
+    </div>
+  </div>
+  <p class="versionnumber">Ver. 1.2.0</p>
 
   <div id="resendModal" class="modal">
     <div class="modal-content">
       <span class="close" (click)="cancelResendingEmail()">&times;</span>
       <p>{{ 'PLEASE VERIFY EMAIL' | translate }}</p>
       <button (click)="resendEmail()">{{ 'RESEND VERIFICATION MAIL' | translate }}</button>
+    </div>
+  </div>
+
+  <div id="forgotPasswordModal" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeForgotPasswordModal()">&times;</span>
+      <p>{{ 'PLEASE ENTER EMAIL' | translate }}</p>
+      <form method="post" target="/" onsubmit="return false">
+        <mat-form-field>
+          <input #resetemail matInput type="email" placeholder="{{ 'EMAIL' | translate }}" maxlength="40" ngModel required (invalid)="setCustomValidityInTemplate()" oninput="this.setCustomValidity('')">
+          <mat-hint align=end>{{resetemail.value?.length || 0}} / 40</mat-hint>
+        </mat-form-field>
+        <div>
+          <button (click)="resetPassword(resetemail.value)">{{ 'SEND PASSWORD RESET MAIL' | translate }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <div class="toastcontent">
+      <p class="toasttext" id="toasttext"></p>
     </div>
   </div>
 </body>

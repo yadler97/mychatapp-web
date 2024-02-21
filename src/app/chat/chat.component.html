@@ -559,23 +559,29 @@
       </div>
       <div class="modal-body">
         <div class="pinboard_content">
-          <ul>
-            <li *ngFor="let message of items_pinned | async">
-              <button (click)="jumpToPinnedMessage(message.key)">
-                <div class="pinned_header">
-                  <p class="name_field">{{ message.sender }}</p>
-                  <p>{{ this.formatDate(message.time) }}</p>
-                </div>
-                <div *ngIf="message.image == ''; then pinned_message else pinned_image"></div>
-                <ng-template #pinned_message>
-                  <p>{{ message.text }}</p>
-                </ng-template>
-                <ng-template #pinned_image>
-                  <img src="{{ message.image }}" alt="image">
-                </ng-template>
-              </button>
-            </li>
-          </ul>
+          <div *ngIf="(items_pinned | async)!.length > 0; then pinned_list_template else empty_pinned_list_template"></div>
+          <ng-template #pinned_list_template>
+            <ul>
+              <li *ngFor="let message of items_pinned | async">
+                <button (click)="jumpToPinnedMessage(message.key)">
+                  <div class="pinned_header">
+                    <p class="name_field">{{ message.sender }}</p>
+                    <p>{{ this.formatDate(message.time) }}</p>
+                  </div>
+                  <div *ngIf="message.image == ''; then pinned_message else pinned_image"></div>
+                  <ng-template #pinned_message>
+                    <p>{{ message.text }}</p>
+                  </ng-template>
+                  <ng-template #pinned_image>
+                    <img src="{{ message.image }}" alt="image">
+                  </ng-template>
+                </button>
+              </li>
+            </ul>
+          </ng-template>
+          <ng-template #empty_pinned_list_template>
+            <p>{{ 'NO PINNED MESSAGES FOUND' | translate }}</p>
+          </ng-template>
         </div>
       </div>
     </div>

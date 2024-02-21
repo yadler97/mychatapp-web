@@ -1622,6 +1622,11 @@ body {
                 }
             }
         }
+
+        p {
+            color: var(--fontcolor);
+            margin: 16px;
+        }
     }
 }
 

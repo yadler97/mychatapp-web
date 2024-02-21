@@ -6,6 +6,12 @@ html {
     background: var(--header);
 }
 
+mark {
+    font-weight: bolder;
+    background: none;
+    color: red !important;
+}
+
 :root {
     --primary-color: #8EC54F;
     --header: #8EC54F;

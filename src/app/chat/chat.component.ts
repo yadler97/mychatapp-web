@@ -16,6 +16,8 @@ import "firebase/compat/storage";
 import { FormControl } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 
+const Mark = require('mark.js');
+
 class Room {
   constructor(public key: String, public name: String, public category: number, public time: String, public password: String, public admin: String, public description: String, public newestMessage: Message, public image: String) { }
 }
@@ -1010,8 +1012,15 @@ export class ChatComponent implements OnInit {
           searchroomlist.push(room);
         }
       }
+      var context = document.querySelectorAll(".roomname");
+      var instance = new Mark(context);
+      instance.unmark();
+      instance.mark(input);
       this.items.next(searchroomlist);
     } else {
+      var context = document.querySelectorAll(".roomname");
+      var instance = new Mark(context);
+      instance.unmark();
       this.items.next(roomlist);
     }
   }

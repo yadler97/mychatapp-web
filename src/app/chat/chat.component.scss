@@ -248,6 +248,7 @@ body {
                                     color: #000000;
                                     color: var(--fontcolor);
                                     text-align: left;
+                                    margin: 0;
                                 }
 
                                 .roomtime {
@@ -256,10 +257,11 @@ body {
                                     padding-top: 5px;
                                     color: var(--fontcolor);
                                     text-align: right;
+                                    margin: 0;
                                 }
                             }
                     
-                            .category {
+                            .newestMessagePreview {
                                 font-size: 14px;
                                 margin: 4px 30px 0px 0px;
                                 position: relative;
@@ -1254,6 +1256,7 @@ body {
                             flex: 1;
                             color: #000000;
                             color: var(--fontcolor);
+                            margin: 0;
                         }
 
                         .roomtime {
@@ -1261,10 +1264,11 @@ body {
                             padding-right: 20px;
                             padding-top: 5px;
                             color: var(--fontcolor);
+                            margin: 0;
                         }
                     }
             
-                    .category {
+                    .newestMessagePreview {
                         font-size: 14px;
                         margin: 4px 30px 0px 0px;
                         position: relative;

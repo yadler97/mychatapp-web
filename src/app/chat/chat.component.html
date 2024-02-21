@@ -48,10 +48,10 @@
               <img src="{{ room.image }}" alt="room image" class="room_image">
               <div class="rightpartroomlist">
                 <div class="firstroomline">
-                  <div class="roomname">{{ room.name }}</div>
-                  <div class="roomtime">{{ room.newestMessage.displayTime }}</div>
+                  <p class="roomname">{{ room.name }}</p>
+                  <p class="roomtime">{{ room.newestMessage.displayTime }}</p>
                 </div>
-                <div class="category">{{ room.newestMessage.text }}</div>
+                <p class="newestMessagePreview">{{ room.newestMessage.text }}</p>
               </div>
             </button>
           </li>
@@ -414,10 +414,10 @@
               <img src="{{ room.image }}" alt="room image" class="room_image">
               <div class="rightpartroomlist">
                 <div class="firstroomline">
-                  <div class="roomname">{{ room.name }}</div>
-                  <div class="roomtime">{{ room.newestMessage.displayTime }}</div>
+                  <p class="roomname">{{ room.name }}</p>
+                  <p class="roomtime">{{ room.newestMessage.displayTime }}</p>
                 </div>
-                <div class="category">{{ room.newestMessage.text }}</div>
+                <p class="newestMessagePreview">{{ room.newestMessage.text }}</p>
               </div>
             </div>
           </li>

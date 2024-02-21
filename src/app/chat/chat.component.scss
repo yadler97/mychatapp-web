@@ -935,15 +935,19 @@ body {
     background: var(--modalheader);
     display: flex;
     flex-flow: column;
+    border-radius: 1em;
 
     .fullscreenimage {
         height: calc(100% - 35px);
         background: white;
+        border-bottom-right-radius: 1em;
+        border-bottom-left-radius: 1em;
     }
 
     .close {
         height: 35px;
         margin-right: .4em;
+        margin-bottom: 5px;
     }
 }
 
@@ -962,6 +966,9 @@ body {
     float: right;
     font-size: 28px;
     font-weight: bold;
+    background: none;
+    border: none;
+    margin-top: 5px;
 }
 
 .close:hover,
@@ -1558,8 +1565,7 @@ body {
     .pinboard_content {
         ul {
             padding: 0;
-            margin-left: 10px;
-            margin-right: 10px;
+            margin: 10px;
 
             li {
                 list-style-type: none;

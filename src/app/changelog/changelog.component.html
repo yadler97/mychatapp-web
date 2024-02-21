@@ -1,6 +1,6 @@
 <header>
   <div class="container">
-    <div class="logo">
+    <a routerLink="/" class="logo">
       <div *ngIf="theme == 'dark'; then dark_logo else light_logo"></div>
       <ng-template #light_logo>
         <img src="assets/img/ic_splash.png" alt="MyChatApp Logo">
@@ -8,8 +8,8 @@
       <ng-template #dark_logo>
         <img src="assets/img/ic_splash_dark.png" alt="MyChatApp Logo">
       </ng-template>
-      <a routerLink="/" class="appname">{{ appname }}</a>
-    </div>
+      <p class="appname">{{ appname }}</p>
+    </a>
   </div>
 </header>
 

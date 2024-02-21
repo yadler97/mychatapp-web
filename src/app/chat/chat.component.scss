@@ -19,27 +19,45 @@ header {
         float: left;
         display: flex;
         flex-flow: row;
+        text-decoration: none;
+        width: fit-content;
+        margin: 5px;
+        border-radius: 10px;
 
         img {
             width: 40px;
             height: 33px;
-            margin-top: 10px;
+            margin-top: 5px;
             margin-bottom: 5px;
             margin-left: 10px;
             float: left;
         }
 
         .appname {
-            margin-left: 1em;
+            margin: 0 1em;
             font-size: 1em;
-            line-height: 55px;
+            line-height: 45px;
             font-weight: bold;
             text-align: center;
             display: inline-block;
             white-space: nowrap;
-            text-decoration: none;
             color: white;
         }
+    }
+
+    .logo:hover {
+        background: #5f8336;
+        background: var(--headerhover);
+        filter:brightness(0.93);
+    }
+
+    .logo:focus {
+        outline-width: 0;
+        filter:brightness(0.85);
+    }
+
+    .logo::-moz-focus-inner {
+        border:0;
     }
 
     .nav_profile_image_box {

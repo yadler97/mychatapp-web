@@ -36,10 +36,7 @@
     <div class="roomlist">
       <ul>
         <li class="roomsearchcontainer">
-          <input #searchroom id="roomsearchinput" type="text" placeholder="{{ 'SEARCH ROOM' | translate }}" (input)="searchRoom(searchroom.value)">
-          <!--<button class="deleteinput" mat-icon-button matSuffix (click)="deleteSearchInput()">
-            <mat-icon class="deletesearchinputicon">clear</mat-icon>
-          </button>!-->
+          <input #searchroom id="roomsearchinput" type="search" placeholder="{{ 'SEARCH ROOM' | translate }}" (input)="searchRoom(searchroom.value)">
         </li>
         <div *ngIf="(items | async)!.length > 0; then roomlist else message_norooms"></div>
         <ng-template #roomlist>

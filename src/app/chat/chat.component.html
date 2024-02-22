@@ -200,7 +200,7 @@
       </div>
       <div class="inputbox" id="inputbox" style="display: none">
         <input #fileInput type="file" accept="image/*" (change)="onFileUpload($event, 0)">
-        <button (click)="fileInput.click()"><img class="uploadimage" src="assets/img/ic_image.png" onmouseover="this.src='assets/img/ic_image_light.png'" onmouseout="this.src='assets/img/ic_image.png'"></button>
+        <button (click)="fileInput.click()"><mat-icon class="uploadimage">image</mat-icon></button>
         <textarea id="messageinput" #box placeholder="{{ 'SEND MESSAGE' | translate }}" (keyup.enter)="sendMessage(box.value); box.value='' "></textarea><br>
         <button id="sendmessagebutton" class="sendbutton" (click)="sendMessage(box.value); box.value='' ">{{ 'SEND' | translate }}</button>
       </div>
@@ -349,7 +349,9 @@
             <div class="imageupload">
               <p class="modal-text">{{ 'ROOM IMAGE' | translate }}</p>
               <input class="uploadelement" #fileInput4 type="file" accept="image/*" (change)="onFileUpload($event, 1)">
-              <input id="room_image_input" type="image" src="assets/img/ic_image.png" (click)="fileInput4.click(); $event.preventDefault()" class="uploadimagebutton">
+              <button id="room_image_input" class="uploadimagebutton" (click)="fileInput4.click(); $event.preventDefault()">
+                <mat-icon>image</mat-icon>
+              </button>
             </div>
             <mat-form-field>
               <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
@@ -521,7 +523,9 @@
             <div class="imageupload">
               <p class="modal-text">{{ 'ROOM IMAGE' | translate }}</p>
               <input class="uploadelement" #fileInput5 type="file" accept="image/*" (change)="onFileUpload($event, 1)">
-              <input id="edit_room_image" type="image" src="assets/img/ic_image.png" (click)="fileInput5.click(); $event.preventDefault()" class="uploadimagebutton">
+              <button id="edit_room_image" class="uploadimagebutton" (click)="fileInput5.click(); $event.preventDefault()">
+                <mat-icon>image</mat-icon>
+              </button>
             </div>
             <mat-form-field>
               <mat-label>{{ 'PASSWORD' | translate }}</mat-label>

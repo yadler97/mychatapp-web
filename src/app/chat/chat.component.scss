@@ -469,7 +469,7 @@ body {
 
                 .uploadimage {
                     height: 24px;
-                    padding: 8px;
+                    padding: 4px;
                 }
 
                 textarea {
@@ -493,15 +493,17 @@ body {
                 }
 
                 button {
-                    height: 40px;
-                    line-height: 40px;
+                    height: 30px;
+                    line-height: 30px;
                     border: none;
                     background: none;
                     font-weight: bold;
-                    cursor: pointer;
                     color: #000000;
                     color: var(--fontcolor);
                     padding: 0 0;
+                    border-radius: 1em;
+                    margin: 5px;
+                    cursor: pointer;
                 }
 
                 .sendbutton {
@@ -509,17 +511,17 @@ body {
                     padding-right: 6px;
                 }
 
-                .sendbutton:hover {
+                button:hover {
                     background-color: rgb(224, 224, 224);
                     background-color: var(--buttonhover);
                 }
 
-                .sendbutton:active {
+                button:active {
                     background-color: #ADADAD;
                     background-color: var(--buttonfocus);
                 }
 
-                .sendbutton::-moz-focus-inner {
+                button::-moz-focus-inner {
                     border:0;
                 }
 
@@ -1177,23 +1179,21 @@ body {
             .uploadimagebutton {
                 width: 36px;
                 height: 36px;
-                border-radius: 0%;
+                border: 0;
+                background: none;
+                color: black;
+                color: var(--fontcolor);
+                border-radius: 1em;
+                cursor: pointer;
             }
 
-            input[type=image]:hover {
+            .uploadimagebutton:hover {
                 filter:brightness(0.93);
             }
 
-            input[type=image]:active {
-                filter:brightness(0.85);
-            }
-
-            input[type=image]:focus {
+            .uploadimagebutton:focus {
                 outline-width: 0;
-            }
-    
-            input[type=image]::-moz-focus-inner {
-                border:0;
+                filter:brightness(0.85);
             }
         }
     }
@@ -1264,20 +1264,17 @@ body {
                     }
                 }
             }
-
-            .container[data-value='selected'] {
-                display: none;
-            }
         }
 
         li:hover {
             background: #D1D1D1;
             background: var(--roomhover);
+            filter:brightness(0.93);
         }
 
-        li:active {
-            background: #BDBDBD;
-            background: var(--roomclicked);
+        li:focus {
+            outline-width: 0;
+            filter:brightness(0.85);
         }
     }
 
@@ -1315,32 +1312,24 @@ body {
                 display: none;
             }
 
-            .uploadimagebutton_square {
+            .uploadimagebutton {
                 width: 36px;
                 height: 36px;
-                border-radius: 0%;
+                border: 0;
+                background: none;
+                color: black;
+                color: var(--fontcolor);
+                border-radius: 1em;
+                cursor: pointer;
             }
 
-            .uploadimagebutton_rectangle {
-                width: 64px;
-                height: 36px;
-                border-radius: 0%;
-            }
-
-            input[type=image]:hover {
+            .uploadimagebutton:hover {
                 filter:brightness(0.93);
             }
 
-            input[type=image]:active {
-                filter:brightness(0.85);
-            }
-
-            input[type=image]:focus {
+            .uploadimagebutton:focus {
                 outline-width: 0;
-            }
-    
-            input[type=image]::-moz-focus-inner {
-                border:0;
+                filter:brightness(0.85);
             }
         }
     }

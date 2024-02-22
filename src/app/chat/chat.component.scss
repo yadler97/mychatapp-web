@@ -161,8 +161,8 @@ body {
             min-width: 350px;
             height: calc(100vh - 55px);
             float: left;
-            background: #929292;
-            background: var(--roomlistbackground);
+            background: #EEEEEE;
+            background: var(--room);
             display: flex;
             flex-flow: column;
             overflow-x: none;
@@ -171,7 +171,7 @@ body {
             ul {
                 list-style-type: none;
                 margin: 0;
-                padding: 0;
+                padding: 10px;
                 flex: 1;
                 overflow-y: scroll;
                 overflow-x: hidden;
@@ -186,6 +186,7 @@ body {
                 .roomsearchcontainer {
                     display: flex;
                     flex-flow: row;
+                    margin-bottom: 10px;
 
                     input {
                         width: 100%;
@@ -194,13 +195,15 @@ body {
                         border: none;
                         background: #EEEEEE;
                         background: var(--room);
+                        border-radius: 1em;
                         color: #000000;
                         color: var(--fontcolor);
+                        filter: brightness(0.93);
                     }
 
                     input:hover {
                         outline-width: 0;
-                        filter: brightness(0.9);
+                        filter: brightness(0.85);
                     }
 
                     input:focus {
@@ -230,10 +233,6 @@ body {
                 }
 
                 li {
-                    background: #EEEEEE;
-                    background: var(--room);
-                    margin-bottom: 2px;
-
                     .container {
                         display: flex;
                         flex-flow: row;
@@ -243,6 +242,7 @@ body {
                         margin-bottom: 0px;
                         background: none;
                         border: none;
+                        border-radius: 1em;
                         cursor: pointer;
                         
                         .room_image {
@@ -986,12 +986,18 @@ body {
 }
 
 .modal-body {
-    padding: 0px 0px;
+    padding: 16px;
+
+    p {
+        color: black;
+        color: var(--fontcolor);
+    }
 
     figure {  
         width: 100%;
         overflow: hidden;
-        margin:0;  
+        margin: 0;
+        border-radius: 1em;
     }
 
     figure img {
@@ -1007,12 +1013,10 @@ body {
     }
 
     .profile_content {
-        padding: 0px 16px;
-
         .profile_name {
             display: flex;
             flex-flow: row;
-            padding-bottom: 1em;
+            margin-left: 16px;
 
             .profile_image {
                 height: 13.75vw;
@@ -1029,8 +1033,6 @@ body {
                     font-size: 3.4375vw;
                     margin: auto;
                     margin-left: 0.5em;
-                    color: #000000;
-                    color: var(--fontcolor);
                 }
     
                 .editbutton {
@@ -1073,13 +1075,9 @@ body {
         .userbio {
             font-size: 20px;
             overflow-wrap: break-word;
-            color: #000000;
-            color: var(--fontcolor);
         }
 
         .bdayandloc {
-            padding-top: 1em;
-            padding-bottom: 1em;
             display: flex;
             flex-flow: row;
 
@@ -1094,23 +1092,17 @@ body {
                 margin-top: 0;
                 margin-bottom: 0;
                 padding-right: 1em;
-                color: #000000;
-                color: var(--fontcolor);
             }
 
             .bday {
                 font-size: 20px;
                 margin-top: 0;
                 margin-bottom: 0;
-                color: #000000;
-                color: var(--fontcolor);
             }
         }
     }
 
     .roomform {
-        padding: 16px;
-
         form {
             display: flex;
             flex-flow: column;
@@ -1144,30 +1136,16 @@ body {
             appearance: none;
         }
 
-        .createroombutton {
-            border: none;
-            background-color: #FF0000;
-            background-color: var(--button);
-            color: white;
-            margin-top: 1em;
-            font-weight: bold;
-            border-radius: 40em;
-            font-size: 1em;
-            padding: 0.5em;
-            float: right;
-            cursor: pointer;
-        }
-
-        .createroombutton:hover, .visibilitytoggle:hover {
+        .visibilitytoggle:hover {
             filter:brightness(0.93);
         }
 
-        .createroombutton:focus, .visibilitytoggle:focus {
+        .visibilitytoggle:focus {
             filter:brightness(0.85);
             outline-width: 0;
         }
 
-        .createroombutton::-moz-focus-inner, .visibilitytoggle::-moz-focus-inner {
+        .visibilitytoggle::-moz-focus-inner {
             border:0;
         }
 
@@ -1185,8 +1163,6 @@ body {
             flex-flow: row;
 
             .modal-text {
-                color: black;
-                color: var(--fontcolor);
                 margin-right: 20px;
                 font-size: 18px;
                 line-height: 36px;
@@ -1222,18 +1198,12 @@ body {
     }
 
     .settings {
-        padding: 16px;
         display: flex;
         flex-flow: column;
 
         mat-slide-toggle {
             font-size: 20px;
             line-height: 34px;
-
-            p {
-                color: black;
-                color: var(--fontcolor);
-            }
         }
     }
 
@@ -1241,25 +1211,17 @@ body {
         margin: 0;
         padding: 0;
         max-height: 80vh;
-        overflow-y: scroll;
         overflow-x: hidden;
-        background: #929292;
-        background: var(--roomlistbackground);
 
         li {
-            background: #EEEEEE;
-            background: var(--room);
-            margin-bottom: 2px;
             list-style-type: none;
+            border-radius: 1em;
             cursor: pointer;
 
             .container {
                 display: flex;
                 flex-flow: row;
                 width: 100%;
-                padding-left: 10px;
-                margin-top: 0px;
-                margin-bottom: 0px;
                 
                 .room_image {
                     width: 50px;
@@ -1279,8 +1241,6 @@ body {
                             font-weight: bold;
                             font-size: 14px;
                             flex: 1;
-                            color: #000000;
-                            color: var(--fontcolor);
                             margin: 0;
                         }
 
@@ -1288,7 +1248,6 @@ body {
                             font-size: 8px;
                             padding-right: 20px;
                             padding-top: 5px;
-                            color: var(--fontcolor);
                             margin: 0;
                         }
                     }
@@ -1301,8 +1260,6 @@ body {
                         overflow: hidden;
                         white-space: nowrap;
                         text-overflow: ellipsis;
-                        color: #000000;
-                        color: var(--fontcolor);
                     }
                 }
             }
@@ -1324,8 +1281,6 @@ body {
     }
 
     .editprofile_content {
-        padding: 16px;
-
         mat-form-field {
             width: 100%;
         }
@@ -1343,41 +1298,11 @@ body {
             resize: none;
         }
 
-        button {
-            border: none;
-            background-color: #FF0000;
-            background-color: var(--button);
-            color: white;
-            margin-top: 1em;
-            margin-bottom: 1em;
-            font-weight: bold;
-            border-radius: 40em;
-            font-size: 1em;
-            padding: 0.5em;
-            float: right;
-            cursor: pointer;
-        }
-
-        button:hover {
-            filter:brightness(0.93);
-        }
-
-        button:focus {
-            filter:brightness(0.85);
-            outline-width: 0;
-        }
-
-        button::-moz-focus-inner {
-            border:0;
-        }
-
         .imageupload {
             display: flex;
             flex-flow: row;
 
             .modal-text {
-                color: black;
-                color: var(--fontcolor);
                 margin-right: 20px;
                 font-size: 18px;
                 line-height: 36px;
@@ -1419,12 +1344,6 @@ body {
     }
 
     .roomInfo_content {
-        padding: 16px;
-
-        p {
-            color: var(--fontcolor);
-        }
-
         .roomInfoImageContainer {
             display: flex;
             justify-content: center;
@@ -1497,79 +1416,24 @@ body {
             }
         }
 
-        .edit_room_button {
-            background: red;
-            background-color: var(--button);
-            border: none;
-            color: white;
-            padding: 0.5em;
-            border-radius: 40em;
-            font-weight: bold;
-            font-size: 1em;
-            float: right;
-            margin-bottom: 20px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-
-        .edit_room_button:hover {
-            filter:brightness(0.93);
-        }
-
-        .edit_room_button:focus {
-            filter:brightness(0.85);
-            outline-width: 0;
-        }
-
-        .edit_room_button::-moz-focus-inner {
-            border:0;
+        .roomInfoButtons {
+            display: flex;
+            flex-flow: row-reverse;
         }
     }
 
     .deleteRoom_content {
-        padding: 16px;
-
-        p {
-            color: var(--fontcolor);
-        }
-        
-        .deleteroombutton {
-            background: red;
-            background-color: var(--button);
-            border: none;
-            color: white;
-            padding: 0.5em;
-            border-radius: 40em;
-            font-weight: bold;
-            font-size: 1em;
-            float: right;
-            margin-bottom: 20px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-
-        .deleteroombutton:hover {
-            filter:brightness(0.93);
-        }
-
-        .deleteroombutton:focus {
-            filter:brightness(0.85);
-            outline-width: 0;
-        }
-
-        .deleteroombutton::-moz-focus-inner {
-            border:0;
-        }
+        display: flex;
+        flex-flow: column;
     }
 
     .pinboard_content {
         ul {
             padding: 0;
-            margin: 10px;
+            margin: 0;
 
             li {
                 list-style-type: none;
-                margin-bottom: 10px;
 
                 button {
                     background: none;
@@ -1590,7 +1454,6 @@ body {
                     }
         
                     p {
-                        color: var(--fontcolor);
                         text-align: left;
                         margin: 0;
                     }
@@ -1621,11 +1484,6 @@ body {
                     outline-width: 0;
                 }
             }
-        }
-
-        p {
-            color: var(--fontcolor);
-            margin: 16px;
         }
     }
 }

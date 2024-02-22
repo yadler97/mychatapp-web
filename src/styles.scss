@@ -51,8 +51,8 @@ mark {
     --fontcolor: #FFFFFF;
     --roomlistbackground: #4A4C52;
     --room: #2F3136;
-    --roomhover: #5C5E63;
-    --roomclicked: #6c6e75;
+    --roomhover: #35383d;
+    --roomclicked: #26282b;
     --standardbanner: #009688;
     --scrollbartrack: #333;
     --scrollbarthumb: #555;
@@ -84,4 +84,36 @@ body {
 section {
     width: 100%;
     margin: 0 auto;
+}
+
+form {
+    display: flex;
+    flex-flow: column;
+}
+
+.defaultButton {
+    background: red;
+    background-color: var(--button);
+    border: none;
+    color: white;
+    padding: 0.5em;
+    border-radius: 40em;
+    font-weight: bold;
+    font-size: 1em;
+    align-self: flex-end;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.defaultButton:hover {
+    filter:brightness(0.93);
+}
+
+.defaultButton:focus {
+    filter:brightness(0.85);
+    outline-width: 0;
+}
+
+.defaultButton::-moz-focus-inner {
+    border:0;
 }

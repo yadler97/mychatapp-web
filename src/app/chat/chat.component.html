@@ -268,12 +268,14 @@
               </button>
             </li>
           </ul>
-          <div *ngIf="this.currentUser?.key == this.room?.admin; then edit_room_button"></div>
-          <ng-template #edit_room_button>
-            <button class="edit_room_button" (click)="openEditRoom()">{{ 'EDIT ROOM' | translate }}</button>
-            <button class="edit_room_button" (click)="openDeleteRoom()">{{ 'DELETE ROOM' | translate }}</button>
-          </ng-template>
-          <button class="edit_room_button" (click)="openPinboard()">{{ 'PINBOARD' | translate }}</button>
+          <div class="roomInfoButtons">
+            <div *ngIf="this.currentUser?.key == this.room?.admin; then edit_room_button"></div>
+            <ng-template #edit_room_button>
+              <button class="defaultButton" (click)="openEditRoom()">{{ 'EDIT ROOM' | translate }}</button>
+              <button class="defaultButton" (click)="openDeleteRoom()">{{ 'DELETE ROOM' | translate }}</button>
+            </ng-template>
+            <button class="defaultButton" (click)="openPinboard()">{{ 'PINBOARD' | translate }}</button>
+          </div>
         </div>
       </div>
     </div>
@@ -363,9 +365,8 @@
               </button>
               <mat-hint align=end>{{confirmpassword.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
-            <div>
-              <button id="addroomsubmitbutton" class="createroombutton" (click)="createRoom(roomname, description, category, password, confirmpassword); hide = false">{{ 'CREATE ROOM' | translate }}</button>
-            </div>
+
+            <button class="defaultButton" (click)="createRoom(roomname, description, category, password, confirmpassword); hide = false">{{ 'CREATE ROOM' | translate }}</button>
           </form>
         </div>
       </div>
@@ -468,7 +469,7 @@
               <input id="profile_banner_input" type="image" src="" (click)="fileInput3.click(); $event.preventDefault()" class="uploadimagebutton_rectangle">
             </div>
 
-            <button id="editprofilesubmitbutton" (click)="editProfile(name.value, bio.value, birthday.value, location.value)">{{ 'CONFIRM' | translate }}</button>
+            <button class="defaultButton" (click)="editProfile(name.value, bio.value, birthday.value, location.value)">{{ 'CONFIRM' | translate }}</button>
           </form>
         </div>
       </div>
@@ -527,9 +528,8 @@
               </button>
               <mat-hint align=end>{{editconfirmpassword.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
-            <div>
-              <button id="editroomsubmitbutton" class="createroombutton" (click)="editRoom(editroomname, editdescription, editcategory, editpassword, editconfirmpassword); hide = false">{{ 'CONFIRM' | translate }}</button>
-            </div>
+
+            <button class="defaultButton" (click)="editRoom(editroomname, editdescription, editcategory, editpassword, editconfirmpassword); hide = false">{{ 'CONFIRM' | translate }}</button>
           </form>
         </div>
       </div>
@@ -545,7 +545,7 @@
       <div class="modal-body">
         <div class="deleteRoom_content">
           <p>{{ 'DO YOU REALLY WANT TO DELETE THIS ROOM' | translate }}</p>
-          <button id="deleteroomsubmitbutton" class="deleteroombutton" (click)="deleteRoom(); hide = false">{{ 'CONFIRM' | translate }}</button>
+          <button class="defaultButton" (click)="deleteRoom(); hide = false">{{ 'CONFIRM' | translate }}</button>
         </div>
       </div>
     </div>

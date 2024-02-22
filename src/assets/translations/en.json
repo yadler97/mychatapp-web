@@ -77,5 +77,6 @@
     "PASSWORD RESET MAIL SENT": "Password reset mail sent",
     "SENDING PASSWORD RESET MAIL FAILED": "Sending password reset mail failed",
     "PINBOARD": "Pinboard",
-    "NO PINNED MESSAGES FOUND": "No pinned messages found"
+    "NO PINNED MESSAGES FOUND": "No pinned messages found",
+    "NAME": "Name"
 }

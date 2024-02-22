@@ -320,14 +320,17 @@
         <div class="roomform">
           <form onsubmit="return false">
             <mat-form-field>
-              <input #roomname matInput type="text" id="roomnameinput" placeholder="{{ 'ROOM NAME' | translate }}" maxlength="25" name="roomnameinput" ngModel required/>
+              <mat-label>{{ 'ROOM NAME' | translate }}</mat-label>
+              <input #roomname matInput type="text" id="roomnameinput" maxlength="25" name="roomnameinput" ngModel required/>
               <mat-hint align=end>{{roomname.value?.length || 0}} / 25</mat-hint>
             </mat-form-field>
             <mat-form-field>
-              <textarea #description matInput type="text" id="roomdescinput" placeholder="{{ 'DESCRIPTION' | translate}}" rows="4" maxlength="150" name="descriptioninput" ngModel required></textarea>
+              <mat-label>{{ 'DESCRIPTION' | translate }}</mat-label>
+              <textarea #description matInput type="text" id="roomdescinput" rows="4" maxlength="150" name="descriptioninput" ngModel></textarea>
               <mat-hint align=end>{{description.value?.length || 0}} / 150</mat-hint>
             </mat-form-field>
             <mat-form-field>
+              <mat-label>{{ 'CATEGORY' | translate }}</mat-label>
               <mat-select #category matInput name="category" id="roomcatselect" placeholder="{{ 'SELECT CATEGORY' | translate }}" name="categoryselect" ngModel required>
                 <mat-option id="roomcatselect_1" value=1>{{ 'STUDY AND WORK' | translate }}</mat-option>
                 <mat-option id="roomcatselect_2" value=2>{{ 'GAMING' | translate }}</mat-option>
@@ -349,14 +352,16 @@
               <input id="room_image_input" type="image" src="assets/img/ic_image.png" (click)="fileInput4.click(); $event.preventDefault()" class="uploadimagebutton">
             </div>
             <mat-form-field>
-              <input #password matInput id="roompasswordinput" placeholder="{{ 'PASSWORD' | translate }}" maxlength="32" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
+              <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
+              <input #password matInput id="roompasswordinput" maxlength="32" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
               <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
               </button>
               <mat-hint align=end>{{password.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
             <mat-form-field>
-              <input #confirmpassword matInput id="roomconfirmpasswordinput" placeholder="{{ 'CONFIRM PASSWORD' | translate }}" maxlength="32" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
+              <mat-label>{{ 'CONFIRM PASSWORD' | translate }}</mat-label>
+              <input #confirmpassword matInput id="roomconfirmpasswordinput" maxlength="32" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
               <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
               </button>
@@ -436,21 +441,25 @@
         <div class="editprofile_content">
           <form onsubmit="return false">
             <mat-form-field>
-              <input #name id="edit_profile_name" matInput placeholder="Name" maxlength="15" name="usernameinput" ngModel required>
+              <mat-label>{{ 'NAME' | translate }}</mat-label>
+              <input #name id="edit_profile_name" matInput maxlength="15" name="usernameinput" ngModel required>
               <mat-hint align=end>{{name.value?.length || 0}} / 15</mat-hint>
             </mat-form-field>
 
             <mat-form-field>
-              <textarea #bio id="edit_profile_bio" matInput placeholder="{{ 'ABOUT ME' | translate }}" rows="4" maxlength="200" name="bioinput" ngModel required></textarea>
+              <mat-label>{{ 'ABOUT ME' | translate }}</mat-label>
+              <textarea #bio id="edit_profile_bio" matInput rows="5" maxlength="200" name="bioinput" ngModel></textarea>
               <mat-hint align=end>{{bio.value?.length || 0}} / 200</mat-hint>
             </mat-form-field>
 
             <mat-form-field>
-              <input #birthday type="date" id="edit_profile_birthday" matInput placeholder="{{ 'BIRTHDAY' | translate }}" name="birthdayinput" ngModel required>
+              <mat-label>{{ 'BIRTHDAY' | translate }}</mat-label>
+              <input #birthday type="date" id="edit_profile_birthday" matInput name="birthdayinput" ngModel required>
             </mat-form-field>
 
             <mat-form-field>
-              <input #location matInput id="edit_profile_location" placeholder="{{ 'LOCATION' | translate }}" maxlength="25" name="locationinput" ngModel required>
+              <mat-label>{{ 'LOCATION' | translate }}</mat-label>
+              <input #location matInput id="edit_profile_location" maxlength="25" name="locationinput" ngModel required>
               <mat-hint align=end>{{location.value?.length || 0}} / 25</mat-hint>
             </mat-form-field>
 
@@ -483,14 +492,17 @@
         <div class="roomform">
           <form onsubmit="return false">
             <mat-form-field>
-              <input #editroomname matInput type="text" id="edit_room_name" placeholder="{{ 'ROOM NAME' | translate }}" maxlength="25" name="roomnameinput" ngModel required/>
+              <mat-label>{{ 'ROOM NAME' | translate }}</mat-label>
+              <input #editroomname matInput type="text" id="edit_room_name" maxlength="25" name="roomnameinput" ngModel required/>
               <mat-hint align=end>{{editroomname.value?.length || 0}} / 25</mat-hint>
             </mat-form-field>
             <mat-form-field>
-              <textarea #editdescription matInput type="text" id="edit_room_description" placeholder="{{ 'DESCRIPTION' | translate}}" rows="4" maxlength="150" name="descriptioninput" ngModel required></textarea>
+              <mat-label>{{ 'DESCRIPTION' | translate }}</mat-label>
+              <textarea #editdescription matInput type="text" id="edit_room_description" rows="4" maxlength="150" name="descriptioninput" ngModel></textarea>
               <mat-hint align=end>{{editdescription.value?.length || 0}} / 150</mat-hint>
             </mat-form-field>
             <mat-form-field>
+              <mat-label>{{ 'CATEGORY' | translate }}</mat-label>
               <mat-select #editcategory [(value)]="this.selectedCategory" name="category" id="edit_room_category" placeholder="{{ 'SELECT CATEGORY' | translate }}" name="categoryselect" ngModel required>
                 <mat-option id="edit_room_category_1" value=1>{{ 'STUDY AND WORK' | translate }}</mat-option>
                 <mat-option id="edit_room_category_2" value=2>{{ 'GAMING' | translate }}</mat-option>
@@ -512,14 +524,16 @@
               <input id="edit_room_image" type="image" src="assets/img/ic_image.png" (click)="fileInput5.click(); $event.preventDefault()" class="uploadimagebutton">
             </div>
             <mat-form-field>
-              <input #editpassword matInput id="edit_room_password" placeholder="{{ 'PASSWORD' | translate }}" maxlength="32" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
+              <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
+              <input #editpassword matInput id="edit_room_password" maxlength="32" name="passwordinput" ngModel required [type]="hide ? 'text' : 'password'">
               <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
               </button>
               <mat-hint align=end>{{editpassword.value?.length || 0}} / 32</mat-hint>
             </mat-form-field>
             <mat-form-field>
-              <input #editconfirmpassword matInput id="edit_room_confirm_password" placeholder="{{ 'CONFIRM PASSWORD' | translate }}" maxlength="32" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
+              <mat-label>{{ 'CONFIRM PASSWORD' | translate }}</mat-label>
+              <input #editconfirmpassword matInput id="edit_room_confirm_password" maxlength="32" name="passwordconfirminput" ngModel required [type]="hide ? 'text' : 'password'">
               <button class="visibilitytoggle" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon class="visibilitytoggleicon">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
               </button>

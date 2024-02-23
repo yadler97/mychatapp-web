@@ -1,6 +1,6 @@
 {
   "name": "mychatapp-web",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -21,6 +21,7 @@
     "@angular/router": "^17.2.1",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "firebase": "^10.8.0",
+    "mark.js": "^8.11.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.2",
     "zone.js": "^0.14.4"

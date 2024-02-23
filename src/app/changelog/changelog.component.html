@@ -1,6 +1,6 @@
 <header>
   <div class="container">
-    <div class="logo">
+    <a routerLink="/" class="logo">
       <div *ngIf="theme == 'dark'; then dark_logo else light_logo"></div>
       <ng-template #light_logo>
         <img src="assets/img/ic_splash.png" alt="MyChatApp Logo">
@@ -8,12 +8,26 @@
       <ng-template #dark_logo>
         <img src="assets/img/ic_splash_dark.png" alt="MyChatApp Logo">
       </ng-template>
-      <a routerLink="/" class="appname">{{ appname }}</a>
-    </div>
+      <p class="appname">{{ appname }}</p>
+    </a>
   </div>
 </header>
 
 <body>
+  <p>Version 1.2.1 (23.02.2024)</p>
+  <ul>
+    <li>Das Design der Raumliste und des Profils wurde überarbeitet</li>
+    <li>Erforderliche Eingabefelder werden jetzt mit einem Sternchen markiert</li>
+    <li>Label wurden zu Eingabeformularen hinzugefügt</li>
+    <li>Das Suchfeld für die Raumsuche ist jetzt korrekt vom Typ "search"</li>
+    <li>Der Suchtext wird jetzt im Raumnamen markiert (Parität mit Android-Version)</li>
+    <li>Wenn keine Nachrichten angepinnt sind, wird beim Öffnen der Pinnwand jetzt ein entsprechender Hinweis angezeigt</li>
+    <li>Der aktuelle Raum wird nicht mehr auf der Raumliste beim Weiterleiten einer Nachricht angezeigt</li>
+    <li>Alle Icons sind jetzt SVGs</li>
+    <li>Ein Klick auf das Logo im Header führt jetzt zur Hauptseite</li>
+    <li>Die Buttons zum Schließen eines Fensters sind jetzt korrekterweise ein HTML-Button-Element (Barrierefreiheit)</li>
+    <li>Kleinere Optimierungen für Mobilgeräte</li>
+  </ul>
   <p>Version 1.2.0 (19.02.2024)</p>
   <ul>
     <li>Pinnwand wurde hinzugefügt (Parität mit Android-Version)</li>

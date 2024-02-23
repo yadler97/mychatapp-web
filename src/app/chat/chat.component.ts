@@ -57,7 +57,7 @@ export class ChatComponent implements OnInit {
   currentUser: User = null;
   displayUser: User = null;
 
-  cm_message: string;
+  clicked_message: Message;
   quote: string = "";
 
   room_image: string = "";
@@ -280,12 +280,15 @@ export class ChatComponent implements OnInit {
             }
           }
           let oldmessage = roomlist.find(x => x.key == snapshot.key)!?.newestMessage;
-          roomlist.find(x => x.key == snapshot.key)!.newestMessage = m;
-          if (oldmessage.key != m.key) {
-            let index = roomlist.indexOf(roomlist.find(x => x.key == snapshot.key)!);
-            let element = roomlist[index];
-            roomlist.splice(index, 1);
-            roomlist.splice(0, 0, element);
+          if (oldmessage != undefined) {
+            roomlist.find(x => x.key == snapshot.key)!.newestMessage = m;
+
+            if (oldmessage.key != m.key) {
+              let index = roomlist.indexOf(roomlist.find(x => x.key == snapshot.key)!);
+              let element = roomlist[index];
+              roomlist.splice(index, 1);
+              roomlist.splice(0, 0, element);
+            }
           }
         })
 
@@ -628,8 +631,7 @@ export class ChatComponent implements OnInit {
       document.getElementById('profileHeader')!.innerHTML = this.translatepipe.transform('PROFILE OF') + " " + this.displayUser.name;
     } else {
       document.getElementById('edit_profile_button')!.style.display = "none";
-      let key = messagelist.find(x => x.key == this.cm_message)!.userid;
-      this.displayUser = userlist.find(x => x.key == key)!;
+      this.displayUser = userlist.find(x => x.key == this.clicked_message.userid)!;
       document.getElementById('profileHeader')!.innerHTML = this.translatepipe.transform('PROFILE OF') + " " + this.displayUser.name;
     }
     let modal = document.getElementById("profileModal");
@@ -828,31 +830,15 @@ export class ChatComponent implements OnInit {
   }
 
   public openMessageMenu({ x, y }: MouseEvent, messageid: String) {
-    this.cm_message = messageid.toString();
     let modalcontent = document.getElementById("contextmenu");
     let m = messagelist.find(x => x.key == messageid);
+    this.clicked_message = m;
     if (m!.image == "") {
       document.getElementById('cmdownloadbutton')!.style.display = "none";
     } else {
       document.getElementById('cmdownloadbutton')!.style.display = "";
     }
-    if (!m!.pinned) {
-      document.getElementById('pin_button_text')!.innerHTML = this.translatepipe.transform("PIN");
-      let pin_icon = document.getElementById('pin_icon') as HTMLImageElement;
-      if (this.theme == 'dark') {
-        pin_icon.src = "assets/img/ic_pin_dark.png";
-      } else {
-        pin_icon.src = "assets/img/ic_pin.png";
-      }
-    } else {
-      document.getElementById('pin_button_text')!.innerHTML = this.translatepipe.transform("UNPIN");
-      let pin_icon = document.getElementById('pin_icon') as HTMLImageElement;
-      if (this.theme == 'dark') {
-        pin_icon.src = "assets/img/ic_unpin_dark.png";
-      } else {
-        pin_icon.src = "assets/img/ic_unpin.png";
-      }
-    }
+
     if (y < 200) {
       modalcontent!.style.top = "200px";
     } else {
@@ -864,7 +850,7 @@ export class ChatComponent implements OnInit {
   }
 
   public quoteMessage() {
-    this.quote = this.cm_message;
+    this.quote = this.clicked_message.key.toString();
     document.getElementById("quotebox")!.style.display = "flex";
     document.getElementById("chatbox")!.style.maxHeight = "calc(100vh - 130px)"
     if (messagelist.find(x => x.key == this.quote)!.userid == this.userid) {
@@ -902,12 +888,11 @@ export class ChatComponent implements OnInit {
   public forwardTo(roomkey: String) {
     let modal = document.getElementById("forwardModal");
     modal!.style.display = "none";
-    let message = messagelist.find(x => x.key == this.cm_message);
     let messageRef = database.ref('/rooms/' + roomkey + '/messages');
     let newMessageKey = messageRef.push().key;
     messageRef.child(newMessageKey).update({
       image: "",
-      text: message.text,
+      text: this.clicked_message.text,
       sender: userid,
       pinned: false,
       forwarded: true,
@@ -942,14 +927,14 @@ export class ChatComponent implements OnInit {
   }
 
   public pinMessage() {
-    let m = messagelist.find(x => x.key == this.cm_message)
+    let m = messagelist.find(x => x.key == this.clicked_message.key)
     if (!m!.pinned) {
       m!.pinned = true
-      database.ref('/rooms/' + this.roomkey + '/messages/' + this.cm_message + '/pinned').set(true);
+      database.ref('/rooms/' + this.roomkey + '/messages/' + this.clicked_message.key + '/pinned').set(true);
       this.showToast(this.translatepipe.transform("MESSAGE PINNED"));
     } else {
       m!.pinned = false
-      database.ref('/rooms/' + this.roomkey + '/messages/' + this.cm_message + '/pinned').set(false);
+      database.ref('/rooms/' + this.roomkey + '/messages/' + this.clicked_message.key + '/pinned').set(false);
       this.showToast(this.translatepipe.transform("MESSAGE UNPINNED"));
     }
   }
@@ -1026,9 +1011,8 @@ export class ChatComponent implements OnInit {
   }
 
   public async downloadFile() {
-    let m = messagelist.find(x => x.key == this.cm_message)
     var a = document.createElement("a");
-    a.href = await this.toDataURL(new URL(m!.image.toString()));
+    a.href = await this.toDataURL(new URL(this.clicked_message!.image.toString()));
     let currentdate = this.getCurrentTime();
     a.download = "MyChatApp_" + currentdate.substring(0, 15);
     a.click();

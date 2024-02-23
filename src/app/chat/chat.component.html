@@ -403,7 +403,13 @@
   <div id="contextmenu" class="contextmenu">
     <button (click)="quoteMessage()" id="cmquotebutton"><mat-icon class="material-symbols-outlined">comment</mat-icon><p>{{ 'QUOTE' | translate }}</p></button>
     <button (click)="forwardMessage()" id="cmforwardbutton"><mat-icon class="material-symbols-outlined">forward</mat-icon><p>{{ 'FORWARD' | translate }}</p></button>
-    <button (click)="pinMessage()" id="cmpinbutton"><img src="assets/img/ic_pin.png" alt="pin icon" id="pin_icon"><p id="pin_button_text">{{ 'PIN' | translate }}</p></button>
+    <div *ngIf="clicked_message?.pinned; then unpin_icon else pin_icon"></div>
+    <ng-template #pin_icon>
+      <button (click)="pinMessage()" id="cmpinbutton"><mat-icon class="material-symbols-outlined" id="pin_icon">push_pin</mat-icon><p id="pin_button_text">{{ 'PIN' | translate }}</p></button>
+    </ng-template>
+    <ng-template #unpin_icon>
+      <button (click)="pinMessage()" id="cmpinbutton"><mat-icon class="material-symbols" id="pin_icon">push_pin</mat-icon><p id="pin_button_text">{{ 'UNPIN' | translate }}</p></button>
+    </ng-template>
     <button (click)="downloadFile()" id="cmdownloadbutton"><mat-icon class="material-symbols-outlined">download</mat-icon><p>{{ 'DOWNLOAD' | translate }}</p></button>
     <button (click)="showProfile(null)" id="cmprofilebutton"><mat-icon class="material-symbols">account_circle</mat-icon><p>{{ 'SHOW PROFILE' | translate }}</p></button>
   </div>
@@ -417,16 +423,19 @@
       <div class="modal-body">
         <ul class="forward_roomlist">
           <li *ngFor="let room of items | async">
-            <div class="container" [attr.data-value]="(roomkey == room.key) ? 'selected' : null" (click)="forwardTo(room.key)">
-              <img src="{{ room.image }}" alt="room image" class="room_image">
-              <div class="rightpartroomlist">
-                <div class="firstroomline">
-                  <p class="roomname">{{ room.name }}</p>
-                  <p class="roomtime">{{ room.newestMessage.displayTime }}</p>
+            <div *ngIf="roomkey != room.key; then forward_template"></div>
+            <ng-template #forward_template>
+              <div class="container" (click)="forwardTo(room.key)">
+                <img src="{{ room.image }}" alt="room image" class="room_image">
+                <div class="rightpartroomlist">
+                  <div class="firstroomline">
+                    <p class="roomname">{{ room.name }}</p>
+                    <p class="roomtime">{{ room.newestMessage.displayTime }}</p>
+                  </div>
+                  <p class="newestMessagePreview">{{ room.newestMessage.text }}</p>
                 </div>
-                <p class="newestMessagePreview">{{ room.newestMessage.text }}</p>
               </div>
-            </div>
+            </ng-template>
           </li>
         </ul>
       </div>

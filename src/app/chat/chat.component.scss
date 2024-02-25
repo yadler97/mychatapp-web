@@ -615,6 +615,11 @@ body {
                                     height: 2em;
                                     border-radius: 50%;
                                     margin-right: 5px;
+                                    cursor: pointer;
+                                }
+
+                                img:hover {
+                                    filter: brightness(0.85);
                                 }
 
                                 .rightpart {

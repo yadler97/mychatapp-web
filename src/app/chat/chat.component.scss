@@ -1328,11 +1328,23 @@ body {
                 cursor: pointer;
             }
 
-            .uploadimagebutton:hover {
+            .uploadimagebutton_square {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+            }
+
+            .uploadimagebutton_rectangle {
+                width: 64px;
+                height: 36px;
+                border-radius: 1em;
+            }
+
+            .uploadimagebutton:hover, .uploadimagebutton_square:hover, .uploadimagebutton_rectangle:hover {
                 filter:brightness(0.93);
             }
 
-            .uploadimagebutton:focus {
+            .uploadimagebutton:focus, .uploadimagebutton_square:focus, .uploadimagebutton_rectangle:focus {
                 outline-width: 0;
                 filter:brightness(0.85);
             }

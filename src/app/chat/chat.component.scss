@@ -615,6 +615,11 @@ body {
                                     height: 2em;
                                     border-radius: 50%;
                                     margin-right: 5px;
+                                    cursor: pointer;
+                                }
+
+                                img:hover {
+                                    filter: brightness(0.85);
                                 }
 
                                 .rightpart {
@@ -1206,6 +1211,24 @@ body {
             font-size: 20px;
             line-height: 34px;
         }
+
+        hr {
+            width: 100%;
+        }
+
+        .versionNumber {
+            display: flex;
+
+            p {
+                margin: 0;
+            }
+
+            a {
+                color: black;
+                color: var(--fontcolor);
+                margin: auto 0 auto 10px;
+            }
+        }
     }
 
     .forward_roomlist {
@@ -1323,11 +1346,23 @@ body {
                 cursor: pointer;
             }
 
-            .uploadimagebutton:hover {
+            .uploadimagebutton_square {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+            }
+
+            .uploadimagebutton_rectangle {
+                width: 64px;
+                height: 36px;
+                border-radius: 1em;
+            }
+
+            .uploadimagebutton:hover, .uploadimagebutton_square:hover, .uploadimagebutton_rectangle:hover {
                 filter:brightness(0.93);
             }
 
-            .uploadimagebutton:focus {
+            .uploadimagebutton:focus, .uploadimagebutton_square:focus, .uploadimagebutton_rectangle:focus {
                 outline-width: 0;
                 filter:brightness(0.85);
             }

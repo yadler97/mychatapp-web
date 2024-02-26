@@ -78,5 +78,6 @@
     "SENDING PASSWORD RESET MAIL FAILED": "Senden der Mail zum Zurücksetzen des Passworts fehlgeschlagen",
     "PINBOARD": "Pinnwand",
     "NO PINNED MESSAGES FOUND": "Keine angepinnten Nachrichten gefunden",
-    "NAME": "Name"
+    "NAME": "Name",
+    "IMAGE NOT AVAILABLE": "Bild nicht verfügbar"
 }

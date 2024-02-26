@@ -557,7 +557,9 @@ export class ChatComponent implements OnInit {
         let storage_img = storage.ref('/images/' + image);
         storage_img.getDownloadURL().then(function(url_img) {
           messagelist.find(x => x.key == snapshot.key)!.image = url_img;
-        })
+        }).catch(function() {
+          messagelist.find(x => x.key == snapshot.key)!.text = translatepipe.transform('IMAGE NOT AVAILABLE');
+        });
       }
       setTimeout(function() { 
         let messagebox = document.getElementById("messages");

@@ -1211,6 +1211,24 @@ body {
             font-size: 20px;
             line-height: 34px;
         }
+
+        hr {
+            width: 100%;
+        }
+
+        .versionNumber {
+            display: flex;
+
+            p {
+                margin: 0;
+            }
+
+            a {
+                color: black;
+                color: var(--fontcolor);
+                margin: auto 0 auto 10px;
+            }
+        }
     }
 
     .forward_roomlist {

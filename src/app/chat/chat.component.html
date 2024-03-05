@@ -63,129 +63,141 @@
       <div class="roomheader" id="roomheader" style="display: none">
         <img id="roomheaderimage" alt="room image" class="roomheaderimage">
         <p class="roomheadername" id="roomheadername">{{ this.room?.name }}</p>
+        <input #searchmessage id="messagesearchinput" type="search" placeholder="{{ 'SEARCH MESSAGE' | translate }}" (input)="searchMessage(searchmessage.value)">
         <button class="roomheaderinfobutton" (click)="openRoomInfo()"><mat-icon>info_outlined</mat-icon></button>
       </div>
       <div class="chatbox" id="chatbox">
         <div class="messages" id="messages">
-          <div class="noroom" id="noroom">
-            <p class="noroom1">{{ 'YOU DONT HAVE A ROOM SELECTED' | translate }}</p>
-            <p class="noroom2">{{ 'CHOOSE A ROOM OR CREATE A NEW ONE' | translate }}</p>
-          </div>
-          <ul id="messagelist">
-            <div class="container_header">
-              <div id="headeritem" class="headeritem"></div>
+          <div *ngIf="roomkey.length > 0; then messages else select_room"></div>
+          <ng-template #select_room>
+            <div class="noroom" id="noroom">
+              <p class="noroom1">{{ 'YOU DONT HAVE A ROOM SELECTED' | translate }}</p>
+              <p class="noroom2">{{ 'CHOOSE A ROOM OR CREATE A NEW ONE' | translate }}</p>
             </div>
-            <li *ngFor="let message of items_messages | async; let i = index">
-              <div *ngIf="message.displayTime == null; then message_header else message_box"></div>
-              <ng-template #message_header>
-                <div class="container_header">
-                  <div class="headeritem" style="display: block;">{{ message.text }}</div>
-                </div>
-              </ng-template>
-              <ng-template #message_box>
-                <div *ngIf="userid == message.userid; then message_sent else message_received"></div>
-                <ng-template #message_received>
-                  <div class="container_received" id="message_{{ message.key }}">
-                    <img src="{{ message.pb_url }}" alt="profile image" class="profile_image" (click)="showProfile(message.userid)">
-                    <div class="rightpart">
-                      <div class="userid">{{ message.sender }}</div>
-                      <div id="message_{{ i }}" class="messagebox" (contextmenu)="openMessageMenu($event, message.key)">
-                        <div *ngIf="message.image == ''; then textmessage else imagemessage"></div>
-                        <ng-template #textmessage>
-                          <div *ngIf="message.quote == ''; then textmessagenormal else textmessagequote"></div>
-                          <ng-template #textmessagenormal>
-                            <div class="messageitem" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
-                          </ng-template>
-                          <ng-template #textmessagequote>
-                            <div *ngIf="message.quotedMessage == null; then textmessagequotedeleted else textmessagequoteavailable"></div>
-                            <ng-template #textmessagequotedeleted>
-                              <div class="messageitem">
-                                <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
-                                  <p class="quotedMessageNoLongerAvailable">{{ 'QUOTED MESSAGE NO LONGER AVAILABLE' | translate }}</p>
-                                </div>
-                                <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
-                              </div>
-                            </ng-template>
-                            <ng-template #textmessagequoteavailable>
-                              <div class="messageitem">
-                                <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
-                                  <img src="{{ message.quotedMessage.pb_url }}" alt="profile image" class="profile_image" (click)="showProfile(message.userid)">
-                                  <div class="rightpartquote">
-                                    <div class="quoteduserid">{{ message.quotedMessage.sender }}</div>
-                                    <div class="quotedtext">{{ message.quotedMessage.text }}</div>
-                                  </div>
-                                  <div *ngIf="message.quotedMessage.image != ''; then quoteimagetemplate"></div>
-                                  <ng-template #quoteimagetemplate>
-                                    <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.image }}">
-                                  </ng-template>
-                                </div>
-                                <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
-                              </div>
-                            </ng-template>
-                          </ng-template>
-                        </ng-template>
-                        <ng-template #imagemessage><img #imageitem src="{{ message.image }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
-                        <div class="time">{{ message.displayTime }}</div>
-                      </div>
+          </ng-template>
+          <ng-template #messages>
+            <ul id="messagelist">
+              <div class="container_header">
+                <div class="headeritem">{{ this.headertext }}</div>
+              </div>
+              <div *ngIf="(items_messages | async)!.length > 0; then messagelist else message_nomessages"></div>
+              <ng-template #messagelist>
+                <li *ngFor="let message of items_messages | async; let i = index">
+                  <div *ngIf="message.displayTime == null; then message_header else message_box"></div>
+                  <ng-template #message_header>
+                    <div class="container_header">
+                      <div class="headeritem" style="display: block;">{{ message.text }}</div>
                     </div>
-                  </div>
-                </ng-template>
-                <ng-template #message_sent>
-                  <div class="container_sent" id="message_{{ message.key }}">
-                    <div class="rightpart">
-                      <div id="message_{{ i }}" class="messagebox" (contextmenu)="openMessageMenu($event, message.key)">
-                        <div class="time">{{ message.displayTime }}</div>
-                        <div *ngIf="message.image == ''; then textmessage else imagemessage"></div>
-                        <ng-template #textmessage>
-                          <div *ngIf="message.quote == ''; then textmessagenormal else textmessagequote"></div>
-                          <ng-template #textmessagenormal>
-                            <div class="messageitem" id="messagecontent_{{ message.key }}">
-                              <div *ngIf="message.forwarded; then forwardedflag"></div>
-                              <ng-template #forwardedflag>
-                                <div class="forwardedflag">
-                                  <mat-icon class="material-symbols-outlined">forward</mat-icon>
-                                  <p>{{ 'FORWARDED' | translate }}</p>
+                  </ng-template>
+                  <ng-template #message_box>
+                    <div *ngIf="userid == message.userid; then message_sent else message_received"></div>
+                    <ng-template #message_received>
+                      <div class="container_received" id="message_{{ message.key }}">
+                        <img src="{{ message.pb_url }}" alt="profile image" class="profile_image" (click)="showProfile(message.userid)">
+                        <div class="rightpart">
+                          <div class="userid">{{ message.sender }}</div>
+                          <div id="message_{{ i }}" class="messagebox" (contextmenu)="openMessageMenu($event, message.key)">
+                            <div *ngIf="message.image == ''; then textmessage else imagemessage"></div>
+                            <ng-template #textmessage>
+                              <div *ngIf="message.quote == ''; then textmessagenormal else textmessagequote"></div>
+                              <ng-template #textmessagenormal>
+                                <div class="messageitem" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
+                              </ng-template>
+                              <ng-template #textmessagequote>
+                                <div *ngIf="message.quotedMessage == null; then textmessagequotedeleted else textmessagequoteavailable"></div>
+                                <ng-template #textmessagequotedeleted>
+                                  <div class="messageitem">
+                                    <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
+                                      <p class="quotedMessageNoLongerAvailable">{{ 'QUOTED MESSAGE NO LONGER AVAILABLE' | translate }}</p>
+                                    </div>
+                                    <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
+                                  </div>
+                                </ng-template>
+                                <ng-template #textmessagequoteavailable>
+                                  <div class="messageitem">
+                                    <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
+                                      <img src="{{ message.quotedMessage.pb_url }}" alt="profile image" class="profile_image" (click)="showProfile(message.userid)">
+                                      <div class="rightpartquote">
+                                        <div class="quoteduserid">{{ message.quotedMessage.sender }}</div>
+                                        <div class="quotedtext">{{ message.quotedMessage.text }}</div>
+                                      </div>
+                                      <div *ngIf="message.quotedMessage.image != ''; then quoteimagetemplate"></div>
+                                      <ng-template #quoteimagetemplate>
+                                        <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.image }}">
+                                      </ng-template>
+                                    </div>
+                                    <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
+                                  </div>
+                                </ng-template>
+                              </ng-template>
+                            </ng-template>
+                            <ng-template #imagemessage><img #imageitem src="{{ message.image }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
+                            <div class="time">{{ message.displayTime }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <ng-template #message_sent>
+                      <div class="container_sent" id="message_{{ message.key }}">
+                        <div class="rightpart">
+                          <div id="message_{{ i }}" class="messagebox" (contextmenu)="openMessageMenu($event, message.key)">
+                            <div class="time">{{ message.displayTime }}</div>
+                            <div *ngIf="message.image == ''; then textmessage else imagemessage"></div>
+                            <ng-template #textmessage>
+                              <div *ngIf="message.quote == ''; then textmessagenormal else textmessagequote"></div>
+                              <ng-template #textmessagenormal>
+                                <div class="messageitem" id="messagecontent_{{ message.key }}">
+                                  <div *ngIf="message.forwarded; then forwardedflag"></div>
+                                  <ng-template #forwardedflag>
+                                    <div class="forwardedflag">
+                                      <mat-icon class="material-symbols-outlined">forward</mat-icon>
+                                      <p>{{ 'FORWARDED' | translate }}</p>
+                                    </div>
+                                  </ng-template>
+                                  {{ message.text }}
                                 </div>
                               </ng-template>
-                              {{ message.text }}
-                            </div>
-                          </ng-template>
-                          <ng-template #textmessagequote>
-                            <div *ngIf="message.quotedMessage == null; then textmessagequotedeleted else textmessagequoteavailable"></div>
-                            <ng-template #textmessagequotedeleted>
-                              <div class="messageitem">
-                                <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
-                                  <p class="quotedMessageNoLongerAvailable">{{ 'QUOTED MESSAGE NO LONGER AVAILABLE' | translate }}</p>
-                                </div>
-                                <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
-                              </div>
-                            </ng-template>
-                            <ng-template #textmessagequoteavailable>
-                              <div class="messageitem">
-                                <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
-                                  <img src="{{ message.quotedMessage.pb_url }}" alt="profile image" class="profile_image" (click)="showProfile(message.userid)">
-                                  <div class="rightpartquote">
-                                    <div class="quoteduserid">{{ message.quotedMessage.sender }}</div>
-                                    <div class="quotedtext">{{ message.quotedMessage.text }}</div>
+                              <ng-template #textmessagequote>
+                                <div *ngIf="message.quotedMessage == null; then textmessagequotedeleted else textmessagequoteavailable"></div>
+                                <ng-template #textmessagequotedeleted>
+                                  <div class="messageitem">
+                                    <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
+                                      <p class="quotedMessageNoLongerAvailable">{{ 'QUOTED MESSAGE NO LONGER AVAILABLE' | translate }}</p>
+                                    </div>
+                                    <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
                                   </div>
-                                  <div *ngIf="message.quotedMessage.image != ''; then quoteimagetemplate"></div>
-                                  <ng-template #quoteimagetemplate>
-                                    <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.image }}">
-                                  </ng-template>
-                                </div>
-                                <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
-                              </div>
+                                </ng-template>
+                                <ng-template #textmessagequoteavailable>
+                                  <div class="messageitem">
+                                    <div class="quoteblock" (click)="jumpToQuotedMessage(message.key)">
+                                      <img src="{{ message.quotedMessage.pb_url }}" alt="profile image" class="profile_image" (click)="showProfile(message.userid)">
+                                      <div class="rightpartquote">
+                                        <div class="quoteduserid">{{ message.quotedMessage.sender }}</div>
+                                        <div class="quotedtext">{{ message.quotedMessage.text }}</div>
+                                      </div>
+                                      <div *ngIf="message.quotedMessage.image != ''; then quoteimagetemplate"></div>
+                                      <ng-template #quoteimagetemplate>
+                                        <img class="quoteimage" id="quoteimage_{{ message.key }}" src="{{ message.quotedMessage.image }}">
+                                      </ng-template>
+                                    </div>
+                                    <div class="ownmessage" id="messagecontent_{{ message.key }}">{{ message.text }}</div>
+                                  </div>
+                                </ng-template>
+                              </ng-template>
                             </ng-template>
-                          </ng-template>
-                        </ng-template>
-                        <ng-template #imagemessage><img #imageitem src="{{ message.image }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
+                            <ng-template #imagemessage><img #imageitem src="{{ message.image }}" alt="image" class="imageitem" (click)="openFullscreen(imageitem.src)"></ng-template>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </ng-template>
+                    </ng-template>
+                  </ng-template>
+                </li>
               </ng-template>
-            </li>
-          </ul>
+              <ng-template #message_nomessages>
+                <p class="nomessagefound">{{ 'NO MESSAGE FOUND' | translate }}</p>
+              </ng-template>
+            </ul>
+          </ng-template>
           <div class="toast" id="toast">
             <div class="toastcontent">
               <p class="toasttext" id="toasttext"></p>

@@ -79,5 +79,7 @@
     "PINBOARD": "Pinboard",
     "NO PINNED MESSAGES FOUND": "No pinned messages found",
     "NAME": "Name",
-    "IMAGE NOT AVAILABLE": "Image not available"
+    "IMAGE NOT AVAILABLE": "Image not available",
+    "SEARCH MESSAGE": "Search message...",
+    "NO MESSAGE FOUND": "No message found"
 }

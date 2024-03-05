@@ -210,26 +210,6 @@ body {
                         outline-width: 0;
                         filter: brightness(0.8);
                     }
-
-                    .deleteinput {
-                        margin-left: -40px;
-                        background: none;
-                        border: none;
-                        position: relative;
-                        z-index: 9998!important;
-
-                        .deletesearchinputicon {
-                            color: #AAA;
-                        }
-
-                        .deletesearchinputicon:hover {
-                            color: #888;
-                        }
-                    }
-
-                    .deleteinput:focus {
-                        outline-width: 0;
-                    }
                 }
 
                 li {
@@ -376,6 +356,28 @@ body {
                     color: #000000;
                     color: var(--fontcolor);
                     flex: 1;
+                }
+
+                input {
+                    width: 40%;
+                    padding: 10px;
+                    font-size: 16px;
+                    border: none;
+                    background: #D1D1D1;
+                    background: var(--roomhover);
+                    border-radius: 1em;
+                    color: #000000;
+                    color: var(--fontcolor);
+                }
+
+                input:hover {
+                    outline-width: 0;
+                    filter: brightness(0.93);
+                }
+
+                input:focus {
+                    outline-width: 0;
+                    filter: brightness(0.80);
                 }
 
                 .roomheaderinfobutton {
@@ -570,6 +572,7 @@ body {
                         list-style-type: none;
                         margin: 0;
                         padding: 0;
+                        height: 100%;
 
                         .container_header {
                             margin: 0 auto;
@@ -584,8 +587,6 @@ body {
                         }
 
                         .headeritem {
-                            display: none;
-                            //width: fit-content;
                             margin: auto;
                             margin-top: 1em;
                             padding: 0.5em;
@@ -594,6 +595,15 @@ body {
                             font-size: 14px;
                             max-width: 80%;
                             border-radius: 12px;
+                        }
+
+                        .nomessagefound {
+                            position: relative;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            margin: 0;
+                            text-align: center;
                         }
         
                         li {

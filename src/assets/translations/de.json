@@ -79,5 +79,7 @@
     "PINBOARD": "Pinnwand",
     "NO PINNED MESSAGES FOUND": "Keine angepinnten Nachrichten gefunden",
     "NAME": "Name",
-    "IMAGE NOT AVAILABLE": "Bild nicht verfügbar"
+    "IMAGE NOT AVAILABLE": "Bild nicht verfügbar",
+    "SEARCH MESSAGE": "Nachricht suchen...",
+    "NO MESSAGE FOUND": "Keine Nachricht gefunden"
 }

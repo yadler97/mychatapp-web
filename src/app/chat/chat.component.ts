@@ -86,6 +86,7 @@ export class ChatComponent implements OnInit {
   roomkey: string = "";
   room: Room;
   selectedCategory: string;
+  headertext: string;
   messageRef = database.ref('/rooms');
 
   ngOnDestroy() {
@@ -477,9 +478,9 @@ export class ChatComponent implements OnInit {
         let displaytime = day + "." + month + "." + year
         let adminname = userlist.find(x => x.key == r.admin)!.name;
         if (navigator.language.substring(0, 2) == "de") {
-          document.getElementById('headeritem')!.innerHTML = "Raum wurde am " + displaytime + " von " + adminname + " erstellt";
+          this.headertext = "Raum wurde am " + displaytime + " von " + adminname + " erstellt";
         } else {
-          document.getElementById('headeritem')!.innerHTML = "Room was created on " + displaytime + " by " + adminname;
+          this.headertext = "Room was created on " + displaytime + " by " + adminname;
         }
         (document.getElementById('roomheaderimage') as HTMLInputElement).src = String(r.image);
         (document.getElementById('roomInfoImage') as HTMLInputElement).src = String(r.image);
@@ -487,10 +488,8 @@ export class ChatComponent implements OnInit {
       }
     }
 
-    document.getElementById('headeritem')!.style.display = "block";
     document.getElementById('inputbox')!.style.display = "";
     document.getElementById('roomheader')!.style.display = "";
-    document.getElementById('noroom')!.style.display = "none";
     this.roomkey = roomkey.toString();
     this.messageRef = database.ref('/rooms/' + roomkey + '/messages');
     messagelist = [];
@@ -1028,11 +1027,6 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  public deleteSearchInput() {
-    (document.getElementById('roomsearchinput') as HTMLInputElement).value = "";
-    this.searchRoom("");
-  }
-
   public openRoomInfo() {
     document.getElementById("roomInfoModal")!.style.display = "block";
   }
@@ -1129,10 +1123,8 @@ export class ChatComponent implements OnInit {
     document.getElementById('roomInfoModal')!.style.display = "none";
     this.roomkey = "";
     this.room = null;
-    document.getElementById('headeritem')!.style.display = "none";
     document.getElementById('inputbox')!.style.display = "none";
     document.getElementById('roomheader')!.style.display = "none";
-    document.getElementById('noroom')!.style.display = "block";
     messagelist = [];
     this.items_messages.next(messagelist);
   }
@@ -1152,6 +1144,27 @@ export class ChatComponent implements OnInit {
       document.getElementById("usermenu")!.style.display = "flex";
     } else {
       document.getElementById("usermenu")!.style.display = "none";
+    }
+  }
+
+  public searchMessage(input: string) {
+    if (input != "") {
+      let searchmessagelist: Array<Message> = [];
+      for (let message of messagelist) {
+        if (message.text.toLowerCase().includes(input.toLowerCase())) {
+          searchmessagelist.push(message);
+        }
+      }
+      var context = document.querySelectorAll(".messageitem");
+      var instance = new Mark(context);
+      instance.unmark();
+      instance.mark(input);
+      this.items_messages.next(searchmessagelist);
+    } else {
+      var context = document.querySelectorAll(".messageitem");
+      var instance = new Mark(context);
+      instance.unmark();
+      this.items_messages.next(messagelist);
     }
   }
 }

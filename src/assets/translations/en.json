@@ -81,5 +81,6 @@
     "NAME": "Name",
     "IMAGE NOT AVAILABLE": "Image not available",
     "SEARCH MESSAGE": "Search message...",
-    "NO MESSAGE FOUND": "No message found"
+    "NO MESSAGE FOUND": "No message found",
+    "DELETE MESSAGE": "Delete message"
 }

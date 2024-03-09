@@ -417,17 +417,21 @@
   </div>
 
   <div id="contextmenu" class="contextmenu">
-    <button (click)="quoteMessage()" id="cmquotebutton"><mat-icon class="material-symbols-outlined">comment</mat-icon><p>{{ 'QUOTE' | translate }}</p></button>
-    <button (click)="forwardMessage()" id="cmforwardbutton"><mat-icon class="material-symbols-outlined">forward</mat-icon><p>{{ 'FORWARD' | translate }}</p></button>
+    <button (click)="quoteMessage()"><mat-icon class="material-symbols-outlined">comment</mat-icon><p>{{ 'QUOTE' | translate }}</p></button>
+    <button (click)="forwardMessage()"><mat-icon class="material-symbols-outlined">forward</mat-icon><p>{{ 'FORWARD' | translate }}</p></button>
     <div *ngIf="clicked_message?.pinned; then unpin_icon else pin_icon"></div>
     <ng-template #pin_icon>
-      <button (click)="pinMessage()" id="cmpinbutton"><mat-icon class="material-symbols-outlined" id="pin_icon">push_pin</mat-icon><p id="pin_button_text">{{ 'PIN' | translate }}</p></button>
+      <button (click)="pinMessage()"><mat-icon class="material-symbols-outlined">push_pin</mat-icon><p>{{ 'PIN' | translate }}</p></button>
     </ng-template>
     <ng-template #unpin_icon>
-      <button (click)="pinMessage()" id="cmpinbutton"><mat-icon class="material-symbols" id="pin_icon">push_pin</mat-icon><p id="pin_button_text">{{ 'UNPIN' | translate }}</p></button>
+      <button (click)="pinMessage()"><mat-icon class="material-symbols">push_pin</mat-icon><p>{{ 'UNPIN' | translate }}</p></button>
     </ng-template>
     <button (click)="downloadFile()" id="cmdownloadbutton"><mat-icon class="material-symbols-outlined">download</mat-icon><p>{{ 'DOWNLOAD' | translate }}</p></button>
-    <button (click)="showProfile(null)" id="cmprofilebutton"><mat-icon class="material-symbols">account_circle</mat-icon><p>{{ 'SHOW PROFILE' | translate }}</p></button>
+    <button (click)="showProfile(null)"><mat-icon class="material-symbols">account_circle</mat-icon><p>{{ 'SHOW PROFILE' | translate }}</p></button>
+    <div *ngIf="clicked_message?.userid == this.currentUser?.key; then delete_message"></div>
+    <ng-template #delete_message>
+      <button (click)="deleteMessage()" class="deleteMessageButton"><mat-icon class="material-symbols-outlined">delete</mat-icon><p>{{ 'DELETE MESSAGE' | translate }}</p></button>
+    </ng-template>
   </div>
 
   <div id="forwardModal" class="modal">

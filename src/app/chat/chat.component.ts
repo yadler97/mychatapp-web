@@ -998,11 +998,13 @@ export class ChatComponent implements OnInit {
           searchroomlist.push(room);
         }
       }
-      var context = document.querySelectorAll(".roomname");
-      var instance = new Mark(context);
-      instance.unmark();
-      instance.mark(input);
       this.items.next(searchroomlist);
+      setTimeout(function() { 
+        var context = document.querySelectorAll(".roomname");
+        var instance = new Mark(context);
+        instance.unmark();
+        instance.mark(input);
+      }, 10);
     } else {
       var context = document.querySelectorAll(".roomname");
       var instance = new Mark(context);
@@ -1155,16 +1157,26 @@ export class ChatComponent implements OnInit {
           searchmessagelist.push(message);
         }
       }
-      var context = document.querySelectorAll(".messageitem");
-      var instance = new Mark(context);
-      instance.unmark();
-      instance.mark(input);
       this.items_messages.next(searchmessagelist);
+      setTimeout(function() { 
+        var context = document.querySelectorAll(".messageitem");
+        var instance = new Mark(context);
+        instance.unmark();
+        instance.mark(input);
+      }, 10);
     } else {
       var context = document.querySelectorAll(".messageitem");
       var instance = new Mark(context);
       instance.unmark();
       this.items_messages.next(messagelist);
     }
+  }
+
+  public deleteMessage() {
+    let roomRef = database.ref('/rooms/');
+    roomRef.child(this.roomkey).child('/messages/').child(this.clicked_message.key.toString()).remove();
+    let index = messagelist.indexOf(messagelist.find(x => x.key == this.clicked_message.key));
+    messagelist.splice(index, 1);
+    this.items_messages.next(messagelist);
   }
 }
